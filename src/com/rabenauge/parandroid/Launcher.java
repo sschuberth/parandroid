@@ -2,6 +2,7 @@ package com.rabenauge.parandroid;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Process;
 
 public class Launcher extends Activity {
     private Demo demo;
@@ -24,5 +25,14 @@ public class Launcher extends Activity {
     protected void onResume() {
         super.onResume();
         demo.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Make sure the process is killed immediately to free resources and
+        // not make it reusable.
+        Process.killProcess(Process.myPid());
     }
 }
