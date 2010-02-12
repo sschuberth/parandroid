@@ -1,6 +1,8 @@
 package com.rabenauge.parandroid;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
@@ -8,12 +10,28 @@ import android.util.Log;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.egl.EGLConfig;
+import java.nio.FloatBuffer;
 
 public class Demo extends GLSurfaceView implements Renderer {
     private static final String TAG="ParaNdroiD";
 
+    private static final float[] data={
+         0.2f,  0.2f, -1.0f, // UR (LR in portrait mode)
+        -0.2f,  0.2f, -1.0f, // UL (UR in portrait mode)
+        -0.2f, -0.2f, -1.0f, // LL (UL in portrait mode)
+         0.2f, -0.2f, -1.0f  // LR (LL in portrait mode)
+    };
+
+    private Context context;
+    private FloatBuffer vertices;
+    private PointSprite bob;
+
     public Demo(Context context) {
         super(context);
+
+        this.context=context;
+
+        //setDebugFlags(DEBUG_CHECK_GL_ERROR|DEBUG_LOG_GL_CALLS);
         setRenderer(this);
     }
 
@@ -30,7 +48,23 @@ public class Demo extends GLSurfaceView implements Renderer {
             Log.i(TAG, "Implements GL10");
         }
 
-        gl.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        GL11 gl11=(GL11)gl;
+
+        // Enable the vertex array.
+        vertices=FloatBuffer.wrap(data);
+
+        gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertices);
+
+        // Create a point sprite from a bitmap resource.
+        bob=new PointSprite(gl11);
+        bob.enable(true);
+
+        Bitmap bitmap=BitmapFactory.decodeResource(context.getResources(), R.drawable.icon);
+        bob.setData(bitmap);
+        bitmap.recycle();
+
+        bob.setSize(48.0f);
     }
 
     public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -45,5 +79,7 @@ public class Demo extends GLSurfaceView implements Renderer {
 
     public void onDrawFrame(GL10 gl) {
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+
+        gl.glDrawArrays(GL10.GL_POINTS, 0, 4);
     }
 }
