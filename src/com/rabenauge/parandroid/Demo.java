@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
+import android.os.PowerManager;
 import android.util.Log;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
@@ -23,6 +24,8 @@ public class Demo extends GLSurfaceView implements Renderer {
     };
 
     private Context context;
+    private PowerManager.WakeLock wl;
+
     private FloatBuffer vertices;
     private PointSprite bob;
 
@@ -33,6 +36,20 @@ public class Demo extends GLSurfaceView implements Renderer {
 
         //setDebugFlags(DEBUG_CHECK_GL_ERROR|DEBUG_LOG_GL_CALLS);
         setRenderer(this);
+
+        PowerManager pm=(PowerManager)context.getSystemService(Context.POWER_SERVICE);
+        wl=pm.newWakeLock(
+            PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
+            PowerManager.ACQUIRE_CAUSES_WAKEUP   |
+            PowerManager.ON_AFTER_RELEASE        ,
+            TAG
+        );
+        wl.acquire();
+    }
+
+    protected void finalize() throws Throwable {
+        super.finalize();
+        wl.release();
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
