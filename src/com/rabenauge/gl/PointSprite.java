@@ -1,4 +1,4 @@
-package com.rabenauge.parandroid;
+package com.rabenauge.gl;
 
 import javax.microedition.khronos.opengles.GL11;
 
@@ -6,7 +6,7 @@ import javax.microedition.khronos.opengles.GL11;
  * Wrapper class for point sprites (requires GL_OES_point_sprite).
  */
 public class PointSprite extends Texture2D {
-    PointSprite(GL11 gl) {
+    public PointSprite(GL11 gl) {
         super(gl);
     }
 

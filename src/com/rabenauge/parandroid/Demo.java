@@ -1,5 +1,7 @@
 package com.rabenauge.parandroid;
 
+import com.rabenauge.gl.*;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

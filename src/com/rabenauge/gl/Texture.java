@@ -1,4 +1,4 @@
-package com.rabenauge.parandroid;
+package com.rabenauge.gl;
 
 import java.nio.IntBuffer;
 import javax.microedition.khronos.opengles.GL10;
@@ -38,7 +38,7 @@ public abstract class Texture extends Bindable {
         return (int)mask<<1;
     }
 
-    Texture(GL11 gl, int target, int pname) {
+    protected Texture(GL11 gl, int target, int pname) {
         super(gl);
 
         this.target=target;

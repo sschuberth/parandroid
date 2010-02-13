@@ -1,4 +1,4 @@
-package com.rabenauge.parandroid;
+package com.rabenauge.gl;
 
 import javax.microedition.khronos.opengles.GL11;
 
@@ -10,7 +10,7 @@ public abstract class Bindable {
     protected GL11 gl;
     protected int handle;
 
-    Bindable(GL11 gl) {
+    protected Bindable(GL11 gl) {
         this.gl=gl;
         handle=create();
     }

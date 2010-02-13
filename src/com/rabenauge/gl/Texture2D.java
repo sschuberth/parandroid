@@ -1,4 +1,4 @@
-package com.rabenauge.parandroid;
+package com.rabenauge.gl;
 
 import android.graphics.Bitmap;
 import javax.microedition.khronos.opengles.GL10;
@@ -8,7 +8,7 @@ import javax.microedition.khronos.opengles.GL11;
  * Wrapper class for 2D texture objects.
  */
 public class Texture2D extends Texture {
-    Texture2D(GL11 gl) {
+    public Texture2D(GL11 gl) {
         super(gl, GL10.GL_TEXTURE_2D, GL11.GL_TEXTURE_BINDING_2D);
     }
 
