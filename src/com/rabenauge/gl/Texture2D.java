@@ -13,10 +13,12 @@ public class Texture2D extends Texture {
     }
 
     public void setData(Bitmap bitmap, int level, boolean border) {
-        makeCurrent();
-        if (!isPOT(bitmap.getWidth()) || !isPOT(bitmap.getHeight())) {
-            bitmap=Bitmap.createScaledBitmap(bitmap, ceilPOT(bitmap.getWidth()), ceilPOT(bitmap.getHeight()), false);
+        int w=bitmap.getWidth(), h=bitmap.getHeight();
+        int w2=ceilPOT(w), h2=ceilPOT(h);
+        if (w!=w2 || h!=h2) {
+            bitmap=Bitmap.createScaledBitmap(bitmap, w2, h2, true);
         }
+        makeCurrent();
         android.opengl.GLUtils.texImage2D(target, level, bitmap, border?1:0);
     }
 
