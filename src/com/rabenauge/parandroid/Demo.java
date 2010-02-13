@@ -30,6 +30,7 @@ public class Demo extends GLSurfaceView implements Renderer {
 
     private FloatBuffer vertices;
     private PointSprite bob;
+    private Texture2D logo_rab, logo_trsi;
 
     public Demo(Context context) {
         super(context);
@@ -73,17 +74,30 @@ public class Demo extends GLSurfaceView implements Renderer {
         vertices=FloatBuffer.wrap(data);
 
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertices);
+        gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
         // Create a point sprite from a bitmap resource.
         bob=new PointSprite(gl11);
-        bob.enable(true);
 
         Bitmap bitmap=BitmapFactory.decodeResource(context.getResources(), R.drawable.icon);
         bob.setData(bitmap);
         bitmap.recycle();
 
         bob.setSize(48.0f);
+
+        // Load the logos.
+        logo_rab=new Texture2D(gl11);
+        bitmap=BitmapFactory.decodeResource(context.getResources(), R.drawable.logo_rab);
+        logo_rab.setData(bitmap);
+        bitmap.recycle();
+
+        logo_trsi=new Texture2D(gl11);
+        bitmap=BitmapFactory.decodeResource(context.getResources(), R.drawable.logo_trsi);
+        logo_trsi.setData(bitmap);
+        bitmap.recycle();
+
+        // Enable 2D texturing in general.
+        logo_rab.enable(true);
     }
 
     public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -99,6 +113,6 @@ public class Demo extends GLSurfaceView implements Renderer {
     public void onDrawFrame(GL10 gl) {
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-        gl.glDrawArrays(GL10.GL_POINTS, 0, 4);
+        Helper.drawScreenSpaceTexture(logo_rab);
     }
 }
