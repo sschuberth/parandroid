@@ -7,7 +7,7 @@ import javax.microedition.khronos.opengles.GL11;
  * textures, vertex buffers, frame buffers etc.
  */
 public abstract class Bindable {
-    protected GL11 gl;
+    public GL11 gl;
     protected int handle;
 
     protected Bindable(GL11 gl) {
