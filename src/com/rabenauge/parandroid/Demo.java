@@ -2,6 +2,7 @@ package com.rabenauge.parandroid;
 
 import com.rabenauge.gl.*;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,7 +27,7 @@ public class Demo extends GLSurfaceView implements Renderer {
          0.2f, -0.2f, -1.0f  // LR (LL in portrait mode)
     };
 
-    private Context context;
+    private Activity activity;
     private PowerManager.WakeLock wl;
     private MediaPlayer mp;
 
@@ -37,15 +38,15 @@ public class Demo extends GLSurfaceView implements Renderer {
 
     private Long t_start;
 
-    public Demo(Context context) {
-        super(context);
+    public Demo(Activity activity) {
+        super(activity);
 
-        this.context=context;
+        this.activity=activity;
 
         //setDebugFlags(DEBUG_CHECK_GL_ERROR|DEBUG_LOG_GL_CALLS);
         setRenderer(this);
 
-        PowerManager pm=(PowerManager)context.getSystemService(Context.POWER_SERVICE);
+        PowerManager pm=(PowerManager)activity.getSystemService(Context.POWER_SERVICE);
         wl=pm.newWakeLock(
             PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
             PowerManager.ACQUIRE_CAUSES_WAKEUP   |
@@ -54,7 +55,7 @@ public class Demo extends GLSurfaceView implements Renderer {
         );
         wl.acquire();
 
-        mp=MediaPlayer.create(context, R.raw.track);
+        mp=MediaPlayer.create(activity, R.raw.track);
     }
 
     protected void finalize() throws Throwable {
@@ -74,6 +75,9 @@ public class Demo extends GLSurfaceView implements Renderer {
         }
         else {
             Log.i(TAG, "Implements GL10");
+
+            Log.e(TAG, "No GL11 available");
+            activity.finish();
         }
 
         GL11 gl11=(GL11)gl;
@@ -87,7 +91,7 @@ public class Demo extends GLSurfaceView implements Renderer {
         // Create a point sprite from a bitmap resource.
         bob=new PointSprite(gl11);
 
-        Bitmap bitmap=BitmapFactory.decodeResource(context.getResources(), R.drawable.icon);
+        Bitmap bitmap=BitmapFactory.decodeResource(activity.getResources(), R.drawable.icon);
         bob.setData(bitmap);
         bitmap.recycle();
 
@@ -95,23 +99,23 @@ public class Demo extends GLSurfaceView implements Renderer {
 
         // Load the title screens.
         title_parandroid=new Texture2D(gl11);
-        bitmap=BitmapFactory.decodeResource(context.getResources(), R.drawable.title_parandroid);
+        bitmap=BitmapFactory.decodeResource(activity.getResources(), R.drawable.title_parandroid);
         title_parandroid.setData(bitmap);
         bitmap.recycle();
 
         title_trsinrab=new Texture2D(gl11);
-        bitmap=BitmapFactory.decodeResource(context.getResources(), R.drawable.title_trsinrab);
+        bitmap=BitmapFactory.decodeResource(activity.getResources(), R.drawable.title_trsinrab);
         title_trsinrab.setData(bitmap);
         bitmap.recycle();
 
         // Load the logos.
         logo_rab=new Texture2D(gl11);
-        bitmap=BitmapFactory.decodeResource(context.getResources(), R.drawable.logo_rab);
+        bitmap=BitmapFactory.decodeResource(activity.getResources(), R.drawable.logo_rab);
         logo_rab.setData(bitmap);
         bitmap.recycle();
 
         logo_trsi=new Texture2D(gl11);
-        bitmap=BitmapFactory.decodeResource(context.getResources(), R.drawable.logo_trsi);
+        bitmap=BitmapFactory.decodeResource(activity.getResources(), R.drawable.logo_trsi);
         logo_trsi.setData(bitmap);
         bitmap.recycle();
 
