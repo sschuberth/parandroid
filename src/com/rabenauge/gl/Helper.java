@@ -24,4 +24,13 @@ public class Helper {
 
         tex.gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
     }
+
+    public static void toggleState(GL10 gl, int cap, boolean state) {
+        if (state) {
+            gl.glEnable(cap);
+        }
+        else {
+            gl.glDisable(cap);
+        }
+    }
 }
