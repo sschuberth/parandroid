@@ -23,6 +23,9 @@ public class Demo extends GLSurfaceView implements Renderer {
     private IntroFade intro_fade;
     private IntroBlink intro_blink;
 
+    private ColorFade fade_in_white;
+    private StarField stars;
+
     public Demo(Activity activity) {
         super(activity);
 
@@ -67,6 +70,9 @@ public class Demo extends GLSurfaceView implements Renderer {
 
         intro_fade=new IntroFade(activity, (GL11)gl);
         intro_blink=new IntroBlink(activity, (GL11)gl);
+
+        fade_in_white=new ColorFade(activity, (GL11)gl, 1000, true, 1, 1, 1);
+        stars=new StarField(activity, (GL11)gl, 400);
     }
 
     public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -88,7 +94,18 @@ public class Demo extends GLSurfaceView implements Renderer {
         long t=android.os.SystemClock.uptimeMillis()-t_start;
 
         // These parts run concurrently and render to the same frame!
-        intro_fade.play(t);
-        intro_blink.play(t);
+        if (intro_fade.play(t)) {
+            intro_blink.play(t);
+        }
+        else {
+            t-=intro_fade.getDuration();
+
+            gl.glClear(GL11.GL_COLOR_BUFFER_BIT);
+
+            stars.play(t);
+
+            // This must come last as it needs to render on top of all other effects.
+            fade_in_white.play(t);
+        }
     }
 }
