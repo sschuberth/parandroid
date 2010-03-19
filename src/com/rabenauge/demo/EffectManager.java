@@ -57,7 +57,7 @@ public class EffectManager {
         effects.add(new Entry(effect, start, duration));
     }
 
-    public void play(long t) {
+    public boolean play(long t) {
         if (curr_index<0) {
             // There is no current effect yet, so start the first one.
             effects.getFirst().effect.startRunning(gl);
@@ -81,11 +81,12 @@ public class EffectManager {
 
                 // After rendering the current effect state we are done.
                 entry.effect.onRender(gl, (float)(t-entry.start)/entry.duration);
-                return;
+                return true;
             }
         }
 
         // No match was found, so end the last effect.
         effects.getLast().effect.stopRunning(gl);
+        return false;
     }
 }
