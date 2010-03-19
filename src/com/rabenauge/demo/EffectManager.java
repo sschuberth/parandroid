@@ -60,7 +60,7 @@ public class EffectManager {
     public void play(long t) {
         if (curr_index<0) {
             // There is no current effect yet, so start the first one.
-            effects.getFirst().effect.onStart(gl);
+            effects.getFirst().effect.startRunning(gl);
             curr_index=0;
         }
 
@@ -72,9 +72,9 @@ public class EffectManager {
                 int index=effects.indexOf(entry);
                 if (index!=curr_index) {
                     // It is time to change effects, so stop the current one ...
-                    effects.get(curr_index).effect.onStop(gl);
+                    effects.get(curr_index).effect.stopRunning(gl);
                     // ... and start the new one.
-                    entry.effect.onStart(gl);
+                    entry.effect.startRunning(gl);
 
                     curr_index=index;
                 }
@@ -86,6 +86,6 @@ public class EffectManager {
         }
 
         // No match was found, so end the last effect.
-        effects.getLast().effect.onStop(gl);
+        effects.getLast().effect.stopRunning(gl);
     }
 }
