@@ -28,7 +28,7 @@ public class IntroBlink extends EffectManager {
             gl.glEnable(GL11.GL_POINT_SMOOTH);
         }
 
-        public void onRender(GL11 gl, float s) {
+        public void onRender(GL11 gl, float s, long t) {
             // Set the projection to match the joint coordinates.
             gl.glMatrixMode(GL11.GL_PROJECTION);
             gl.glLoadIdentity();

@@ -12,7 +12,7 @@ public class IntroFade extends EffectManager {
 
     // Fade-in the Droid title screen from black.
     private class FadeBlackToDroid extends Effect {
-        public void onRender(GL11 gl, float s) {
+        public void onRender(GL11 gl, float s, long t) {
             gl.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
             // A simple linear fade-in looks unnatural.
@@ -29,14 +29,14 @@ public class IntroFade extends EffectManager {
             gl.glColor4f(1, 1, 1, 1);
         }
 
-        public void onRender(GL11 gl, float s) {
+        public void onRender(GL11 gl, float s, long t) {
             Helper.drawScreenSpaceTexture(title_droid);
         }
     }
 
     // Fade from the Droid to the TRSI 'N' RAB title screen.
     private class FadeDroidToTrsiNRab extends Effect {
-        public void onRender(GL11 gl, float s) {
+        public void onRender(GL11 gl, float s, long t) {
             gl.glColor4f(1, 1, 1, 1);
             Helper.drawScreenSpaceTexture(title_droid);
 
@@ -54,14 +54,14 @@ public class IntroFade extends EffectManager {
             gl.glColor4f(1, 1, 1, 1);
         }
 
-        public void onRender(GL11 gl, float s) {
+        public void onRender(GL11 gl, float s, long t) {
             Helper.drawScreenSpaceTexture(title_trsinrab);
         }
     }
 
     // Fade from the TRSI 'N' RAB to the Para 'N' droiD title screen.
     private class FadeTrsiNRabToParaNdroiD extends Effect {
-        public void onRender(GL11 gl, float s) {
+        public void onRender(GL11 gl, float s, long t) {
             gl.glColor4f(1, 1, 1, 1);
             Helper.drawScreenSpaceTexture(title_trsinrab);
 
@@ -79,7 +79,7 @@ public class IntroFade extends EffectManager {
             gl.glColor4f(1, 1, 1, 1);
         }
 
-        public void onRender(GL11 gl, float s) {
+        public void onRender(GL11 gl, float s, long t) {
             Helper.drawScreenSpaceTexture(title_parandroid);
         }
     }
@@ -90,7 +90,7 @@ public class IntroFade extends EffectManager {
             gl.glClearColor(1, 1, 1, 1);
         }
 
-        public void onRender(GL11 gl, float s) {
+        public void onRender(GL11 gl, float s, long t) {
             gl.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
             // A simple linear fade-in looks unnatural.

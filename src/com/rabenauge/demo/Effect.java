@@ -29,8 +29,8 @@ public abstract class Effect {
     // Called once when the effects should start.
     public void onStart(GL11 gl) {}
 
-    // Called with s in range [0, 1] to render that effect percentage.
-    public abstract void onRender(GL11 gl, float s);
+    // Called with s in range [0, 1] to render that effect percentage, and with t being the time elapsed since the last call.
+    public abstract void onRender(GL11 gl, float s, long t);
 
     // Tells the effect to stop running.
     public final void stopRunning(GL11 gl) {

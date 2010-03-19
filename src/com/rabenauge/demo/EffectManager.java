@@ -14,7 +14,7 @@ public class EffectManager {
      * A dummy effect to wait for some time.
      */
     public class Wait extends Effect {
-        public void onRender(GL11 gl, float s) {
+        public void onRender(GL11 gl, float s, long t) {
             // Do nothing.
         }
     }
@@ -40,12 +40,14 @@ public class EffectManager {
     private GL11 gl;
     private LinkedList<Entry> effects;
     private int curr_index;
+    private long t_last;
 
     public EffectManager(GL11 gl) {
         this.gl=gl;
 
         effects=new LinkedList<Entry>();
         curr_index=-1;
+        t_last=0;
     }
 
     public void add(Effect effect, long duration) {
@@ -80,7 +82,8 @@ public class EffectManager {
                 }
 
                 // After rendering the current effect state we are done.
-                entry.effect.onRender(gl, (float)(t-entry.start)/entry.duration);
+                entry.effect.onRender(gl, (float)(t-entry.start)/entry.duration, t-t_last);
+                t_last=t;
                 return true;
             }
         }
