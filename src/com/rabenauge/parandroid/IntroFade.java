@@ -103,10 +103,9 @@ public class IntroFade extends EffectManager {
         title_trsinrab.setData(bitmap);
         bitmap.recycle();
 
-        // Enable 2D texturing in general.
+        // Set universal OpenGL states for all effects in this part.
         title_droid.enable(true);
 
-        // Set universal OpenGL states for all effects in this part.
         gl.glEnable(GL11.GL_BLEND);
         gl.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 

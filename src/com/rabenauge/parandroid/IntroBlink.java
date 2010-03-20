@@ -23,8 +23,8 @@ public class IntroBlink extends EffectManager {
 
     private class BlinkJoints extends Effect {
         public void onStart(GL11 gl) {
-            gl.glColorPointer(4, GL11.GL_FLOAT, 0, FloatBuffer.wrap(colors));
             gl.glPointSize(2.5f);
+            gl.glColorPointer(4, GL11.GL_FLOAT, 0, FloatBuffer.wrap(colors));
             gl.glEnable(GL11.GL_POINT_SMOOTH);
         }
 
