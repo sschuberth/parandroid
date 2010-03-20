@@ -23,64 +23,41 @@ public class IntroFade extends EffectManager {
         }
     }
 
-    // Keep showing the Droid title screen.
-    private class ShowDroidTitle extends Effect {
+    // Keep showing the given title screen.
+    private class ShowTitle extends Effect {
+        private Texture2D title;
+
+        public ShowTitle(Texture2D title) {
+            this.title=title;
+        }
+
         public void onStart(GL11 gl) {
             gl.glColor4f(1, 1, 1, 1);
         }
 
         public void onRender(GL11 gl, float s, long t) {
-            Helper.drawScreenSpaceTexture(title_droid);
+            Helper.drawScreenSpaceTexture(title);
         }
     }
 
-    // Fade from the Droid to the TRSI 'N' RAB title screen.
-    private class FadeDroidToTrsiNRab extends Effect {
+    // Fade from a title screen to another title screen.
+    private class FadeTitle extends Effect {
+        Texture2D from, to;
+
+        public FadeTitle(Texture2D from, Texture2D to) {
+            this.from=from;
+            this.to=to;
+        }
+
         public void onRender(GL11 gl, float s, long t) {
             gl.glColor4f(1, 1, 1, 1);
-            Helper.drawScreenSpaceTexture(title_droid);
+            Helper.drawScreenSpaceTexture(from);
 
             // A simple linear fade-in looks unnatural.
             s*=s;
 
             gl.glColor4f(1, 1, 1, s);
-            Helper.drawScreenSpaceTexture(title_trsinrab);
-        }
-    }
-
-    // Keep showing the TRSI 'N' RAB title screen.
-    private class ShowTrsiNRabTitle extends Effect {
-        public void onStart(GL11 gl) {
-            gl.glColor4f(1, 1, 1, 1);
-        }
-
-        public void onRender(GL11 gl, float s, long t) {
-            Helper.drawScreenSpaceTexture(title_trsinrab);
-        }
-    }
-
-    // Fade from the TRSI 'N' RAB to the Para 'N' droiD title screen.
-    private class FadeTrsiNRabToParaNdroiD extends Effect {
-        public void onRender(GL11 gl, float s, long t) {
-            gl.glColor4f(1, 1, 1, 1);
-            Helper.drawScreenSpaceTexture(title_trsinrab);
-
-            // A simple linear fade-in looks unnatural.
-            s*=s;
-
-            gl.glColor4f(1, 1, 1, s);
-            Helper.drawScreenSpaceTexture(title_parandroid);
-        }
-    }
-
-    // Keep showing the Para 'N' droiD title screen.
-    private class ShowParaNdroiDTitle extends Effect {
-        public void onStart(GL11 gl) {
-            gl.glColor4f(1, 1, 1, 1);
-        }
-
-        public void onRender(GL11 gl, float s, long t) {
-            Helper.drawScreenSpaceTexture(title_parandroid);
+            Helper.drawScreenSpaceTexture(to);
         }
     }
 
@@ -140,13 +117,13 @@ public class IntroFade extends EffectManager {
         add(new Clear(), 1000);
 
         add(new FadeBlackToDroid(), 7*1000);
-        add(new ShowDroidTitle(), 7*1000);
+        add(new ShowTitle(title_droid), 7*1000);
 
-        add(new FadeDroidToTrsiNRab(), 7*1000);
-        add(new ShowTrsiNRabTitle(), 7*1000);
+        add(new FadeTitle(title_droid, title_trsinrab), 7*1000);
+        add(new ShowTitle(title_trsinrab), 7*1000);
 
-        add(new FadeTrsiNRabToParaNdroiD(), 7*1000);
-        add(new ShowParaNdroiDTitle(), 7*1000);
+        add(new FadeTitle(title_trsinrab, title_parandroid), 7*1000);
+        add(new ShowTitle(title_parandroid), 7*1000);
 
         add(new FadeParaNdroiDToWhite(), 500);
     }
