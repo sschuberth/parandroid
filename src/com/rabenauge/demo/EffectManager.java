@@ -59,13 +59,16 @@ public class EffectManager {
         t_last=0;
     }
 
-    public void add(Effect effect, long duration) {
-        long start=0;
+    public long getDuration() {
+        long duration=0;
         if (!effects.isEmpty()) {
-            // The succeeding effect's start time equals the previous effect's start time plus its duration. 
-            start=effects.getLast().start+effects.getLast().duration;
+            duration=effects.getLast().start+effects.getLast().duration;
         }
-        effects.add(new Entry(effect, start, duration));
+        return duration;
+    }
+
+    public void add(Effect effect, long duration) {
+        effects.add(new Entry(effect, getDuration(), duration));
     }
 
     public boolean play(long t) {
