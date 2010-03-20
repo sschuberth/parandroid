@@ -12,17 +12,20 @@ public class Helper {
     private static final float w=1, h=1;
     private static final FloatBuffer v=FloatBuffer.allocate(8).put(w).put(h).put(0).put(h).put(0).put(0).put(w).put(0);
 
+    public static void drawScreenSpaceQuad(GL10 gl) {
+        gl.glMatrixMode(GL10.GL_PROJECTION);
+        gl.glLoadIdentity();
+        GLU.gluOrtho2D(gl, 0, w, h, 0);
+
+        gl.glVertexPointer(2, GL10.GL_FLOAT, 0, v);
+        gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+    }
+
     public static void drawScreenSpaceTexture(Texture2D tex) {
         tex.makeCurrent();
-
-        tex.gl.glMatrixMode(GL10.GL_PROJECTION);
-        tex.gl.glLoadIdentity();
-        GLU.gluOrtho2D(tex.gl, 0, w, h, 0);
-
-        tex.gl.glVertexPointer(2, GL10.GL_FLOAT, 0, v);
         tex.gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, v);
 
-        tex.gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+        drawScreenSpaceQuad(tex.gl);
     }
 
     public static void toggleState(GL10 gl, int cap, boolean state) {
