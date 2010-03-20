@@ -11,6 +11,15 @@ public class EffectManager {
     public static final float PI=(float)Math.PI;
 
     /*
+     * A helper effect that just clears the screen.
+     */
+    public class Clear extends Effect {
+        public void onRender(GL11 gl, float s, long t) {
+            gl.glClear(GL11.GL_COLOR_BUFFER_BIT);
+        }
+    }
+
+    /*
      * A dummy effect to wait for some time.
      */
     public class Wait extends Effect {

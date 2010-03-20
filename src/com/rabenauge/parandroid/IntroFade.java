@@ -137,7 +137,7 @@ public class IntroFade extends EffectManager {
         gl.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
 
         // Schedule the effects in this part.
-        add(new Wait(), 1000);
+        add(new Clear(), 1000);
 
         add(new FadeBlackToDroid(), 7*1000);
         add(new ShowDroidTitle(), 7*1000);
