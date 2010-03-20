@@ -81,6 +81,8 @@ public class IntroFade extends EffectManager {
             // Make sure the screen is finally full white
             // in case onRender() was not called with s=1.0.
             gl.glClear(GL11.GL_COLOR_BUFFER_BIT);
+
+            gl.glClearColor(0, 0, 0, 0);
         }
     }
 
