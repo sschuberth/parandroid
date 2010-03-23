@@ -1,6 +1,5 @@
 package com.rabenauge.gl;
 
-import java.nio.IntBuffer;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
@@ -60,19 +59,20 @@ public abstract class Texture extends Bindable {
     }
 
     protected int create() {
-        IntBuffer handle=IntBuffer.allocate(1);
-        gl.glGenTextures(1, handle);
-        return handle.get(0);
+        int[] textures=new int[1];
+        gl.glGenTextures(1, textures, 0);
+        return textures[0];
     }
 
     protected void destroy(int handle) {
-        gl.glDeleteTextures(1, IntBuffer.allocate(1).put(handle));
+        int[] textures={handle};
+        gl.glDeleteTextures(1, textures, 0);
     }
 
     public int getCurrent() {
-        IntBuffer params=IntBuffer.allocate(1);
-        gl.glGetIntegerv(pname, params);
-        return params.get(0);
+        int[] params=new int[1];
+        gl.glGetIntegerv(pname, params, 0);
+        return params[0];
     }
 
     public void setCurrent(int handle) {
