@@ -1,6 +1,5 @@
 package com.rabenauge.gl;
 
-import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 /*
@@ -46,7 +45,7 @@ public abstract class Texture extends Bindable {
         // The default is GL_NEAREST_MIPMAP_LINEAR, which will result in white
         // textures if we do not have mipmaps. As we rarely use mipmaps, change the default.
         makeCurrent();
-        gl.glTexParameterx(target, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
+        gl.glTexParameterx(target, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
     }
 
     public void enable(boolean state) {
