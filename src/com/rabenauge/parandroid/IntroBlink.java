@@ -30,11 +30,6 @@ public class IntroBlink extends EffectManager {
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
-            // Set the projection to match the joint coordinates.
-            gl.glMatrixMode(GL11.GL_PROJECTION);
-            gl.glLoadIdentity();
-            GLU.gluOrtho2D(gl, 0, 800, 480, 0);
-
             // Fade the colors.
             for (int i=3; i<colors.length; i+=4) {
                 colors[i]=(int)((1.0f-FloatMath.cos(DemoMath.PI*s*i))/2.0f*65536);
@@ -44,10 +39,18 @@ public class IntroBlink extends EffectManager {
             gl.glDisable(GL11.GL_TEXTURE_2D);
             gl.glEnableClientState(GL11.GL_COLOR_ARRAY);
 
+            // Set the projection to match the joint coordinates.
+            gl.glMatrixMode(GL11.GL_PROJECTION);
+            gl.glPushMatrix();
+            gl.glLoadIdentity();
+            GLU.gluOrtho2D(gl, 0, 800, 480, 0);
+
             gl.glVertexPointer(2, GL11.GL_SHORT, 0, ShortBuffer.wrap(joints));
             gl.glDrawArrays(GL11.GL_POINTS, 0, joints.length/2);
 
             // Restore OpenGL states for the fading part.
+            gl.glPopMatrix();
+
             gl.glDisableClientState(GL11.GL_COLOR_ARRAY);
             gl.glEnable(GL11.GL_TEXTURE_2D);
         }

@@ -25,6 +25,7 @@ public class Demo extends GLSurfaceView implements Renderer {
 
     private ColorFade fade_in_white;
     private StarField stars;
+    private LogoChange logos;
 
     public Demo(Activity activity) {
         super(activity);
@@ -82,6 +83,7 @@ public class Demo extends GLSurfaceView implements Renderer {
 
         fade_in_white=new ColorFade(activity, (GL11)gl, 1000, true, 1, 1, 1);
         stars=new StarField(activity, (GL11)gl, 400);
+        logos=new LogoChange(activity, (GL11)gl, 40, 20, 8000, 2000);
     }
 
     public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -112,6 +114,7 @@ public class Demo extends GLSurfaceView implements Renderer {
             gl.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
             stars.play(t);
+            logos.play(t);
 
             // This must come last as it needs to render on top of all other effects.
             fade_in_white.play(t);

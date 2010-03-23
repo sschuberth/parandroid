@@ -20,11 +20,6 @@ public class StarField extends EffectManager {
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
-            // Set the projection to match the star coordinates.
-            gl.glMatrixMode(GL11.GL_PROJECTION);
-            gl.glLoadIdentity();
-            GLU.gluOrtho2D(gl, 0, WIDTH/65536.0f, HEIGHT/65536.0f, 0);
-
             for (int i=0; i<star_coords.length; i+=4) {
                 float factor=star_speeds[i]*e/500;
 
@@ -37,10 +32,18 @@ public class StarField extends EffectManager {
             gl.glDisable(GL11.GL_TEXTURE_2D);
             gl.glEnableClientState(GL11.GL_COLOR_ARRAY);
 
+            // Set the projection to match the star coordinates.
+            gl.glMatrixMode(GL11.GL_PROJECTION);
+            gl.glPushMatrix();
+            gl.glLoadIdentity();
+            GLU.gluOrtho2D(gl, 0, WIDTH/65536.0f, HEIGHT/65536.0f, 0);
+
             gl.glVertexPointer(2, GL11.GL_FIXED, 0, IntBuffer.wrap(star_coords));
             gl.glDrawArrays(GL11.GL_LINES, 0, star_coords.length/2);
 
             // Restore OpenGL states.
+            gl.glPopMatrix();
+
             gl.glDisableClientState(GL11.GL_COLOR_ARRAY);
             gl.glEnable(GL11.GL_TEXTURE_2D);
 

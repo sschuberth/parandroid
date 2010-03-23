@@ -19,11 +19,14 @@ public class Helper {
 
     public static void drawScreenSpaceQuad(GL10 gl) {
         gl.glMatrixMode(GL10.GL_PROJECTION);
+        gl.glPushMatrix();
         gl.glLoadIdentity();
         GLU.gluOrtho2D(gl, 0, w, h, 0);
 
         gl.glVertexPointer(2, GL10.GL_BYTE, 0, v);
         gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+
+        gl.glPopMatrix();
     }
 
     public static void drawScreenSpaceTexture(Texture2D tex) {

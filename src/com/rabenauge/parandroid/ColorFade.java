@@ -17,6 +17,7 @@ public class ColorFade extends EffectManager {
             float a=in?1-s:s;
             gl.glColor4f(r, g, b, a);
             Helper.drawScreenSpaceQuad(gl);
+            gl.glColor4f(1, 1, 1, 1);
 
             // Restore OpenGL states.
             gl.glEnable(GL11.GL_TEXTURE_2D);
