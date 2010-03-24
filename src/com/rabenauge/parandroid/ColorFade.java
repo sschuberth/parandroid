@@ -10,7 +10,7 @@ public class ColorFade extends EffectManager {
     private float r, g, b;
 
     private class Fade extends Effect {
-        public void onRender(GL11 gl, float s, long t) {
+        public void onRender(GL11 gl, long t, long e, float s) {
             // Set OpenGL states.
             gl.glDisable(GL11.GL_TEXTURE_2D);
 

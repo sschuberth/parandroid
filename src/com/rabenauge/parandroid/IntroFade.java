@@ -12,7 +12,7 @@ public class IntroFade extends EffectManager {
 
     // Fade-in the Droid title screen from black.
     private class FadeBlackToDroid extends Effect {
-        public void onRender(GL11 gl, float s, long t) {
+        public void onRender(GL11 gl, long t, long e, float s) {
             gl.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
             // A simple linear fade-in looks unnatural.
@@ -35,7 +35,7 @@ public class IntroFade extends EffectManager {
             gl.glColor4f(1, 1, 1, 1);
         }
 
-        public void onRender(GL11 gl, float s, long t) {
+        public void onRender(GL11 gl, long t, long e, float s) {
             Helper.drawScreenSpaceTexture(title);
         }
     }
@@ -49,7 +49,7 @@ public class IntroFade extends EffectManager {
             this.to=to;
         }
 
-        public void onRender(GL11 gl, float s, long t) {
+        public void onRender(GL11 gl, long t, long e, float s) {
             gl.glColor4f(1, 1, 1, 1);
             Helper.drawScreenSpaceTexture(from);
 
@@ -67,7 +67,7 @@ public class IntroFade extends EffectManager {
             gl.glClearColor(1, 1, 1, 1);
         }
 
-        public void onRender(GL11 gl, float s, long t) {
+        public void onRender(GL11 gl, long t, long e, float s) {
             gl.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
             // A simple linear fade-in looks unnatural.

@@ -28,14 +28,14 @@ public class StarField extends EffectManager {
             gl.glEnable(GL11.GL_LINE_SMOOTH);
         }
 
-        public void onRender(GL11 gl, float s, long t) {
+        public void onRender(GL11 gl, long t, long e, float s) {
             // Set the projection to match the star coordinates.
             gl.glMatrixMode(GL11.GL_PROJECTION);
             gl.glLoadIdentity();
             GLU.gluOrtho2D(gl, 0, WIDTH/65536.0f, HEIGHT/65536.0f, 0);
 
             for (int i=0; i<star_coords.length; i+=4) {
-                float factor=star_speeds[i]*t/500;
+                float factor=star_speeds[i]*e/500;
 
                 // Avoid flickering of small stars by making the lines at least two pixels long.
                 star_coords[i+2]=star_coords[i  ] + (int)((star_coords[i  ]-center_x)*factor/65536.0f);
