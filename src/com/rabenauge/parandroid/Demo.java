@@ -54,10 +54,19 @@ public class Demo extends GLSurfaceView implements Renderer {
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         // Get some OpenGL information.
-        Log.i(TAG, gl.glGetString(GL10.GL_VENDOR));
-        Log.i(TAG, gl.glGetString(GL10.GL_RENDERER));
-        Log.i(TAG, gl.glGetString(GL10.GL_VERSION));
-        Log.i(TAG, gl.glGetString(GL10.GL_EXTENSIONS).replace(' ', '\n'));
+        Log.i(TAG, "GL_VENDOR     : "    + gl.glGetString(GL10.GL_VENDOR));
+        Log.i(TAG, "GL_RENDERER   : "    + gl.glGetString(GL10.GL_RENDERER));
+        Log.i(TAG, "GL_VERSION    : "    + gl.glGetString(GL10.GL_VERSION));
+        Log.i(TAG, "GL_EXTENSIONS :\n  " + gl.glGetString(GL10.GL_EXTENSIONS).trim().replace(" ", "\n  "));
+
+        int[] params=new int[2];
+        gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE, params, 0);
+        Log.i(TAG, "GL_MAX_TEXTURE_SIZE        : " + String.valueOf(params[0]));
+        gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_UNITS, params, 0);
+        Log.i(TAG, "GL_MAX_TEXTURE_UNITS       : " + String.valueOf(params[0]));
+        gl.glGetIntegerv(GL10.GL_SMOOTH_POINT_SIZE_RANGE, params, 0);
+        Log.i(TAG, "GL_SMOOTH_POINT_SIZE_RANGE : " + String.valueOf(params[0]) + ", " + String.valueOf(params[1]));
+
         if (gl instanceof GL11) {
             Log.i(TAG, "Implements GL11");
         }
