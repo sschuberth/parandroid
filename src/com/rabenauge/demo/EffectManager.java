@@ -8,8 +8,6 @@ import javax.microedition.khronos.opengles.GL11;
  * A simple manager for a list of demo effects.
  */
 public class EffectManager {
-    public static final float PI=(float)Math.PI;
-
     /*
      * A helper effect that just clears the screen.
      */

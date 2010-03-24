@@ -13,15 +13,6 @@ public class StarField extends EffectManager {
     private int[] star_coords;
     private int[] star_speeds;
 
-    private float randomize(float factor, float invalid) {
-        float r;
-        do {
-            r=(float)(Math.random()*factor);
-        }
-        while (r==invalid); 
-        return r;
-    }
-
     private class Flight extends Effect {
         public void onStart(GL11 gl) {
             gl.glColorPointer(4, GL11.GL_FIXED, 0, IntBuffer.wrap(star_speeds));
@@ -60,8 +51,8 @@ public class StarField extends EffectManager {
                 if (star_coords[i  ]<0 || star_coords[i  ]>=WIDTH
                  || star_coords[i+1]<0 || star_coords[i+1]>=HEIGHT) 
                 {
-                    star_coords[i  ]=(int)(randomize(WIDTH , center_x));
-                    star_coords[i+1]=(int)(randomize(HEIGHT, center_y));
+                    star_coords[i  ]=(int)(DemoMath.randomize(WIDTH , center_x));
+                    star_coords[i+1]=(int)(DemoMath.randomize(HEIGHT, center_y));
                 }
             }
         }
@@ -83,11 +74,11 @@ public class StarField extends EffectManager {
         star_speeds=new int[count*4*2];
 
         for (int c=0, s=0; c<star_coords.length; c+=4, s+=8) {
-            star_coords[c  ]=(int)(randomize(WIDTH , center_x));
-            star_coords[c+1]=(int)(randomize(HEIGHT, center_y));
+            star_coords[c  ]=(int)(DemoMath.randomize(WIDTH , center_x));
+            star_coords[c+1]=(int)(DemoMath.randomize(HEIGHT, center_y));
 
             // The speed is also used as the grayscale color.
-            star_speeds[s  ]=(int)(randomize(1, 0)*65536);
+            star_speeds[s  ]=(int)(DemoMath.randomize(1, 0)*65536);
             star_speeds[s+1]=star_speeds[s];
             star_speeds[s+2]=star_speeds[s];
             star_speeds[s+3]=(int)(1.0f*65536);

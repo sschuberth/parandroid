@@ -37,7 +37,7 @@ public class IntroBlink extends EffectManager {
 
             // Fade the colors.
             for (int i=3; i<colors.length; i+=4) {
-                colors[i]=(int)((1.0f-FloatMath.cos(PI*s*i))/2.0f*65536);
+                colors[i]=(int)((1.0f-FloatMath.cos(DemoMath.PI*s*i))/2.0f*65536);
             }
 
             // Set OpenGL states that differ from the concurrently running fading part.

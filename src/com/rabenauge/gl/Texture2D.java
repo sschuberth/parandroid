@@ -1,6 +1,7 @@
 package com.rabenauge.gl;
 
 import android.graphics.Bitmap;
+import com.rabenauge.demo.DemoMath;
 import javax.microedition.khronos.opengles.GL11;
 
 /*
@@ -13,7 +14,7 @@ public class Texture2D extends Texture {
 
     public void setData(Bitmap bitmap, int level, boolean border) {
         int w=bitmap.getWidth(), h=bitmap.getHeight();
-        int w2=ceilPOT(w), h2=ceilPOT(h);
+        int w2=DemoMath.ceilPOT(w), h2=DemoMath.ceilPOT(h);
         if (w!=w2 || h!=h2) {
             bitmap=Bitmap.createScaledBitmap(bitmap, w2, h2, true);
         }

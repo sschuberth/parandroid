@@ -8,34 +8,6 @@ import javax.microedition.khronos.opengles.GL11;
 public abstract class Texture extends Bindable {
     protected int target, pname;
 
-    public static boolean isPOT(int x) {
-        return x!=0 && (x&(x-1))==0;
-    }
-
-    public static int floorPOT(int x) {
-        if (isPOT(x) || x==0) {
-            return x;
-        }
-
-        long mask=(long)1<<31;
-        while ((x&mask)==0 && mask>1) {
-            mask>>=1;
-        }
-        return (int)mask;
-    }
-
-    public static int ceilPOT(int x) {
-        if (isPOT(x) || x==0) {
-            return x;
-        }
-
-        long mask=(long)1<<31;
-        while ((x&mask)==0 && mask>1) {
-            mask>>=1;
-        }
-        return (int)mask<<1;
-    }
-
     protected Texture(GL11 gl, int target, int pname) {
         super(gl);
 
