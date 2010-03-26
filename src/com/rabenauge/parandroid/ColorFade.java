@@ -33,6 +33,7 @@ public class ColorFade extends EffectManager {
         this.g=g;
         this.b=b;
 
+        // Schedule the effects in this part.
         add(new Fade(), t);
     }
 }
