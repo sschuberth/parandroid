@@ -90,8 +90,10 @@ public class IntroFade extends EffectManager {
         super(gl);
 
         // Load the title screens.
+        Bitmap bitmap;
+
         title_droid=new Texture2D(gl);
-        Bitmap bitmap=BitmapFactory.decodeResource(activity.getResources(), R.drawable.title_droid);
+        bitmap=BitmapFactory.decodeResource(activity.getResources(), R.drawable.title_droid);
         title_droid.setData(bitmap);
         bitmap.recycle();
 
