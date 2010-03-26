@@ -11,6 +11,7 @@ public class PointSprite extends Texture2D {
     }
 
     public void enable(boolean state) {
+        super.enable(state);
         if (state) {
             gl.glEnable(GL11.GL_POINT_SPRITE_OES);
             gl.glTexEnvx(GL11.GL_POINT_SPRITE_OES, GL11.GL_COORD_REPLACE_OES, 1);
