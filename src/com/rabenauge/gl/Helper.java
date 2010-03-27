@@ -9,21 +9,21 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class Helper {
     // Vertices and texture coordinates for rendering a bitmap in order LR, LL, UL, UR.
-    private static final byte w=1, h=1;
-    private static final ByteBuffer v=ByteBuffer.allocateDirect(8).put(w).put(h).put((byte)0).put(h).put((byte)0).put((byte)0).put(w).put((byte)0);
+    private static final byte WIDTH=1, HEIGHT=1;
+    private static final ByteBuffer VERTICES=ByteBuffer.allocateDirect(8).put(WIDTH).put(HEIGHT).put((byte)0).put(HEIGHT).put((byte)0).put((byte)0).put(WIDTH).put((byte)0);
 
     static {
         // Reset the buffer position before using the buffer!
-        v.position(0);
+        VERTICES.position(0);
     }
 
     public static void drawScreenSpaceQuad(GL10 gl) {
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glPushMatrix();
         gl.glLoadIdentity();
-        GLU.gluOrtho2D(gl, 0, w, h, 0);
+        GLU.gluOrtho2D(gl, 0, WIDTH, HEIGHT, 0);
 
-        gl.glVertexPointer(2, GL10.GL_BYTE, 0, v);
+        gl.glVertexPointer(2, GL10.GL_BYTE, 0, VERTICES);
         gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
 
         gl.glPopMatrix();
@@ -31,7 +31,7 @@ public class Helper {
 
     public static void drawScreenSpaceTexture(Texture2D tex) {
         tex.makeCurrent();
-        tex.gl.glTexCoordPointer(2, GL10.GL_BYTE, 0, v);
+        tex.gl.glTexCoordPointer(2, GL10.GL_BYTE, 0, VERTICES);
 
         drawScreenSpaceQuad(tex.gl);
     }

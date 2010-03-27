@@ -9,7 +9,8 @@ import java.nio.ShortBuffer;
 import javax.microedition.khronos.opengles.GL11;
 
 public class IntroBlink extends EffectManager {
-    private static final short[] joints={
+    private static final int WIDTH=800, HEIGHT=480;
+    private static final short[] JOINTS={
         270, 93,  231,130,  213,130,
         251,298,  269,298,
         185,357,
@@ -20,6 +21,7 @@ public class IntroBlink extends EffectManager {
         530, 45,  548, 64,  548, 83,  548,100,
         555,397,  574,397,  574,378
     };
+
     private int[] colors;
 
     private class BlinkJoints extends Effect {
@@ -43,10 +45,10 @@ public class IntroBlink extends EffectManager {
             gl.glMatrixMode(GL11.GL_PROJECTION);
             gl.glPushMatrix();
             gl.glLoadIdentity();
-            GLU.gluOrtho2D(gl, 0, 800, 480, 0);
+            GLU.gluOrtho2D(gl, 0, WIDTH, HEIGHT, 0);
 
-            gl.glVertexPointer(2, GL11.GL_SHORT, 0, ShortBuffer.wrap(joints));
-            gl.glDrawArrays(GL11.GL_POINTS, 0, joints.length/2);
+            gl.glVertexPointer(2, GL11.GL_SHORT, 0, ShortBuffer.wrap(JOINTS));
+            gl.glDrawArrays(GL11.GL_POINTS, 0, JOINTS.length/2);
 
             // Restore OpenGL states for the fading part.
             gl.glPopMatrix();
@@ -63,7 +65,7 @@ public class IntroBlink extends EffectManager {
     public IntroBlink(Activity activity, GL11 gl) {
         super(gl);
 
-        colors=new int[joints.length/2*4];
+        colors=new int[JOINTS.length/2*4];
         for (int i=0; i<colors.length; i+=4) {
             colors[i  ]=(int)(1.0f*65536);
             colors[i+1]=0;
