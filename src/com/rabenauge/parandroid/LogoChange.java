@@ -167,7 +167,7 @@ public class LogoChange extends EffectManager {
         indices=new short[grid_y][grid_x*2];
         dists=new float[grid_y][grid_x];
 
-        float x0=-0.5f, x1=0.5f;
+        float x0=-0.4f, x1=0.4f;
         float y0=0.35f, y1=-0.15f;
 
         int g=0, t=0;
