@@ -15,7 +15,6 @@ public class StarField extends EffectManager {
 
     private class Flight extends Effect {
         public void onStart(GL11 gl) {
-            gl.glColorPointer(4, GL11.GL_FIXED, 0, IntBuffer.wrap(star_speeds));
             gl.glEnable(GL11.GL_LINE_SMOOTH);
         }
 
@@ -38,6 +37,7 @@ public class StarField extends EffectManager {
             gl.glLoadIdentity();
             GLU.gluOrtho2D(gl, 0, WIDTH/65536.0f, HEIGHT/65536.0f, 0);
 
+            gl.glColorPointer(4, GL11.GL_FIXED, 0, IntBuffer.wrap(star_speeds));
             gl.glVertexPointer(2, GL11.GL_FIXED, 0, IntBuffer.wrap(star_coords));
             gl.glDrawArrays(GL11.GL_LINES, 0, star_coords.length/2);
 

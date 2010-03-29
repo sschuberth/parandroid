@@ -27,6 +27,7 @@ public class Demo extends GLSurfaceView implements Renderer {
     private StarField stars;
     private LogoChange logos;
     private BobsStatic bobs_static;
+    private CopperBars bars;
 
     public Demo(Activity activity) {
         super(activity);
@@ -62,6 +63,8 @@ public class Demo extends GLSurfaceView implements Renderer {
         Log.i(TAG, "GL_EXTENSIONS :\n  " + gl.glGetString(GL10.GL_EXTENSIONS).trim().replace(" ", "\n  "));
 
         int[] params=new int[2];
+        gl.glGetIntegerv(GL10.GL_MAX_LIGHTS, params, 0);
+        Log.i(TAG, "GL_MAX_LIGHTS              : " + String.valueOf(params[0]));
         gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE, params, 0);
         Log.i(TAG, "GL_MAX_TEXTURE_SIZE        : " + String.valueOf(params[0]));
         gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_UNITS, params, 0);
@@ -86,6 +89,7 @@ public class Demo extends GLSurfaceView implements Renderer {
         stars=new StarField(activity, (GL11)gl, 400);
         logos=new LogoChange(activity, (GL11)gl, 40, 20, 8000, 2000);
         bobs_static=new BobsStatic(activity, (GL11)gl);
+        bars=new CopperBars(activity, (GL11)gl);
     }
 
     public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -114,12 +118,13 @@ public class Demo extends GLSurfaceView implements Renderer {
             // Reset the relative time for this part.
             t-=intro_fade.getDuration();
 
-            gl.glClear(GL11.GL_COLOR_BUFFER_BIT);
+            gl.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
 
             // These parts run concurrently and render to the same frame!
             stars.play(t);
             logos.play(t);
             bobs_static.play(t);
+            bars.play(t);
 
             // This must come last as it needs to render on top of all other effects.
             fade_in_white.play(t);
