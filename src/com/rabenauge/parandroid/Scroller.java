@@ -22,18 +22,18 @@ public class Scroller extends EffectManager {
         "interactive mobile Android platform cell phone demo. Presented to you by Tristar and " +
         "Red Sector Incorporated: Twice the Fun - Double the Trouble. And Rabenauge: Beauty lies in " +
         "the Eye of the Raven. " +
-        "/ " +
+        "     " +
         "Twenty Five Years RSI. Twenty Years TRSI. Online until bust. We are the sleeping Gods. " +
         "We salute all, who built the heritage. Values never die. Spotter says: Boogie down " +
         "Brookline. This demo is for my Princessive Princess Press, the Beautiful. Three ´P` high and " +
         "rising. Fly, Boston College Eagle, defy death. Regards to Irata, the Founder and Legend. " +
-        "/ " +
-        "... ... ... " +
-        "/ " +
+        "     " +
+        "Handshakes to Titus: Thx man. And Happy Birtday to TRSI from Rabenauge! " +
+        "     " +
         "Golden Greetings to: " +
         "ACS - ALCATRAZ - ANDROMEDA SOFTWARE DEVELOPMENT - ATE BIT - BAUKNECHT - BITFELLAS - " +
         "BIRDHOUSE PROJECTS - BRAINSTORM - CONSPIRACY - COOCOON - DANISH GOLD - DRIFTERS - " +
-        "EQUINOX - FAIRLIGHT - GENESIS - GNUMPF POSSE - HAUJOBB - HITMEN - HOODLUM - HOTSTUFFERS - " +
+        "EQUINOX - FAIRLIGHT - FTC - GENESIS - GNUMPF POSSE - HAUJOBB - HITMEN - HOODLUM - HOTSTUFFERS - " +
         "KALISTO - K TWO - KEFRENS - NEOSCIENTISTS - PARADISE - PARADOX - POLKA BROTHERS - RGBA - " +
         "REBELS - RAZOR NINETEEN ELEVEN - REMEDY - ROYAL BELGIAN BEER SQUADRON - SCARAB - SCOOPEX - " +
         "SECTION EIGHT - SPACEBALLS - SPECKDRUMM - SPEEDQUEEN - TEK - STILL - THE BLACK LOTUS - " +
@@ -56,8 +56,7 @@ public class Scroller extends EffectManager {
         tex_coords=IntBuffer.allocate(num_coords);
 
         for (int i=0; i<text.length(); ++i) {
-            char aaa=text.charAt(i);
-            int pos=CHARS.indexOf(aaa);
+            int pos=CHARS.indexOf(text.charAt(i));
             if (pos>=0) {
                 pos*=char_width;
 
@@ -106,6 +105,23 @@ public class Scroller extends EffectManager {
             wobbling_line_coords=ShortBuffer.allocate(line_coords.capacity());
         }
 
+        public void onStart(GL11 gl) {
+            float[] params={0, 0, 0, 0.5f};
+            gl.glTexEnvfv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_COLOR, params, 0);
+
+            // Choose to replace RGB with RGB from the environment color.
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_COMBINE_RGB, GL11.GL_REPLACE);
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_SRC0_RGB, GL11.GL_CONSTANT);
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_OPERAND0_RGB, GL11.GL_SRC_COLOR);
+
+            // Choose to replace alpha with a mixture of texture alpha and environment color alpha.
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_COMBINE_ALPHA, GL11.GL_MODULATE);
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_SRC0_ALPHA, GL11.GL_CONSTANT);
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_OPERAND0_ALPHA, GL11.GL_SRC_ALPHA);
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_SRC1_ALPHA, GL11.GL_TEXTURE);
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_OPERAND1_ALPHA, GL11.GL_SRC_ALPHA);
+        }
+
         public void onRender(GL11 gl, long t, long e, float s) {
             // Scroll at a speed of 2 character per second.
             int speed=2;
@@ -136,6 +152,8 @@ public class Scroller extends EffectManager {
             gl.glLoadIdentity();
             GLU.gluOrtho2D(gl, 0, WIDTH, HEIGHT, 0);
 
+            charset.makeCurrent();
+
             gl.glTexCoordPointer(2, GL11.GL_FIXED, 0, sliding_tex_coords.slice());
             gl.glVertexPointer(2, GL11.GL_SHORT, 0, wobbling_line_coords);
 
@@ -145,28 +163,14 @@ public class Scroller extends EffectManager {
             float shadow=12;
             gl.glTranslatef(shadow, shadow, 0);
 
-            float[] params={0, 0, 0, 0.8f};
-            gl.glTexEnvfv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_COLOR, params, 0);
-
             // Choose to use texture combiners.
             gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_COMBINE);
-
-            // Choose to replace RGB with RGB from the environment color.
-            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_COMBINE_RGB, GL11.GL_REPLACE);
-            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_SRC0_RGB, GL11.GL_CONSTANT);
-            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_OPERAND0_RGB, GL11.GL_SRC_COLOR);
-
-            // Choose to replace alpha with a mixture of texture alpha and environment color alpha.
-            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_COMBINE_ALPHA, GL11.GL_MODULATE);
-            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_SRC0_ALPHA, GL11.GL_CONSTANT);
-            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_OPERAND0_ALPHA, GL11.GL_SRC_ALPHA);
-            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_SRC1_ALPHA, GL11.GL_TEXTURE);
-            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_OPERAND1_ALPHA, GL11.GL_SRC_ALPHA);
 
             gl.glDrawArrays(GL11.GL_LINES, 0, line_coords.capacity()/2);
 
             // Restore OpenGL states.
             gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
+
             gl.glPopMatrix();
 
             // Draw the text.
@@ -207,6 +211,6 @@ public class Scroller extends EffectManager {
         line_coords.rewind();
 
         // Schedule the effects in this part.
-        add(new Scroll(), 45*1000);
+        add(new Scroll(), Demo.DURATION_PART_STATIC);
     }
 }
