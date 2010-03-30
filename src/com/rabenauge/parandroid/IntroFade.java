@@ -8,6 +8,9 @@ import com.rabenauge.gl.*;
 import javax.microedition.khronos.opengles.GL11;
 
 public class IntroFade extends EffectManager {
+    public static final long DURATION_EFFECT_DELAY=1000;
+    public static final long DURATION_EFFECT_FADEOUT=500;
+
     private Texture2D title_droid, title_parandroid, title_trsinrab;
 
     // Fade-in the Droid title screen from black.
@@ -117,17 +120,18 @@ public class IntroFade extends EffectManager {
         gl.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
 
         // Schedule the effects in this part.
-        add(new Clear(), 1000);
+        add(new Clear(), DURATION_EFFECT_DELAY);
 
-        add(new FadeBlackToDroid(), 7*1000);
-        add(new ShowTitle(title_droid), 7*1000);
+        long duration=(Demo.DURATION_PART_INTRO-DURATION_EFFECT_DELAY-DURATION_EFFECT_FADEOUT)/6;
+        add(new FadeBlackToDroid(), duration);
+        add(new ShowTitle(title_droid), duration);
 
-        add(new FadeTitle(title_droid, title_trsinrab), 7*1000);
-        add(new ShowTitle(title_trsinrab), 7*1000);
+        add(new FadeTitle(title_droid, title_trsinrab), duration);
+        add(new ShowTitle(title_trsinrab), duration);
 
-        add(new FadeTitle(title_trsinrab, title_parandroid), 7*1000);
-        add(new ShowTitle(title_parandroid), 7*1000);
+        add(new FadeTitle(title_trsinrab, title_parandroid), duration);
+        add(new ShowTitle(title_parandroid), duration);
 
-        add(new FadeParaNdroiDToWhite(), 500);
+        add(new FadeParaNdroiDToWhite(), DURATION_EFFECT_FADEOUT);
     }
 }

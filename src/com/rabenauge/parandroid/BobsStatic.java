@@ -168,6 +168,6 @@ public class BobsStatic extends EffectManager {
         }
 
         // Schedule the effects in this part.
-        add(new Swarm(), 45*1000);
+        add(new Swarm(), Demo.DURATION_PART_STATIC);
     }
 }

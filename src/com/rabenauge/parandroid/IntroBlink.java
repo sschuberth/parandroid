@@ -74,6 +74,6 @@ public class IntroBlink extends EffectManager {
         }
 
         // Schedule the effects in this part.
-        add(new BlinkJoints(), 1000 + 6*7*1000);
+        add(new BlinkJoints(), Demo.DURATION_PART_INTRO-IntroFade.DURATION_EFFECT_FADEOUT);
     }
 }

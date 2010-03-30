@@ -150,6 +150,6 @@ public class CopperBars extends EffectManager {
         calcCylinderColors(CYL_SIDES, colors[2], 143, 115, 99);
 
         // Schedule the effects in this part.
-        add(new UpDown(), 45*1000);
+        add(new UpDown(), Demo.DURATION_PART_STATIC);
     }
 }

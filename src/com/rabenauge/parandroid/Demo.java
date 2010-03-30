@@ -20,9 +20,11 @@ public class Demo extends GLSurfaceView implements Renderer {
     private MediaPlayer mp;
     private Long t_start;
 
+    public static final long DURATION_PART_INTRO=43500;
     private IntroFade intro_fade;
     private IntroBlink intro_blink;
 
+    public static final long DURATION_PART_STATIC=45000;
     private ColorFade fade_in_white;
     private StarField stars;
     private LogoChange logos;
