@@ -76,14 +76,15 @@ public class BobsStatic extends EffectManager {
     private class Swarm extends Effect {
         public void onRender(GL11 gl, long t, long e, float s) {
             // Move the bobs.
-            int i, p=((int)t/10)&(~1);
+            int i, p=((int)t/40)&(~1);
             for (i=0; i<NUM_BOBS; ++i) {
-                int offset=i*8, step=i*10;
+                int offset=i*8, step=i*7;
 
                 // Start moving the bobs one after the other, not all at the same time.
-                float x=quad_coords[offset];
-                calcBobVertex2D(points[(p+step)%points.length], points[(p+step+1)%points.length], TEX_WIDTH*0.5f, TEX_HEIGHT*0.5f, quad_coords, offset);
-                if (x==0) {
+                float px=quad_coords[offset];
+                int cx=((p+step)%NUM_POINTS)*2, cy=cx+1;
+                calcBobVertex2D(points[cx], points[cy], TEX_WIDTH*0.6f, TEX_HEIGHT*0.6f, quad_coords, offset);
+                if (px==0) {
                     break;
                 }
             }

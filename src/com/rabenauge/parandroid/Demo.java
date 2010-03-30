@@ -24,7 +24,7 @@ public class Demo extends GLSurfaceView implements Renderer {
     private IntroFade intro_fade;
     private IntroBlink intro_blink;
 
-    public static final long DURATION_PART_STATIC=45000;
+    public static final long DURATION_PART_STATIC=30000;
     private ColorFade fade_in_white;
     private StarField stars;
     private LogoChange logos;

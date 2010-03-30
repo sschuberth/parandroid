@@ -142,7 +142,7 @@ public class Scroller extends EffectManager {
                 wobbling_line_coords.put(i+1, y0);
 
                 wobbling_line_coords.put(i+2, line_coords.get(i+2));
-                short y1=(short)(line_coords.get(i+3)+FloatMath.sin(angle*1.2f)*amp);
+                short y1=(short)(line_coords.get(i+3)+FloatMath.sin(angle+0.9f)*amp);
                 wobbling_line_coords.put(i+3, y1);
             }
 
