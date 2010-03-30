@@ -30,6 +30,7 @@ public class Demo extends GLSurfaceView implements Renderer {
     private LogoChange logos;
     private BobsStatic bobs_static;
     private CopperBars bars;
+    private Scroller scroller;
 
     public Demo(Activity activity) {
         super(activity);
@@ -92,6 +93,7 @@ public class Demo extends GLSurfaceView implements Renderer {
         logos=new LogoChange(activity, (GL11)gl, 40, 20, 8000, 2000);
         bobs_static=new BobsStatic(activity, (GL11)gl);
         bars=new CopperBars(activity, (GL11)gl);
+        scroller=new Scroller(activity, (GL11)gl);
     }
 
     public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -127,6 +129,7 @@ public class Demo extends GLSurfaceView implements Renderer {
             logos.play(t);
             bobs_static.play(t);
             bars.play(t);
+            scroller.play(t);
 
             // This must come last as it needs to render on top of all other effects.
             fade_in_white.play(t);
