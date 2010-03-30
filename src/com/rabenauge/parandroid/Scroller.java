@@ -145,13 +145,31 @@ public class Scroller extends EffectManager {
             float shadow=12;
             gl.glTranslatef(shadow, shadow, 0);
 
-            gl.glColor4f(0.2f, 0.2f, 0.2f, 0.5f);
+            float[] params={0, 0, 0, 0.8f};
+            gl.glTexEnvfv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_COLOR, params, 0);
+
+            // Choose to use texture combiners.
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_COMBINE);
+
+            // Choose to replace RGB with RGB from the environment color.
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_COMBINE_RGB, GL11.GL_REPLACE);
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_SRC0_RGB, GL11.GL_CONSTANT);
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_OPERAND0_RGB, GL11.GL_SRC_COLOR);
+
+            // Choose to replace alpha with a mixture of texture alpha and environment color alpha.
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_COMBINE_ALPHA, GL11.GL_MODULATE);
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_SRC0_ALPHA, GL11.GL_CONSTANT);
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_OPERAND0_ALPHA, GL11.GL_SRC_ALPHA);
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_SRC1_ALPHA, GL11.GL_TEXTURE);
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_OPERAND1_ALPHA, GL11.GL_SRC_ALPHA);
+
             gl.glDrawArrays(GL11.GL_LINES, 0, line_coords.capacity()/2);
 
+            // Restore OpenGL states.
+            gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
             gl.glPopMatrix();
 
             // Draw the text.
-            gl.glColor4f(1, 1, 1, 1);
             gl.glDrawArrays(GL11.GL_LINES, 0, line_coords.capacity()/2);
 
             // Restore OpenGL states.
