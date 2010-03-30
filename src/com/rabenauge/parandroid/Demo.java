@@ -67,13 +67,19 @@ public class Demo extends GLSurfaceView implements Renderer {
 
         int[] params=new int[2];
         gl.glGetIntegerv(GL10.GL_MAX_LIGHTS, params, 0);
-        Log.i(TAG, "GL_MAX_LIGHTS              : " + String.valueOf(params[0]));
+        Log.i(TAG, "GL_MAX_LIGHTS               : " + String.valueOf(params[0]));
         gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE, params, 0);
-        Log.i(TAG, "GL_MAX_TEXTURE_SIZE        : " + String.valueOf(params[0]));
+        Log.i(TAG, "GL_MAX_TEXTURE_SIZE         : " + String.valueOf(params[0]));
         gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_UNITS, params, 0);
-        Log.i(TAG, "GL_MAX_TEXTURE_UNITS       : " + String.valueOf(params[0]));
+        Log.i(TAG, "GL_MAX_TEXTURE_UNITS        : " + String.valueOf(params[0]));
+        gl.glGetIntegerv(GL10.GL_ALIASED_LINE_WIDTH_RANGE, params, 0);
+        Log.i(TAG, "GL_ALIASED_LINE_WIDTH_RANGE : " + String.valueOf(params[0]) + ", " + String.valueOf(params[1]));
+        gl.glGetIntegerv(GL10.GL_SMOOTH_LINE_WIDTH_RANGE, params, 0);
+        Log.i(TAG, "GL_SMOOTH_LINE_WIDTH_RANGE  : " + String.valueOf(params[0]) + ", " + String.valueOf(params[1]));
+        gl.glGetIntegerv(GL10.GL_ALIASED_POINT_SIZE_RANGE, params, 0);
+        Log.i(TAG, "GL_ALIASED_POINT_SIZE_RANGE : " + String.valueOf(params[0]) + ", " + String.valueOf(params[1]));
         gl.glGetIntegerv(GL10.GL_SMOOTH_POINT_SIZE_RANGE, params, 0);
-        Log.i(TAG, "GL_SMOOTH_POINT_SIZE_RANGE : " + String.valueOf(params[0]) + ", " + String.valueOf(params[1]));
+        Log.i(TAG, "GL_SMOOTH_POINT_SIZE_RANGE  : " + String.valueOf(params[0]) + ", " + String.valueOf(params[1]));
 
         if (gl instanceof GL11) {
             Log.i(TAG, "Implements GL11");
