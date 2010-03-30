@@ -10,7 +10,7 @@ import android.os.PowerManager;
 import android.util.Log;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
-import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.egl.*;
 
 public class Demo extends GLSurfaceView implements Renderer {
     private static final String TAG="ParaNdroiD";
@@ -38,6 +38,19 @@ public class Demo extends GLSurfaceView implements Renderer {
         this.activity=activity;
 
         //setDebugFlags(DEBUG_CHECK_GL_ERROR|DEBUG_LOG_GL_CALLS);
+        setEGLConfigChooser(new EGLConfigChooser() {
+            public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
+                int[] attributes={
+                     EGL10.EGL_DEPTH_SIZE,
+                     16,
+                     EGL10.EGL_NONE
+                };
+                EGLConfig[] configs=new EGLConfig[1];
+                int[] result=new int[1];
+                egl.eglChooseConfig(display, attributes, configs, 1, result);
+                return configs[0];
+           }
+        });
         setRenderer(this);
 
         PowerManager pm=(PowerManager)activity.getSystemService(Context.POWER_SERVICE);
