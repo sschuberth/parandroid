@@ -1,6 +1,5 @@
 package com.rabenauge.parandroid;
 
-import android.app.Activity;
 import com.rabenauge.demo.*;
 import com.rabenauge.gl.*;
 import javax.microedition.khronos.opengles.GL11;
@@ -24,7 +23,7 @@ public class ColorFade extends EffectManager {
         }
     }
 
-    public ColorFade(Activity activity, GL11 gl, long t, boolean in, float r, float g, float b) {
+    public ColorFade(Demo demo, GL11 gl, long t, boolean in, float r, float g, float b) {
         super(gl);
 
         this.in=in;

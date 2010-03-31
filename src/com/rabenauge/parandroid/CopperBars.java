@@ -1,6 +1,5 @@
 package com.rabenauge.parandroid;
 
-import android.app.Activity;
 import android.util.FloatMath;
 import com.rabenauge.demo.*;
 import java.nio.*;
@@ -120,7 +119,7 @@ public class CopperBars extends EffectManager {
         }
     }
 
-    public CopperBars(Activity activity, GL11 gl) {
+    public CopperBars(Demo demo, GL11 gl) {
         super(gl);
 
         // Generate the cylinder geometry.

@@ -1,6 +1,5 @@
 package com.rabenauge.parandroid;
 
-import android.app.Activity;
 import android.opengl.GLU;
 import android.util.FloatMath;
 import com.rabenauge.demo.*;
@@ -62,7 +61,7 @@ public class IntroBlink extends EffectManager {
         }
     }
 
-    public IntroBlink(Activity activity, GL11 gl) {
+    public IntroBlink(Demo demo, GL11 gl) {
         super(gl);
 
         colors=new int[JOINTS.length/2*4];

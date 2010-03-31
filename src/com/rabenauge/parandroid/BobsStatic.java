@@ -1,6 +1,5 @@
 package com.rabenauge.parandroid;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLU;
@@ -107,13 +106,13 @@ public class BobsStatic extends EffectManager {
         }
     }
 
-    public BobsStatic(Activity activity, GL11 gl) {
+    public BobsStatic(Demo demo, GL11 gl) {
         super(gl);
 
         // Load the bob textures.
         Bitmap bitmap;
 
-        bitmap=BitmapFactory.decodeResource(activity.getResources(), R.drawable.bobs_static);
+        bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.bobs_static);
         bobs=new Texture2D(gl);
         bobs.setData(bitmap);
         bitmap.recycle();

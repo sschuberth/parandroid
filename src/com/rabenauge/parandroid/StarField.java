@@ -1,6 +1,5 @@
 package com.rabenauge.parandroid;
 
-import android.app.Activity;
 import android.opengl.GLU;
 import com.rabenauge.demo.*;
 import java.nio.IntBuffer;
@@ -65,7 +64,7 @@ public class StarField extends EffectManager {
         }
     }
 
-    public StarField(Activity activity, GL11 gl, int count) {
+    public StarField(Demo demo, GL11 gl, int count) {
         super(gl);
 
         center_x=WIDTH/2;

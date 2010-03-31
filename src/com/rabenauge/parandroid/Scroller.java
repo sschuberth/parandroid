@@ -1,6 +1,5 @@
 package com.rabenauge.parandroid;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLU;
@@ -182,13 +181,13 @@ public class Scroller extends EffectManager {
         }
     }
 
-    public Scroller(Activity activity, GL11 gl) {
+    public Scroller(Demo demo, GL11 gl) {
         super(gl);
 
         // Load the character set.
         Bitmap bitmap;
 
-        bitmap=BitmapFactory.decodeResource(activity.getResources(), R.drawable.charset);
+        bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.charset);
         charset=new Texture2D(gl);
         charset.setData(bitmap);
         bitmap.recycle();

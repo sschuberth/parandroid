@@ -2,12 +2,14 @@ package com.rabenauge.parandroid;
 
 import android.app.Activity;
 import android.content.Context;
+import android.hardware.*;
 import android.media.MediaPlayer;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
 import android.os.PowerManager;
 import android.util.Log;
+import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.egl.*;
@@ -16,8 +18,11 @@ public class Demo extends GLSurfaceView implements Renderer {
     private static final String TAG="ParaNdroiD";
 
     private Activity activity;
+
     private PowerManager.WakeLock wl;
+    private SensorManager sm;
     private MediaPlayer mp;
+
     private Long t_start;
 
     public static final long DURATION_PART_INTRO=43500;
@@ -62,6 +67,8 @@ public class Demo extends GLSurfaceView implements Renderer {
         );
         wl.acquire();
 
+        sm=(SensorManager)activity.getSystemService(Context.SENSOR_SERVICE);
+
         mp=MediaPlayer.create(activity, R.raw.track);
     }
 
@@ -104,15 +111,29 @@ public class Demo extends GLSurfaceView implements Renderer {
             activity.finish();
         }
 
-        intro_fade=new IntroFade(activity, (GL11)gl);
-        intro_blink=new IntroBlink(activity, (GL11)gl);
+        // Get some sensor information.
+        List<Sensor> sensors=sm.getSensorList(Sensor.TYPE_ALL);
+        for (Sensor sensor:sensors) {
+            Log.i(TAG, "Sensor: " + sensor.getName() + ", " + sensor.getVendor());
+        }
 
-        fade_in_white=new ColorFade(activity, (GL11)gl, 1000, true, 1, 1, 1);
-        stars=new StarField(activity, (GL11)gl, 400);
-        logos=new LogoChange(activity, (GL11)gl, 40, 20, 8000, 2000);
-        bobs_static=new BobsStatic(activity, (GL11)gl);
-        bars=new CopperBars(activity, (GL11)gl);
-        scroller=new Scroller(activity, (GL11)gl);
+        intro_fade=new IntroFade(this, (GL11)gl);
+        intro_blink=new IntroBlink(this, (GL11)gl);
+
+        fade_in_white=new ColorFade(this, (GL11)gl, 1000, true, 1, 1, 1);
+        stars=new StarField(this, (GL11)gl, 400);
+        logos=new LogoChange(this, (GL11)gl, 40, 20, 8000, 2000);
+        bobs_static=new BobsStatic(this, (GL11)gl);
+        bars=new CopperBars(this, (GL11)gl);
+        scroller=new Scroller(this, (GL11)gl);
+    }
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public SensorManager getSensorManager() {
+        return sm;
     }
 
     public void onSurfaceChanged(GL10 gl, int width, int height) {

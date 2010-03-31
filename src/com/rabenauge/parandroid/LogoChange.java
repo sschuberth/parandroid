@@ -1,6 +1,5 @@
 package com.rabenauge.parandroid;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.FloatMath;
@@ -134,7 +133,7 @@ public class LogoChange extends EffectManager {
         }
     }
 
-    public LogoChange(Activity activity, GL11 gl, int grid_x, int grid_y, long serene_duration, long ripple_duration) {
+    public LogoChange(Demo demo, GL11 gl, int grid_x, int grid_y, long serene_duration, long ripple_duration) {
         super(gl);
 
         this.grid_x=grid_x;
@@ -150,13 +149,13 @@ public class LogoChange extends EffectManager {
         Bitmap bitmap;
 
         gl.glActiveTexture(GL11.GL_TEXTURE1);
-        bitmap=BitmapFactory.decodeResource(activity.getResources(), R.drawable.logo_rab);
+        bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.logo_rab);
         logo_rab=new Texture2D(gl);
         logo_rab.setData(bitmap);
         bitmap.recycle();
 
         gl.glActiveTexture(GL11.GL_TEXTURE0);
-        bitmap=BitmapFactory.decodeResource(activity.getResources(), R.drawable.logo_trsi);
+        bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.logo_trsi);
         logo_trsi=new Texture2D(gl);
         logo_trsi.setData(bitmap);
         bitmap.recycle();

@@ -1,6 +1,5 @@
 package com.rabenauge.parandroid;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import com.rabenauge.demo.*;
@@ -89,24 +88,24 @@ public class IntroFade extends EffectManager {
         }
     }
 
-    public IntroFade(Activity activity, GL11 gl) {
+    public IntroFade(Demo demo, GL11 gl) {
         super(gl);
 
         // Load the title screens.
         Bitmap bitmap;
 
         title_droid=new Texture2D(gl);
-        bitmap=BitmapFactory.decodeResource(activity.getResources(), R.drawable.title_droid);
+        bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.title_droid);
         title_droid.setData(bitmap);
         bitmap.recycle();
 
         title_parandroid=new Texture2D(gl);
-        bitmap=BitmapFactory.decodeResource(activity.getResources(), R.drawable.title_parandroid);
+        bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.title_parandroid);
         title_parandroid.setData(bitmap);
         bitmap.recycle();
 
         title_trsinrab=new Texture2D(gl);
-        bitmap=BitmapFactory.decodeResource(activity.getResources(), R.drawable.title_trsinrab);
+        bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.title_trsinrab);
         title_trsinrab.setData(bitmap);
         bitmap.recycle();
 
