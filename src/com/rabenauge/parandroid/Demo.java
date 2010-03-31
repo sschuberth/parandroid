@@ -15,7 +15,7 @@ import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.egl.*;
 
 public class Demo extends GLSurfaceView implements Renderer {
-    private static final String TAG="ParaNdroiD";
+    public static final String NAME="ParaNdroiD";
 
     private Activity activity;
 
@@ -63,7 +63,7 @@ public class Demo extends GLSurfaceView implements Renderer {
             PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
             PowerManager.ACQUIRE_CAUSES_WAKEUP   |
             PowerManager.ON_AFTER_RELEASE        ,
-            TAG
+            NAME
         );
         wl.acquire();
 
@@ -80,41 +80,41 @@ public class Demo extends GLSurfaceView implements Renderer {
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         // Get some OpenGL information.
-        Log.i(TAG, "GL_VENDOR     : "    + gl.glGetString(GL10.GL_VENDOR));
-        Log.i(TAG, "GL_RENDERER   : "    + gl.glGetString(GL10.GL_RENDERER));
-        Log.i(TAG, "GL_VERSION    : "    + gl.glGetString(GL10.GL_VERSION));
-        Log.i(TAG, "GL_EXTENSIONS :\n  " + gl.glGetString(GL10.GL_EXTENSIONS).trim().replace(" ", "\n  "));
+        Log.i(NAME, "GL_VENDOR     : "    + gl.glGetString(GL10.GL_VENDOR));
+        Log.i(NAME, "GL_RENDERER   : "    + gl.glGetString(GL10.GL_RENDERER));
+        Log.i(NAME, "GL_VERSION    : "    + gl.glGetString(GL10.GL_VERSION));
+        Log.i(NAME, "GL_EXTENSIONS :\n  " + gl.glGetString(GL10.GL_EXTENSIONS).trim().replace(" ", "\n  "));
 
         int[] params=new int[2];
         gl.glGetIntegerv(GL10.GL_MAX_LIGHTS, params, 0);
-        Log.i(TAG, "GL_MAX_LIGHTS               : " + String.valueOf(params[0]));
+        Log.i(NAME, "GL_MAX_LIGHTS               : " + String.valueOf(params[0]));
         gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE, params, 0);
-        Log.i(TAG, "GL_MAX_TEXTURE_SIZE         : " + String.valueOf(params[0]));
+        Log.i(NAME, "GL_MAX_TEXTURE_SIZE         : " + String.valueOf(params[0]));
         gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_UNITS, params, 0);
-        Log.i(TAG, "GL_MAX_TEXTURE_UNITS        : " + String.valueOf(params[0]));
+        Log.i(NAME, "GL_MAX_TEXTURE_UNITS        : " + String.valueOf(params[0]));
         gl.glGetIntegerv(GL10.GL_ALIASED_LINE_WIDTH_RANGE, params, 0);
-        Log.i(TAG, "GL_ALIASED_LINE_WIDTH_RANGE : " + String.valueOf(params[0]) + ", " + String.valueOf(params[1]));
+        Log.i(NAME, "GL_ALIASED_LINE_WIDTH_RANGE : " + String.valueOf(params[0]) + ", " + String.valueOf(params[1]));
         gl.glGetIntegerv(GL10.GL_SMOOTH_LINE_WIDTH_RANGE, params, 0);
-        Log.i(TAG, "GL_SMOOTH_LINE_WIDTH_RANGE  : " + String.valueOf(params[0]) + ", " + String.valueOf(params[1]));
+        Log.i(NAME, "GL_SMOOTH_LINE_WIDTH_RANGE  : " + String.valueOf(params[0]) + ", " + String.valueOf(params[1]));
         gl.glGetIntegerv(GL10.GL_ALIASED_POINT_SIZE_RANGE, params, 0);
-        Log.i(TAG, "GL_ALIASED_POINT_SIZE_RANGE : " + String.valueOf(params[0]) + ", " + String.valueOf(params[1]));
+        Log.i(NAME, "GL_ALIASED_POINT_SIZE_RANGE : " + String.valueOf(params[0]) + ", " + String.valueOf(params[1]));
         gl.glGetIntegerv(GL10.GL_SMOOTH_POINT_SIZE_RANGE, params, 0);
-        Log.i(TAG, "GL_SMOOTH_POINT_SIZE_RANGE  : " + String.valueOf(params[0]) + ", " + String.valueOf(params[1]));
+        Log.i(NAME, "GL_SMOOTH_POINT_SIZE_RANGE  : " + String.valueOf(params[0]) + ", " + String.valueOf(params[1]));
 
         if (gl instanceof GL11) {
-            Log.i(TAG, "Implements GL11");
+            Log.i(NAME, "Implements GL11");
         }
         else {
-            Log.i(TAG, "Implements GL10");
+            Log.i(NAME, "Implements GL10");
 
-            Log.e(TAG, "No GL11 available");
+            Log.e(NAME, "No GL11 available");
             activity.finish();
         }
 
         // Get some sensor information.
         List<Sensor> sensors=sm.getSensorList(Sensor.TYPE_ALL);
         for (Sensor sensor:sensors) {
-            Log.i(TAG, "Sensor: " + sensor.getName() + ", " + sensor.getVendor());
+            Log.i(NAME, "Sensor: " + sensor.getName() + ", " + sensor.getVendor());
         }
 
         intro_fade=new IntroFade(this, (GL11)gl);

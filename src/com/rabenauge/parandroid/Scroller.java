@@ -36,7 +36,8 @@ public class Scroller extends EffectManager {
         "KALISTO - K TWO - KEFRENS - NEOSCIENTISTS - PARADISE - PARADOX - POLKA BROTHERS - RGBA - " +
         "REBELS - RAZOR NINETEEN ELEVEN - REMEDY - ROYAL BELGIAN BEER SQUADRON - SCARAB - SCOOPEX - " +
         "SECTION EIGHT - SPACEBALLS - SPECKDRUMM - SPEEDQUEEN - TEK - STILL - THE BLACK LOTUS - " +
-        "THE LIGHTFORCE - THE SILENTS - TITAN - THE PLANET OF LEATHER MOOMINS - UK ALLSTARS";
+        "THE LIGHTFORCE - THE SILENTS - TITAN - THE PLANET OF LEATHER MOOMINS - UK ALLSTARS" +
+        " --- ";
 
     private Texture2D charset;
     private IntBuffer tex_coords;
@@ -97,11 +98,26 @@ public class Scroller extends EffectManager {
         private IntBuffer sliding_tex_coords;
         private ShortBuffer wobbling_line_coords;
 
+        private float speed;
+
         public Scroll() {
-            sliding_tex_coords=tex_coords.duplicate();
+            sliding_tex_coords=IntBuffer.allocate(tex_coords.capacity()+WIDTH*2*2);
             sliding_tex_coords.put(tex_coords);
+            tex_coords.rewind();
+            for (int i=0; i<WIDTH*2*2; ++i) {
+                sliding_tex_coords.put(tex_coords.get(i));
+            }
+            // No need to rewind sliding_tex_coords.
 
             wobbling_line_coords=ShortBuffer.allocate(line_coords.capacity());
+
+            // By default, scroll at a speed of 2 character per second.
+            speed=2.0f;
+            int t=Math.round(TEXT.length()/speed);
+            android.util.Log.i(Demo.NAME,
+                "Scrolling will take " + String.valueOf(t/60) + ":" + String.valueOf(t%60) + "m (" + String.valueOf(t)+"s) for " +
+                String.valueOf(TEXT.length()) + " chars at " + String.valueOf(speed) + " chars per second"
+            );
         }
 
         public void onStart(GL11 gl) {
@@ -122,10 +138,11 @@ public class Scroller extends EffectManager {
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
-            // Scroll at a speed of 2 character per second.
-            int speed=2;
-            int pos=(int)t*speed*CHAR_SIZE/1000*4;
-            if (pos>=tex_coords.capacity()) {
+            int pos=(int)((float)t/1000*CHAR_SIZE*speed)*2*2;
+            while (pos<0) {
+                pos+=tex_coords.capacity();
+            }
+            while (pos>=tex_coords.capacity()) {
                 pos-=tex_coords.capacity();
             }
             sliding_tex_coords.position(pos);
