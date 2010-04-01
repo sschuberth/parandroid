@@ -7,7 +7,7 @@ import javax.microedition.khronos.opengles.GL11;
 
 public class CopperBars extends EffectManager {
     private static final float CYL_RADIUS=0.08f;
-    private static final float CYL_LENGTH=4.2f;
+    private static final float CYL_LENGTH=5.0f;
     private static final int CYL_SIDES=20;
 
     private IntBuffer coords, normals;
