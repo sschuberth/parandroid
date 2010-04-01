@@ -36,6 +36,7 @@ public class Demo extends GLSurfaceView implements Renderer {
     private BobsStatic bobs_static;
     private CopperBars bars;
     private Scroller scroller;
+    private RorschachFade fade_in_rorschach, fade_out_rorschach;
 
     public Demo(Activity activity) {
         super(activity);
@@ -128,12 +129,14 @@ public class Demo extends GLSurfaceView implements Renderer {
         intro_fade=new IntroFade(this, (GL11)gl);
         intro_blink=new IntroBlink(this, (GL11)gl);
 
-        fade_in_white=new ColorFade(this, (GL11)gl, 1000, true, 1, 1, 1);
+        fade_in_white=new ColorFade(this, (GL11)gl, 2*1000, true, 1, 1, 1);
         stars=new StarField(this, (GL11)gl, 400);
         logos=new LogoChange(this, (GL11)gl, 40, 20, 8000, 2000);
         bobs_static=new BobsStatic(this, (GL11)gl);
         bars=new CopperBars(this, (GL11)gl);
         scroller=new Scroller(this, (GL11)gl);
+        fade_in_rorschach=new RorschachFade(this, (GL11)gl, 2*1000, true);
+        fade_out_rorschach=new RorschachFade(this, (GL11)gl, 6*1000, false);
     }
 
     public Activity getActivity() {
@@ -162,6 +165,9 @@ public class Demo extends GLSurfaceView implements Renderer {
 
         long t=android.os.SystemClock.uptimeMillis()-t_start;
 
+        // DEBUG: Uncomment to skip the intro part.
+        //t+=intro_fade.getDuration();
+
         // These parts run concurrently and render to the same frame!
         if (intro_fade.play(t)) {
             intro_blink.play(t);
@@ -173,14 +179,22 @@ public class Demo extends GLSurfaceView implements Renderer {
             gl.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
 
             // These parts run concurrently and render to the same frame!
-            stars.play(t);
-            logos.play(t);
-            bobs_static.play(t);
-            bars.play(t);
-            scroller.play(t);
+            if (stars.play(t)) {
+                logos.play(t);
+                bobs_static.play(t);
+                bars.play(t);
+                scroller.play(t);
 
-            // This must come last as it needs to render on top of all other effects.
-            fade_in_white.play(t);
+                // These must come last as they need to render on top of all other effects.
+                fade_in_white.play(t);
+                fade_in_rorschach.play(t);
+            }
+            else {
+                // Reset the relative time for this part.
+                t-=stars.getDuration();
+
+                fade_out_rorschach.play(t);
+            }
         }
     }
 }
