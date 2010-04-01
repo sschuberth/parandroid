@@ -23,43 +23,10 @@ public class IntroFade extends EffectManager {
             gl.glColor4f(1, 1, 1, s);
             Helper.drawScreenSpaceTexture(title_droid);
         }
-    }
 
-    // Keep showing the given texture.
-    private class ShowTexture extends Effect {
-        private Texture2D title;
-
-        public ShowTexture(Texture2D title) {
-            this.title=title;
-        }
-
-        public void onStart(GL11 gl) {
+        public void onStop(GL11 gl) {
+            // Just in case onRender() was not called with exactly s=1.
             gl.glColor4f(1, 1, 1, 1);
-        }
-
-        public void onRender(GL11 gl, long t, long e, float s) {
-            Helper.drawScreenSpaceTexture(title);
-        }
-    }
-
-    // Fade from one texture to another texture.
-    private class FadeTexture extends Effect {
-        private Texture2D from, to;
-
-        public FadeTexture(Texture2D from, Texture2D to) {
-            this.from=from;
-            this.to=to;
-        }
-
-        public void onRender(GL11 gl, long t, long e, float s) {
-            gl.glColor4f(1, 1, 1, 1);
-            Helper.drawScreenSpaceTexture(from);
-
-            // A simple linear fade-in looks unnatural.
-            s*=s;
-
-            gl.glColor4f(1, 1, 1, s);
-            Helper.drawScreenSpaceTexture(to);
         }
     }
 
@@ -80,10 +47,12 @@ public class IntroFade extends EffectManager {
         }
 
         public void onStop(GL11 gl) {
+            // Just in case onRender() was not called with exactly s=1.
+            gl.glColor4f(1, 1, 1, 1);
+
             // Make sure the screen is finally full white
             // in case onRender() was not called with s=1.0.
             gl.glClear(GL11.GL_COLOR_BUFFER_BIT);
-
             gl.glClearColor(0, 0, 0, 0);
         }
     }
@@ -123,13 +92,13 @@ public class IntroFade extends EffectManager {
 
         long duration=(Demo.DURATION_PART_INTRO-DURATION_EFFECT_DELAY-DURATION_EFFECT_FADEOUT)/6;
         add(new FadeBlackToDroid(), duration);
-        add(new ShowTexture(title_droid), duration);
+        add(new EffectManager.TextureShow(title_droid), duration);
 
-        add(new FadeTexture(title_droid, title_trsinrab), duration);
-        add(new ShowTexture(title_trsinrab), duration);
+        add(new EffectManager.TextureTransition(title_droid, title_trsinrab), duration);
+        add(new EffectManager.TextureShow(title_trsinrab), duration);
 
-        add(new FadeTexture(title_trsinrab, title_parandroid), duration);
-        add(new ShowTexture(title_parandroid), duration);
+        add(new EffectManager.TextureTransition(title_trsinrab, title_parandroid), duration);
+        add(new EffectManager.TextureShow(title_parandroid), duration);
 
         add(new FadeParaNdroiDToWhite(), DURATION_EFFECT_FADEOUT);
     }

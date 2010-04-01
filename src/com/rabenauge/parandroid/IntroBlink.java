@@ -61,6 +61,9 @@ public class IntroBlink extends EffectManager {
 
             gl.glDisableClientState(GL11.GL_COLOR_ARRAY);
             gl.glEnable(GL11.GL_TEXTURE_2D);
+
+            // Yes, using color arrays seems to modify the color state!
+            gl.glColor4f(1, 1, 1, 1);
         }
 
         public void onStop(GL11 gl) {

@@ -1,5 +1,7 @@
 package com.rabenauge.demo;
 
+import com.rabenauge.gl.Helper;
+import com.rabenauge.gl.Texture2D;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import javax.microedition.khronos.opengles.GL11;
@@ -23,6 +25,70 @@ public class EffectManager {
     public class Wait extends Effect {
         public void onRender(GL11 gl, long t, long e, float s) {
             // Do nothing.
+        }
+    }
+
+    /*
+     * An effect to fade the current screen contents from / to a given texture.
+     */
+    public class TextureFade extends Effect {
+        private Texture2D texture;
+        private boolean in;
+
+        public TextureFade(Texture2D texture, boolean in) {
+            this.texture=texture;
+            this.in=in;
+        }
+
+        public void onRender(GL11 gl, long t, long e, float s) {
+            float a=in?s:1-s;
+            gl.glColor4f(1, 1, 1, a);
+            Helper.drawScreenSpaceTexture(texture);
+
+            // We need to restore this immediately for other concurrently running effects.
+            gl.glColor4f(1, 1, 1, 1);
+        }
+    }
+
+    /*
+     * An effect to fade from one texture to another texture.
+     */
+    public class TextureTransition extends Effect {
+        private Texture2D from, to;
+
+        public TextureTransition(Texture2D from, Texture2D to) {
+            this.from=from;
+            this.to=to;
+        }
+
+        public void onRender(GL11 gl, long t, long e, float s) {
+            Helper.drawScreenSpaceTexture(from);
+
+            // A simple linear fade-in looks unnatural.
+            s*=s;
+
+            gl.glColor4f(1, 1, 1, s);
+            Helper.drawScreenSpaceTexture(to);
+        }
+
+        public void onStop(GL11 gl) {
+            // Just in case onRender() was not called with exactly s=1.
+            gl.glColor4f(1, 1, 1, 1);
+        }
+    }
+
+    /*
+     * An effect to keep showing the given texture.
+     */
+    public class TextureShow extends Effect {
+        private Texture2D title;
+
+        public TextureShow(Texture2D title) {
+            this.title=title;
+        }
+
+        public void onRender(GL11 gl, long t, long e, float s) {
+            Helper.drawScreenSpaceTexture(title);
         }
     }
 
