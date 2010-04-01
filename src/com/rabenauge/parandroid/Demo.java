@@ -7,7 +7,6 @@ import android.media.MediaPlayer;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
-import android.os.PowerManager;
 import android.util.Log;
 import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
@@ -19,7 +18,6 @@ public class Demo extends GLSurfaceView implements Renderer {
 
     private Activity activity;
 
-    private PowerManager.WakeLock wl;
     private SensorManager sm;
     private MediaPlayer mp;
 
@@ -64,15 +62,6 @@ public class Demo extends GLSurfaceView implements Renderer {
         });
         setRenderer(this);
 
-        PowerManager pm=(PowerManager)activity.getSystemService(Context.POWER_SERVICE);
-        wl=pm.newWakeLock(
-            PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
-            PowerManager.ACQUIRE_CAUSES_WAKEUP   |
-            PowerManager.ON_AFTER_RELEASE        ,
-            NAME
-        );
-        wl.acquire();
-
         sm=(SensorManager)activity.getSystemService(Context.SENSOR_SERVICE);
 
         mp=MediaPlayer.create(activity, R.raw.track);
@@ -81,7 +70,6 @@ public class Demo extends GLSurfaceView implements Renderer {
     protected void finalize() throws Throwable {
         super.finalize();
         mp.release();
-        wl.release();
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
