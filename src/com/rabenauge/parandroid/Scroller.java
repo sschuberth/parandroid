@@ -17,6 +17,7 @@ public class Scroller extends EffectManager {
 
     private static final String CHARS="abcdefghijklmnopqrstuvwxyz.:-,`´!»«+";
     private static final String TEXT=
+        "               " +
         "Another firstie for the pleasure of Breakpoint Nation: Para´N`droiD. The initial fully " +
         "interactive mobile Android platform cell phone demo. Presented to you by Tristar and " +
         "Red Sector Incorporated: Twice the Fun - Double the Trouble. And Rabenauge: Beauty lies in " +
