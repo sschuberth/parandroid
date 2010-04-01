@@ -227,6 +227,6 @@ public class Scroller extends EffectManager {
         line_coords.rewind();
 
         // Schedule the effects in this part.
-        add(new Scroll(), Demo.DURATION_PART_STATIC);
+        add(new Scroll(), Demo.DURATION_MAIN_EFFECTS);
     }
 }

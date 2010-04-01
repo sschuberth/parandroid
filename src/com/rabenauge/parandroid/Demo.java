@@ -29,13 +29,18 @@ public class Demo extends GLSurfaceView implements Renderer {
     private IntroFade intro_fade;
     private IntroBlink intro_blink;
 
-    public static final long DURATION_PART_STATIC=30000;
+    public static final long DURATION_PART_OUTRO=43500;
+
+    // The song has a duration of 5:28m (328s).
+    public static final long DURATION_MAIN_EFFECTS=328*1000-DURATION_PART_INTRO-DURATION_PART_OUTRO;
     private ColorFade fade_in_white;
     private StarField stars;
     private LogoChange logos;
     private BobsStatic bobs_static;
     private CopperBars bars;
     private Scroller scroller;
+
+    public static final long DURATION_PART_STATIC=30000;
     private RorschachFade fade_in_rorschach, fade_out_rorschach;
 
     public Demo(Activity activity) {
@@ -179,20 +184,20 @@ public class Demo extends GLSurfaceView implements Renderer {
             gl.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
 
             // These parts run concurrently and render to the same frame!
-            if (stars.play(t)) {
-                logos.play(t);
-                bobs_static.play(t);
-                bars.play(t);
-                scroller.play(t);
+            stars.play(t);
+            logos.play(t);
+            bobs_static.play(t);
+            bars.play(t);
+            scroller.play(t);
+
+            // These must come last as they need to render on top of all other effects.
+            fade_in_white.play(t);
+
+            if (!fade_in_rorschach.play(t)) {
+                // Reset the relative time for this part.
+                t-=fade_in_rorschach.getDuration();
 
                 // These must come last as they need to render on top of all other effects.
-                fade_in_white.play(t);
-                fade_in_rorschach.play(t);
-            }
-            else {
-                // Reset the relative time for this part.
-                t-=stars.getDuration();
-
                 fade_out_rorschach.play(t);
             }
         }

@@ -92,6 +92,6 @@ public class StarField extends EffectManager {
         }
 
         // Schedule the effects in this part.
-        add(new Flight(), Demo.DURATION_PART_STATIC);
+        add(new Flight(), Demo.DURATION_MAIN_EFFECTS);
     }
 }

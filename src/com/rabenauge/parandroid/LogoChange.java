@@ -198,6 +198,6 @@ public class LogoChange extends EffectManager {
         }
 
         // Schedule the effects in this part.
-        add(new Change(), Demo.DURATION_PART_STATIC);
+        add(new Change(), Demo.DURATION_MAIN_EFFECTS);
     }
 }
