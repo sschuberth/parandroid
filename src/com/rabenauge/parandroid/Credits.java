@@ -2,6 +2,7 @@ package com.rabenauge.parandroid;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.FloatMath;
 
 import com.rabenauge.demo.*;
 import com.rabenauge.gl.*;
@@ -15,23 +16,6 @@ public class Credits extends EffectManager {
     private Texture2D[] textures;
 
     private class Cubes extends Effect {
-        private long WAIT=5000;
-        private long startTime;
-        private int effectState=0;
-
-        public void onStart(GL11 gl) {
-            cubeVertexBfr = new FloatBuffer[6];
-            for (int i = 0; i < 6; i++)
-            {
-                cubeVertexBfr[i] = FloatBuffer.wrap(cubeVertexCoords[i]);
-            }
-
-            gl.glEnable(GL10.GL_CULL_FACE);
-            gl.glEnable(GL10.GL_DEPTH_TEST);
-
-            startTime=System.currentTimeMillis();
-        }
-
         private final static int MAX_X=5;
         private final static int MAX_Y=3;
 
@@ -74,20 +58,36 @@ public class Credits extends EffectManager {
             },
         };
 
-        private  float[] cubeTextureCoords = new float[8];
-        private  FloatBuffer[] cubeVertexBfr;
+        private float[] cubeTextureCoords = new float[8];
+        private FloatBuffer[] cubeVertexBfr;
 
-        private  float cubeRotX;
-        private  float cubeRotY;
-        private  float cubeRotZ;
+        private float cubeRotX;
+        private float cubeRotY;
+        private float cubeRotZ;
+
+        private float cubeRotXStart=0;
 
         private float ypos;
         private float xpos;
 
+        public void onStart(GL11 gl) {
+            cubeVertexBfr = new FloatBuffer[6];
+            for (int i = 0; i < 6; i++)
+            {
+                cubeVertexBfr[i] = FloatBuffer.wrap(cubeVertexCoords[i]);
+            }
+
+            gl.glMatrixMode(GL10.GL_MODELVIEW);
+
+            gl.glEnable(GL10.GL_CULL_FACE);
+            gl.glEnable(GL10.GL_DEPTH_TEST);
+        }
+
         @Override
         public void onRender(GL11 gl, long t, long e, float s) {
+            cubeRotX=cubeRotXStart+s*90;
+
             gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
 
             xpos=-6f;
@@ -102,14 +102,13 @@ public class Credits extends EffectManager {
                     gl.glLoadIdentity();
                     ypos+=2f;
 
-                    setCubeSpace(gl,x, y);
-                    //gl.glTranslatef(xpos, ypos, -8);
+                    float f=1-FloatMath.cos(s*2*DemoMath.PI);
+                    gl.glTranslatef(xpos+(x-MAX_X/2)*f*2, ypos+(y-MAX_Y/2)*f*2, -8);
+
                     gl.glRotatef(cubeRotX, 1, 0, 0);
                     gl.glRotatef(cubeRotY, 0, 1, 0);
                     gl.glRotatef(cubeRotZ, 0, 0, 1);
 
-                    gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-                    gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
                     for (int i = 0; i < 6; i++) // draw each face
                     {
                         switch (i)
@@ -126,79 +125,17 @@ public class Credits extends EffectManager {
                         gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, FloatBuffer.wrap(cubeTextureCoords));
                         gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
                     }
-
-                    gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-                    gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-                }
-            }
-
-            if(System.currentTimeMillis()-startTime>WAIT&&effectState==0)
-            {
-                effectState=1;
-            }
-
-            if(effectState==1)
-            {
-                cubeRotX += 1.0f;
-                if(cubeRotX%90==0)
-                {
-                    effectState=3;
-                    startTime=System.currentTimeMillis();
                 }
             }
         }
 
-        float xspace=0;
-        float yspace=0;
+        public void onStop(GL11 gl) {
+            gl.glLoadIdentity();
 
-        private void setCubeSpace(GL11 gl,int x, int y) {
-            float xpos2=0;
-            float ypos2=0;
+            gl.glDisable(GL10.GL_DEPTH_TEST);
+            gl.glDisable(GL10.GL_CULL_FACE);
 
-            if(effectState==0)
-            {
-                xspace=0;
-                yspace=0;
-            }
-            if(effectState==1)
-            {
-                xspace-=0.001f;
-                yspace-=0.0015f;
-                //if(xspace<=-0.8f)  // x space
-                //  effectState=2;
-            }
-            if(effectState==3)
-            {
-                xspace+=0.001f;
-                yspace+=0.0015f;
-                if(xspace>=0.0f)
-                    effectState=0;
-            }
-
-            switch(x)
-            {
-                case 0: xpos2=xpos+(xspace*2); break;
-                case 1: xpos2=xpos+xspace; break;
-                case 3: xpos2=xpos+(xspace*-1); break;
-                case 4: xpos2=xpos+(xspace*-1*2); break;
-            }
-            switch(y)
-            {
-                case 0: ypos2=ypos+yspace; break;
-                case 2: ypos2=ypos-yspace; break;
-            }
-
-//          if(effectState==2)
-//          {
-//              cubeRotX += 1.0f;
-//              if(cubeRotX%90==0)
-//              {
-//                  effectState=3;
-//                  startTime=System.currentTimeMillis();
-//              }
-//          }
-
-            gl.glTranslatef(xpos2, ypos2, -8);
+            cubeRotXStart+=90;
         }
 
         private void setTextureCoords(int x,int y)
@@ -237,6 +174,13 @@ public class Credits extends EffectManager {
         }
 
         // Schedule the effects in this part.
-        add(new Cubes(), 160*1000);
+        add(new EffectManager.TextureFade(textures[0], true), 8*1000);
+
+        Cubes cubes=new Cubes();
+        for (int i=1; i<ids.length; ++i) {
+            add(cubes, 4*1000);
+            add(new EffectManager.TextureShow(textures[i]), 2*1000);
+        }
+        add(new EffectManager.ColorFade(0, 0, 0, false), 8*1000);
     }
 }
