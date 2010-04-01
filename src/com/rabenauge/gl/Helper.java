@@ -8,9 +8,9 @@ import javax.microedition.khronos.opengles.GL10;
  * A class for various static helper methods.
  */
 public class Helper {
-    // Vertices and texture coordinates for rendering a bitmap in order LR, LL, UL, UR.
+    // Vertices and texture coordinates for rendering a bitmap in order UL, LL, LR, UR.
     private static final byte WIDTH=1, HEIGHT=1;
-    private static final ByteBuffer VERTICES=ByteBuffer.allocateDirect(8).put(WIDTH).put(HEIGHT).put((byte)0).put(HEIGHT).put((byte)0).put((byte)0).put(WIDTH).put((byte)0);
+    private static final ByteBuffer VERTICES=ByteBuffer.allocateDirect(8).put((byte)0).put((byte)0).put((byte)0).put(HEIGHT).put(WIDTH).put(HEIGHT).put(WIDTH).put((byte)0);
 
     static {
         // Reset the buffer position before using the buffer!
