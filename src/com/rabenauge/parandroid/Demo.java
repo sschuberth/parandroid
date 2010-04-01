@@ -8,12 +8,15 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.egl.*;
 
-public class Demo extends GLSurfaceView implements Renderer {
+public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
     public static final String NAME="ParaNdroiD";
 
     private Activity activity;
@@ -21,7 +24,8 @@ public class Demo extends GLSurfaceView implements Renderer {
     private SensorManager sm;
     private MediaPlayer mp;
 
-    private Long t_start;
+    private Long t_start=null;
+    private boolean interactive=false;
 
     // The song has a duration of 5:28m (328s).
     public static final long DURATION_TOTAL=328*1000;
@@ -42,7 +46,7 @@ public class Demo extends GLSurfaceView implements Renderer {
     private CopperBars bars;
     private Scroller scroller;
 
-    public static final long DURATION_PART_STATIC=30*1000;
+    public static final long DURATION_PART_STATIC=10*1000;
     private RorschachFade fade_in_rorschach, fade_out_rorschach;
 
     public Demo(Activity activity) {
@@ -67,6 +71,7 @@ public class Demo extends GLSurfaceView implements Renderer {
         setRenderer(this);
 
         sm=(SensorManager)activity.getSystemService(Context.SENSOR_SERVICE);
+        setOnTouchListener(this);
 
         mp=MediaPlayer.create(activity, R.raw.track);
     }
@@ -74,6 +79,14 @@ public class Demo extends GLSurfaceView implements Renderer {
     protected void finalize() throws Throwable {
         super.finalize();
         mp.release();
+    }
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public SensorManager getSensorManager() {
+        return sm;
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -138,14 +151,6 @@ public class Demo extends GLSurfaceView implements Renderer {
         credits=new Credits(this, (GL11)gl);
     }
 
-    public Activity getActivity() {
-        return activity;
-    }
-
-    public SensorManager getSensorManager() {
-        return sm;
-    }
-
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         // Adjust the viewport.
         gl.glViewport(0, 0, width, height);
@@ -158,14 +163,14 @@ public class Demo extends GLSurfaceView implements Renderer {
 
     public void onDrawFrame(GL10 gl) {
         if (t_start==null) {
-            mp.start();
+            //mp.start();
             t_start=android.os.SystemClock.uptimeMillis();
         }
 
         long t=android.os.SystemClock.uptimeMillis()-t_start;
 
         // DEBUG: Uncomment to skip the intro part.
-        //t+=intro_fade.getDuration();
+        t+=intro_fade.getDuration();
 
         // These parts run concurrently and render to the same frame!
         if (intro_fade.play(t)) {
@@ -192,12 +197,46 @@ public class Demo extends GLSurfaceView implements Renderer {
                 tp-=fade_in_rorschach.getDuration();
 
                 // These must come last as they need to render on top of all other effects.
-                fade_out_rorschach.play(tp);
+                if (!fade_out_rorschach.play(tp)) {
+                    interactive=true;
+                }
             }
         }
 
         if (!credits.play(t)) {
             activity.finish();
         }
+    }
+
+    public boolean onTouch(View v, MotionEvent event) {
+        if (!interactive || event.getAction()!=MotionEvent.ACTION_DOWN) {
+            return false;
+        }
+
+        // TODO: Do not hard-code these values, they come from the Milestone.
+        final float MAX_X=600, MAX_Y=320;
+        float x=Math.max(0, Math.min(event.getX()/MAX_X, 1)), y=Math.max(0, Math.min(event.getY()/MAX_Y, 1));
+
+        if (y<0.5f) {
+            if (x<0.33f) {
+                Log.i(NAME, "TOUCH: Bobs");
+            }
+            else if (x<0.66f) {
+                Log.i(NAME, "TOUCH: Logo");
+            }
+            else {
+                Log.i(NAME, "TOUCH: Stars");
+            }
+        }
+        else {
+            if (x<0.5f) {
+                Log.i(NAME, "TOUCH: Scroller");
+            }
+            else {
+                Log.i(NAME, "TOUCH: Exit");
+            }
+        }
+
+        return true;
     }
 }
