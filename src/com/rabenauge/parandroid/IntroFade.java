@@ -25,11 +25,11 @@ public class IntroFade extends EffectManager {
         }
     }
 
-    // Keep showing the given title screen.
-    private class ShowTitle extends Effect {
+    // Keep showing the given texture.
+    private class ShowTexture extends Effect {
         private Texture2D title;
 
-        public ShowTitle(Texture2D title) {
+        public ShowTexture(Texture2D title) {
             this.title=title;
         }
 
@@ -42,11 +42,11 @@ public class IntroFade extends EffectManager {
         }
     }
 
-    // Fade from a title screen to another title screen.
-    private class FadeTitle extends Effect {
-        Texture2D from, to;
+    // Fade from one texture to another texture.
+    private class FadeTexture extends Effect {
+        private Texture2D from, to;
 
-        public FadeTitle(Texture2D from, Texture2D to) {
+        public FadeTexture(Texture2D from, Texture2D to) {
             this.from=from;
             this.to=to;
         }
@@ -123,13 +123,13 @@ public class IntroFade extends EffectManager {
 
         long duration=(Demo.DURATION_PART_INTRO-DURATION_EFFECT_DELAY-DURATION_EFFECT_FADEOUT)/6;
         add(new FadeBlackToDroid(), duration);
-        add(new ShowTitle(title_droid), duration);
+        add(new ShowTexture(title_droid), duration);
 
-        add(new FadeTitle(title_droid, title_trsinrab), duration);
-        add(new ShowTitle(title_trsinrab), duration);
+        add(new FadeTexture(title_droid, title_trsinrab), duration);
+        add(new ShowTexture(title_trsinrab), duration);
 
-        add(new FadeTitle(title_trsinrab, title_parandroid), duration);
-        add(new ShowTitle(title_parandroid), duration);
+        add(new FadeTexture(title_trsinrab, title_parandroid), duration);
+        add(new ShowTexture(title_parandroid), duration);
 
         add(new FadeParaNdroiDToWhite(), DURATION_EFFECT_FADEOUT);
     }
