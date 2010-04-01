@@ -1,20 +1,36 @@
 package com.rabenauge.parandroid;
 
 import android.opengl.GLU;
+import android.hardware.*;
+
 import com.rabenauge.demo.*;
 import java.nio.IntBuffer;
 import javax.microedition.khronos.opengles.GL11;
 
 public class StarField extends EffectManager {
     private static final int WIDTH=800*65536, HEIGHT=480*65536;
-    private int center_x, center_y;
+
+    private static final int DEF_CENTER_X=WIDTH/2, DEF_CENTER_Y=HEIGHT/2;
+    private int center_x=DEF_CENTER_X, center_y=DEF_CENTER_Y;
 
     private int[] star_coords;
     private int[] star_speeds;
 
-    private class Flight extends Effect {
+    private SensorManager sm;
+    public Flight flight;
+
+    public class Flight extends Effect implements SensorEventListener {
+        public boolean interactive=false;
+
+        private static final float TOLERANCE=1.2f;
+        private long t_last=-1;
+
         public void onStart(GL11 gl) {
             gl.glEnable(GL11.GL_LINE_SMOOTH);
+
+            // Using TYPE_ALL here does *not* work to listen to all sensors.
+            Sensor sensor=sm.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+            sm.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
@@ -60,15 +76,53 @@ public class StarField extends EffectManager {
         }
 
         public void onStop(GL11 gl) {
+            sm.unregisterListener(this);
+
             gl.glDisable(GL11.GL_LINE_SMOOTH);
+        }
+
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+
+        public void onSensorChanged(SensorEvent event) {
+            int type=event.sensor.getType();
+
+            if (type!=Sensor.TYPE_ORIENTATION || !interactive) {
+                return;
+            }
+
+            // Only allow one update every 100ms, otherwise updates
+            // come way too fast and the phone gets bogged down
+            // with garbage collection, see
+            // http://stuffthathappens.com/blog/2009/03/15/android-accelerometer/
+            long t=android.os.SystemClock.uptimeMillis(), t_diff=t-t_last;
+            if (t_last!=-1 && t_diff<100) {
+                return;
+            }
+            t_last=t;
+
+            // Converge to the desired yaw.
+            float v=event.values[1];
+            if (Math.abs(v)<TOLERANCE) {
+                v=0;
+            }
+            v=DEF_CENTER_X-v*65536*25;
+            center_x=(center_x+(int)v)/2;
+
+            // Converge to the desired pitch.
+            float h=event.values[2];
+            if (Math.abs(h)<TOLERANCE) {
+                h=0;
+            }
+            h=DEF_CENTER_Y+h*65536*15;
+            center_y=(center_y+(int)h)/2;
         }
     }
 
     public StarField(Demo demo, GL11 gl, int count) {
         super(gl);
 
-        center_x=WIDTH/2;
-        center_y=HEIGHT/2;
+        sm=demo.getSensorManager();
 
         // Stores x, y per star vertex.
         star_coords=new int[count*2*2];
@@ -92,6 +146,7 @@ public class StarField extends EffectManager {
         }
 
         // Schedule the effects in this part.
-        add(new Flight(), Demo.DURATION_MAIN_EFFECTS);
+        flight=new Flight();
+        add(flight, Demo.DURATION_MAIN_EFFECTS);
     }
 }
