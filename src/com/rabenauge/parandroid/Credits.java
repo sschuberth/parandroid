@@ -21,24 +21,13 @@ public class Credits extends EffectManager {
 
         public void onStart(GL11 gl) {
             cubeVertexBfr = new FloatBuffer[6];
-            cubeTextureBfr = new FloatBuffer[6];
             for (int i = 0; i < 6; i++)
             {
                 cubeVertexBfr[i] = FloatBuffer.wrap(cubeVertexCoords[i]);
-                cubeTextureBfr[i] = FloatBuffer.wrap(cubeTextureCoords[i]);
             }
 
-            gl.glShadeModel(GL10.GL_SMOOTH);
-            gl.glClearColor(0, 0, 0, 0);
-
-            gl.glClearDepthf(1.0f);
-            gl.glEnable(GL10.GL_DEPTH_TEST);
-            gl.glDepthFunc(GL10.GL_LEQUAL);
-
             gl.glEnable(GL10.GL_CULL_FACE);
-            gl.glCullFace(GL10.GL_BACK);
-
-            gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+            gl.glEnable(GL10.GL_DEPTH_TEST);
 
             startTime=System.currentTimeMillis();
         }
@@ -85,9 +74,8 @@ public class Credits extends EffectManager {
             },
         };
 
-        private  float[][] cubeTextureCoords = new float[6][8];
+        private  float[] cubeTextureCoords = new float[8];
         private  FloatBuffer[] cubeVertexBfr;
-        private  FloatBuffer[] cubeTextureBfr;
 
         private  float cubeRotX;
         private  float cubeRotY;
@@ -102,7 +90,7 @@ public class Credits extends EffectManager {
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
 
-             xpos=-6f;
+            xpos=-6f;
 
             // draw the cubes
             for(int x=0;x<MAX_X;x++)
@@ -132,11 +120,10 @@ public class Credits extends EffectManager {
                             case 3: textures[2].makeCurrent(); break; // back
                         }
 
-                        setTextureCoords(0,x, y);
-                        cubeTextureBfr[i] = FloatBuffer.wrap(cubeTextureCoords[0]);
+                        setTextureCoords(x, y);
 
                         gl.glVertexPointer(3, GL10.GL_FLOAT, 0, cubeVertexBfr[i]);
-                        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, cubeTextureBfr[i]);
+                        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, FloatBuffer.wrap(cubeTextureCoords));
                         gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
                     }
 
@@ -214,22 +201,24 @@ public class Credits extends EffectManager {
             gl.glTranslatef(xpos2, ypos2, -8);
         }
 
-        private void setTextureCoords (int i,int x,int y) // TODO remove i
+        private void setTextureCoords(int x,int y)
         {
             float y2=2;
             y2=y2-y;
 
-            float W=1024;  // TODO why does it work ?
-            float H=512;   // TODO why does it work ?
+            // Hard-code the scaled POT texture size.
+            float W=1024;
+            float H=512;
+
             float xOL=(W/MAX_X)*x;
             float xOR=(W/MAX_X)*(x+1);
             float yO=(H/MAX_Y)*y2;
             float yU=(H/MAX_Y)*(y2+1);
 
-            cubeTextureCoords[i][0]=(xOR)/W;    cubeTextureCoords[i][1]=(yO)/H ;
-            cubeTextureCoords[i][2]=(xOL)/W;    cubeTextureCoords[i][3]=(yO)/H;
-            cubeTextureCoords[i][4]=(xOL)/W ;   cubeTextureCoords[i][5]=(yU)/H;
-            cubeTextureCoords[i][6]=(xOR)/W;    cubeTextureCoords[i][7]=(yU)/H;
+            cubeTextureCoords[0]=(xOR)/W;    cubeTextureCoords[1]=(yO)/H;
+            cubeTextureCoords[2]=(xOL)/W;    cubeTextureCoords[3]=(yO)/H;
+            cubeTextureCoords[4]=(xOL)/W;    cubeTextureCoords[5]=(yU)/H;
+            cubeTextureCoords[6]=(xOR)/W;    cubeTextureCoords[7]=(yU)/H;
         }
     }
 
