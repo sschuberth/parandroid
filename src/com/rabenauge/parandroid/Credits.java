@@ -12,7 +12,7 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 public class Credits extends EffectManager {
-    private Texture2D texture2d[]=new Texture2D[4];
+    private Texture2D[] textures;
 
     private class Cubes extends Effect {
         private long WAIT=5000;
@@ -126,10 +126,10 @@ public class Credits extends EffectManager {
                     {
                         switch (i)
                         {
-                            case 0: texture2d[1].makeCurrent(); break; // top
-                            case 1: texture2d[3].makeCurrent(); break; // bottom
-                            case 2: texture2d[0].makeCurrent(); break; // front
-                            case 3: texture2d[2].makeCurrent(); break; // back
+                            case 0: textures[1].makeCurrent(); break; // top
+                            case 1: textures[3].makeCurrent(); break; // bottom
+                            case 2: textures[0].makeCurrent(); break; // front
+                            case 3: textures[2].makeCurrent(); break; // back
                         }
 
                         setTextureCoords(0,x, y);
@@ -237,28 +237,17 @@ public class Credits extends EffectManager {
         super(gl);
 
         // Load the end screens.
-        Bitmap bitmap;
+        int[] ids={R.drawable.credits_names, R.drawable.credits_rab, R.drawable.credits_trsi, R.drawable.credits_final};
+        textures=new Texture2D[ids.length];
 
-        bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.credits_names);
-        texture2d[0]=new Texture2D(gl);
-        texture2d[0].setData(bitmap);
-        bitmap.recycle();
+        for (int i=0; i<ids.length; ++i) {
+            Bitmap bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), ids[i]);
+            textures[i]=new Texture2D(gl);
+            textures[i].setData(bitmap);
+            bitmap.recycle();
+        }
 
-        bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.credits_rab);
-        texture2d[1]=new Texture2D(gl);
-        texture2d[1].setData(bitmap);
-        bitmap.recycle();
-
-        bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.credits_trsi);
-        texture2d[2]=new Texture2D(gl);
-        texture2d[2].setData(bitmap);
-        bitmap.recycle();
-
-        bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.credits_final);
-        texture2d[3]=new Texture2D(gl);
-        texture2d[3].setData(bitmap);
-        bitmap.recycle();
-
+        // Schedule the effects in this part.
         add(new Cubes(), 160*1000);
     }
 }
