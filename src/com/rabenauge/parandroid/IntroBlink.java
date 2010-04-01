@@ -27,7 +27,14 @@ public class IntroBlink extends EffectManager {
         public void onStart(GL11 gl) {
             gl.glPointSize(2.5f);
             gl.glColorPointer(4, GL11.GL_FIXED, 0, IntBuffer.wrap(colors));
-            gl.glEnable(GL11.GL_POINT_SMOOTH);
+
+            // Only enable point smoothing if we can draw sizes greater than 1,
+            // else the points will be too small.
+            int[] params=new int[2];
+            gl.glGetIntegerv(GL11.GL_SMOOTH_POINT_SIZE_RANGE, params, 0);
+            if (params[1]>1) {
+                gl.glEnable(GL11.GL_POINT_SMOOTH);
+            }
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
