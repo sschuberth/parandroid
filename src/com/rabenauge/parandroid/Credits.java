@@ -174,13 +174,18 @@ public class Credits extends EffectManager {
         }
 
         // Schedule the effects in this part.
-        add(new EffectManager.TextureFade(textures[0], true), 8*1000);
+        long overlap=6*1000;
+        add(new EffectManager.Wait(), Demo.DURATION_TOTAL-Demo.DURATION_PART_OUTRO-overlap);
+        add(new EffectManager.TextureFade(textures[0], true), overlap);
+
+        long d=Demo.DURATION_PART_OUTRO/(2+(4+2)*ids.length+8);
+        add(new EffectManager.TextureShow(textures[0]), 2*d);
 
         Cubes cubes=new Cubes();
         for (int i=1; i<ids.length; ++i) {
-            add(cubes, 4*1000);
-            add(new EffectManager.TextureShow(textures[i]), 2*1000);
+            add(cubes, 4*d);
+            add(new EffectManager.TextureShow(textures[i]), 2*d);
         }
-        add(new EffectManager.ColorFade(0, 0, 0, false), 8*1000);
+        add(new EffectManager.TextureFade(textures[3], false), 8*d);
     }
 }

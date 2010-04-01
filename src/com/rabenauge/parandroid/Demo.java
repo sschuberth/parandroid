@@ -23,14 +23,18 @@ public class Demo extends GLSurfaceView implements Renderer {
 
     private Long t_start;
 
+    // The song has a duration of 5:28m (328s).
+    public static final long DURATION_TOTAL=328*1000;
+
+    // The song's "woosh" is approx. at 43s.
     public static final long DURATION_PART_INTRO=43500;
     private IntroFade intro_fade;
     private IntroBlink intro_blink;
 
-    public static final long DURATION_PART_OUTRO=43500;
+    public static final long DURATION_PART_OUTRO=40*1000;
+    private Credits credits;
 
-    // The song has a duration of 5:28m (328s).
-    public static final long DURATION_MAIN_EFFECTS=328*1000-DURATION_PART_INTRO-DURATION_PART_OUTRO;
+    public static final long DURATION_MAIN_EFFECTS=DURATION_TOTAL-DURATION_PART_INTRO-DURATION_PART_OUTRO;
     private WhiteFadeIn white_fade_in;
     private StarField stars;
     private LogoChange logos;
@@ -38,7 +42,7 @@ public class Demo extends GLSurfaceView implements Renderer {
     private CopperBars bars;
     private Scroller scroller;
 
-    public static final long DURATION_PART_STATIC=30000;
+    public static final long DURATION_PART_STATIC=30*1000;
     private RorschachFade fade_in_rorschach, fade_out_rorschach;
 
     public Demo(Activity activity) {
@@ -130,6 +134,8 @@ public class Demo extends GLSurfaceView implements Renderer {
         scroller=new Scroller(this, (GL11)gl);
         fade_in_rorschach=new RorschachFade(this, (GL11)gl, 2*1000, true);
         fade_out_rorschach=new RorschachFade(this, (GL11)gl, 6*1000, false);
+
+        credits=new Credits(this, (GL11)gl);
     }
 
     public Activity getActivity() {
@@ -167,27 +173,31 @@ public class Demo extends GLSurfaceView implements Renderer {
         }
         else {
             // Reset the relative time for this part.
-            t-=intro_fade.getDuration();
+            long tp=t-intro_fade.getDuration();
 
             gl.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
 
             // These parts run concurrently and render to the same frame!
-            stars.play(t);
-            logos.play(t);
-            bobs_static.play(t);
-            bars.play(t);
-            scroller.play(t);
+            stars.play(tp);
+            logos.play(tp);
+            bobs_static.play(tp);
+            bars.play(tp);
+            scroller.play(tp);
 
             // These must come last as they need to render on top of all other effects.
-            white_fade_in.play(t);
+            white_fade_in.play(tp);
 
-            if (!fade_in_rorschach.play(t)) {
+            if (!fade_in_rorschach.play(tp)) {
                 // Reset the relative time for this part.
-                t-=fade_in_rorschach.getDuration();
+                tp-=fade_in_rorschach.getDuration();
 
                 // These must come last as they need to render on top of all other effects.
-                fade_out_rorschach.play(t);
+                fade_out_rorschach.play(tp);
             }
+        }
+
+        if (!credits.play(t)) {
+            activity.finish();
         }
     }
 }
