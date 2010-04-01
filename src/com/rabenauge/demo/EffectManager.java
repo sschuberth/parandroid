@@ -29,6 +29,35 @@ public class EffectManager {
     }
 
     /*
+     * An effect to fade the current screen contents from / to a given color.
+     */
+    public class ColorFade extends Effect {
+        private float r, g, b;
+        private boolean in;
+
+        public ColorFade(float r, float g, float b, boolean in) {
+            this.r=r;
+            this.g=g;
+            this.b=b;
+
+            this.in=in;
+        }
+
+        public void onRender(GL11 gl, long t, long e, float s) {
+            // Set OpenGL states.
+            gl.glDisable(GL11.GL_TEXTURE_2D);
+
+            float a=in?1-s:s;
+            gl.glColor4f(r, g, b, a);
+            Helper.drawScreenSpaceQuad(gl);
+            gl.glColor4f(1, 1, 1, 1);
+
+            // Restore OpenGL states.
+            gl.glEnable(GL11.GL_TEXTURE_2D);
+        }
+    }
+
+    /*
      * An effect to fade the current screen contents from / to a given texture.
      */
     public class TextureFade extends Effect {

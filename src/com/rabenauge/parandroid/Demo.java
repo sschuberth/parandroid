@@ -31,7 +31,7 @@ public class Demo extends GLSurfaceView implements Renderer {
 
     // The song has a duration of 5:28m (328s).
     public static final long DURATION_MAIN_EFFECTS=328*1000-DURATION_PART_INTRO-DURATION_PART_OUTRO;
-    private ColorFade fade_in_white;
+    private WhiteFadeIn white_fade_in;
     private StarField stars;
     private LogoChange logos;
     private BobsStatic bobs_static;
@@ -122,7 +122,7 @@ public class Demo extends GLSurfaceView implements Renderer {
         intro_fade=new IntroFade(this, (GL11)gl);
         intro_blink=new IntroBlink(this, (GL11)gl);
 
-        fade_in_white=new ColorFade(this, (GL11)gl, 2*1000, true, 1, 1, 1);
+        white_fade_in=new WhiteFadeIn(this, (GL11)gl, 2*1000);
         stars=new StarField(this, (GL11)gl, 400);
         logos=new LogoChange(this, (GL11)gl, 40, 20, 8000, 2000);
         bobs_static=new BobsStatic(this, (GL11)gl);
@@ -179,7 +179,7 @@ public class Demo extends GLSurfaceView implements Renderer {
             scroller.play(t);
 
             // These must come last as they need to render on top of all other effects.
-            fade_in_white.play(t);
+            white_fade_in.play(t);
 
             if (!fade_in_rorschach.play(t)) {
                 // Reset the relative time for this part.
