@@ -48,7 +48,7 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
     private CopperBars bars;
     private Scroller scroller;
 
-    public static final long DURATION_PART_STATIC=30*1000;
+    public static final long DURATION_PART_STATIC=20*1000;
     private RorschachFade fade_in_rorschach, fade_out_rorschach;
 
     public Demo(Activity activity) {
