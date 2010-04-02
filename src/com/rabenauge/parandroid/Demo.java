@@ -48,7 +48,7 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
     private CopperBars bars;
     private Scroller scroller;
 
-    public static final long DURATION_PART_STATIC=10*1000;
+    public static final long DURATION_PART_STATIC=30*1000;
     private RorschachFade fade_in_rorschach, fade_out_rorschach;
 
     public Demo(Activity activity) {
@@ -165,14 +165,14 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
 
     public void onDrawFrame(GL10 gl) {
         if (t_start==null) {
-            //mp.start();
+            mp.start();
             t_start=android.os.SystemClock.uptimeMillis();
         }
 
         t=android.os.SystemClock.uptimeMillis()-t_start;
 
         // DEBUG: Uncomment to skip the intro part.
-        t+=intro_fade.getDuration();
+        //t+=intro_fade.getDuration();
 
         // These parts run concurrently and render to the same frame!
         if (intro_fade.play(t)) {
