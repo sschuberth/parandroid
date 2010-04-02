@@ -78,14 +78,14 @@ public class Credits extends EffectManager {
             }
 
             gl.glEnable(GL10.GL_CULL_FACE);
-            gl.glEnable(GL10.GL_DEPTH_TEST);
         }
 
         @Override
         public void onRender(GL11 gl, long t, long e, float s) {
             cubeRotX=cubeRotXStart+s*90;
 
-            gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+            gl.glEnable(GL10.GL_DEPTH_TEST);
+            gl.glClear(GL10.GL_COLOR_BUFFER_BIT|GL10.GL_DEPTH_BUFFER_BIT);
 
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
@@ -127,13 +127,14 @@ public class Credits extends EffectManager {
                     }
                 }
             }
+
+            gl.glDisable(GL10.GL_DEPTH_TEST);
         }
 
         public void onStop(GL11 gl) {
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
 
-            gl.glDisable(GL10.GL_DEPTH_TEST);
             gl.glDisable(GL10.GL_CULL_FACE);
 
             cubeRotXStart+=90;
@@ -160,6 +161,24 @@ public class Credits extends EffectManager {
         }
     }
 
+    public class TextureShake extends Effect {
+        private Texture2D title;
+
+        public TextureShake(Texture2D title) {
+            this.title=title;
+        }
+
+        public void onRender(GL11 gl, long t, long e, float s) {
+            gl.glMatrixMode(GL10.GL_MODELVIEW);
+            gl.glPushMatrix();
+            gl.glLoadIdentity();
+            float f=FloatMath.sin(s*DemoMath.PI)/50;
+            gl.glTranslatef((float)(Math.random()-0.5)*f, (float)(Math.random()-0.5)*f, 0);
+            Helper.drawScreenSpaceTexture(title);
+            gl.glPopMatrix();
+        }
+    }
+
     public Credits(Demo demo, GL11 gl) {
         super(gl);
 
@@ -178,13 +197,14 @@ public class Credits extends EffectManager {
         add(new EffectManager.Wait(), Demo.DURATION_TOTAL-Demo.DURATION_PART_OUTRO-Demo.DURATION_PART_OUTRO_FADE);
         add(new EffectManager.TextureFade(textures[0], true), Demo.DURATION_PART_OUTRO_FADE);
 
-        long d=Demo.DURATION_PART_OUTRO/(2+(4+2)*ids.length+8);
+        long d=Demo.DURATION_PART_OUTRO/(2+(1+2)*ids.length+8);
         add(new EffectManager.TextureShow(textures[0]), 2*d);
 
         Cubes cubes=new Cubes();
         for (int i=1; i<ids.length; ++i) {
-            add(cubes, 4*d);
-            add(new EffectManager.TextureShow(textures[i]), 2*d);
+            add(cubes, 1*d);
+            add(new TextureShake(textures[i]), 300);
+            add(new EffectManager.TextureShow(textures[i]), 2*d-300);
         }
         add(new EffectManager.TextureFade(textures[3], false), 8*d);
     }

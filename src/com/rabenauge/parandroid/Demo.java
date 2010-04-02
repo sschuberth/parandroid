@@ -174,6 +174,8 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
         // DEBUG: Uncomment to skip the intro part.
         //t+=intro_fade.getDuration();
 
+        long tc=t+t_credits;
+
         // These parts run concurrently and render to the same frame!
         if (intro_fade.play(t)) {
             intro_blink.play(t);
@@ -183,16 +185,17 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
             long tp=t-intro_fade.getDuration();
 
             gl.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
+            if (t_credits==0 || tc<=DURATION_TOTAL-DURATION_PART_OUTRO) {
+                // These parts run concurrently and render to the same frame!
+                stars.play(tp);
+                logos.play(tp);
+                bobs.play(tp);
+                bars.play(tp);
+                scroller.play(tp);
 
-            // These parts run concurrently and render to the same frame!
-            stars.play(tp);
-            logos.play(tp);
-            bobs.play(tp);
-            bars.play(tp);
-            scroller.play(tp);
-
-            // These must come last as they need to render on top of all other effects.
-            white_fade_in.play(tp);
+                // These must come last as they need to render on top of all other effects.
+                white_fade_in.play(tp);
+            }
 
             if (!fade_in_rorschach.play(tp)) {
                 // Reset the relative time for this part.
@@ -208,13 +211,6 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
             }
         }
 
-        long tc=t+t_credits;
-        if (t_credits>0 && tc>DURATION_TOTAL-DURATION_PART_OUTRO) {
-            // Because we are still rendering the main effects if we jumped
-            // forward in time to the credits, we need to clear the screen for
-            // the final fade-out.
-            gl.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
-        }
         if (!credits.play(tc)) {
             activity.finish();
         }
