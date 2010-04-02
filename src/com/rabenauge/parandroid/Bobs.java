@@ -11,7 +11,7 @@ import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL11;
 
-public class BobsStatic extends EffectManager {
+public class Bobs extends EffectManager {
     private static final int WIDTH=800, HEIGHT=480;
     private static final int NUM_BOBS=10;
     private static final int NUM_POINTS=400;
@@ -106,7 +106,7 @@ public class BobsStatic extends EffectManager {
         }
     }
 
-    public BobsStatic(Demo demo, GL11 gl) {
+    public Bobs(Demo demo, GL11 gl) {
         super(gl);
 
         // Load the bob textures.

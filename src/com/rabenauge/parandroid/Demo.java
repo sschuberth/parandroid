@@ -44,7 +44,7 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
     private WhiteFadeIn white_fade_in;
     private StarField stars;
     private LogoChange logos;
-    private BobsStatic bobs_static;
+    private Bobs bobs;
     private CopperBars bars;
     private Scroller scroller;
 
@@ -144,7 +144,7 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
         white_fade_in=new WhiteFadeIn(this, (GL11)gl, 2*1000);
         stars=new StarField(this, (GL11)gl, 400);
         logos=new LogoChange(this, (GL11)gl, 40, 20, 8000, 2000);
-        bobs_static=new BobsStatic(this, (GL11)gl);
+        bobs=new Bobs(this, (GL11)gl);
         bars=new CopperBars(this, (GL11)gl);
         scroller=new Scroller(this, (GL11)gl);
         fade_in_rorschach=new RorschachFade(this, (GL11)gl, 2*1000, true);
@@ -187,7 +187,7 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
             // These parts run concurrently and render to the same frame!
             stars.play(tp);
             logos.play(tp);
-            bobs_static.play(tp);
+            bobs.play(tp);
             bars.play(tp);
             scroller.play(tp);
 
