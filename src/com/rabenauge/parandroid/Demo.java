@@ -222,16 +222,19 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
                 Log.i(NAME, "TOUCH: Bobs");
 
                 stars.flight.interactive=false;
+                scroller.scroll.interactive=false;
             }
             else if (x<0.66f) {
                 Log.i(NAME, "TOUCH: Logo");
 
                 stars.flight.interactive=false;
+                scroller.scroll.interactive=false;
             }
             else {
                 Log.i(NAME, "TOUCH: Stars");
 
                 stars.flight.interactive=!stars.flight.interactive;
+                scroller.scroll.interactive=false;
             }
         }
         else {
@@ -239,11 +242,13 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
                 Log.i(NAME, "TOUCH: Scroller");
 
                 stars.flight.interactive=false;
+                scroller.scroll.interactive=!scroller.scroll.interactive;
             }
             else {
                 Log.i(NAME, "TOUCH: Exit");
 
                 stars.flight.interactive=false;
+                scroller.scroll.interactive=false;
             }
         }
 

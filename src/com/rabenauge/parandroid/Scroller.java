@@ -2,6 +2,7 @@ package com.rabenauge.parandroid;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.*;
 import android.opengl.GLU;
 import android.util.FloatMath;
 import com.rabenauge.demo.*;
@@ -43,6 +44,9 @@ public class Scroller extends EffectManager {
     private Texture2D charset;
     private IntBuffer tex_coords;
     private ShortBuffer line_coords;
+
+    private SensorManager sm;
+    public Scroll scroll;
 
     private void calcTexCoords(String text, int tex_width, int tex_height, int chars_per_row, int chars_per_column) {
         text=text.toLowerCase();
@@ -95,11 +99,18 @@ public class Scroller extends EffectManager {
         tex_coords.rewind();
     }
 
-    private class Scroll extends Effect {
+    public class Scroll extends Effect implements SensorEventListener {
         private IntBuffer sliding_tex_coords;
         private ShortBuffer wobbling_line_coords;
 
-        private float speed;
+        public boolean interactive=false;
+
+        private static final float TOLERANCE=1.2f;
+        private long t_last=-1;
+
+        private static final float DEF_SPEED=2.0f, DEF_AMP=25.0f;
+        private float speed=DEF_SPEED, amp=DEF_AMP;
+        private int pos=0;
 
         public Scroll() {
             sliding_tex_coords=IntBuffer.allocate(tex_coords.capacity()+WIDTH*2*2);
@@ -112,8 +123,6 @@ public class Scroller extends EffectManager {
 
             wobbling_line_coords=ShortBuffer.allocate(line_coords.capacity());
 
-            // By default, scroll at a speed of 2 character per second.
-            speed=2.0f;
             int t=Math.round(TEXT.length()/speed);
             android.util.Log.i(Demo.NAME,
                 "Scrolling will take " + String.valueOf(t/60) + ":" + String.valueOf(t%60) + "m (" + String.valueOf(t)+"s) for " +
@@ -136,10 +145,14 @@ public class Scroller extends EffectManager {
             gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_OPERAND0_ALPHA, GL11.GL_SRC_ALPHA);
             gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_SRC1_ALPHA, GL11.GL_TEXTURE);
             gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_OPERAND1_ALPHA, GL11.GL_SRC_ALPHA);
+
+            // Using TYPE_ALL here does *not* work to listen to all sensors.
+            Sensor sensor=sm.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+            sm.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
-            int pos=(int)((float)t/1000*CHAR_SIZE*speed)*2*2;
+            pos+=(int)(CHAR_SIZE*speed*(float)e/1000)*2*2;
             while (pos<0) {
                 pos+=tex_coords.capacity();
             }
@@ -149,7 +162,6 @@ public class Scroller extends EffectManager {
             sliding_tex_coords.position(pos);
 
             // Wobble the line coordinates.
-            float amp=30.0f;
             for (int i=0; i<line_coords.capacity(); i+=4) {
                 float angle=(float)i/line_coords.capacity()*2*DemoMath.PI;
                 angle+=(float)t/200;
@@ -197,10 +209,54 @@ public class Scroller extends EffectManager {
             gl.glMatrixMode(GL11.GL_PROJECTION);
             gl.glPopMatrix();
         }
+
+        public void onStop(GL11 gl) {
+            sm.unregisterListener(this);
+        }
+
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+
+        public void onSensorChanged(SensorEvent event) {
+            int type=event.sensor.getType();
+
+            if (type!=Sensor.TYPE_ORIENTATION || !interactive) {
+                return;
+            }
+
+            // Only allow one update every 100ms, otherwise updates
+            // come way too fast and the phone gets bogged down
+            // with garbage collection, see
+            // http://stuffthathappens.com/blog/2009/03/15/android-accelerometer/
+            long t=android.os.SystemClock.uptimeMillis(), t_diff=t-t_last;
+            if (t_last!=-1 && t_diff<100) {
+                return;
+            }
+            t_last=t;
+
+            // Converge to the desired speed.
+            float v=event.values[1];
+            if (Math.abs(v)<TOLERANCE) {
+                v=0;
+            }
+            v=DEF_SPEED+v/1.5f;
+            speed=(speed+v)/2;
+
+            // Converge to the desired amplitude.
+            float h=event.values[2];
+            if (Math.abs(h)<TOLERANCE) {
+                h=0;
+            }
+            h=DEF_AMP-h*3.0f;
+            h=Math.max(0, Math.min(h, 50));
+            amp=(amp+h)/2;
+        }
     }
 
     public Scroller(Demo demo, GL11 gl) {
         super(gl);
+
+        sm=demo.getSensorManager();
 
         // Load the character set.
         Bitmap bitmap;
@@ -228,6 +284,7 @@ public class Scroller extends EffectManager {
         line_coords.rewind();
 
         // Schedule the effects in this part.
-        add(new Scroll(), Demo.DURATION_MAIN_EFFECTS);
+        scroll=new Scroll();
+        add(scroll, Demo.DURATION_MAIN_EFFECTS);
     }
 }
