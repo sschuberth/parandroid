@@ -13,6 +13,7 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 public class Credits extends EffectManager {
+    private Demo demo;
     private Texture2D[] textures;
 
     private class Cubes extends Effect {
@@ -179,8 +180,34 @@ public class Credits extends EffectManager {
         }
     }
 
+    public class TextureFadeSound extends Effect {
+        private Texture2D texture;
+        private boolean in;
+
+        public TextureFadeSound(Texture2D texture, boolean in) {
+            this.texture=texture;
+            this.in=in;
+        }
+
+        public void onRender(GL11 gl, long t, long e, float s) {
+            float a=in?s:1-s;
+            gl.glColor4f(1, 1, 1, a);
+            Helper.drawScreenSpaceTexture(texture);
+
+            // We need to restore this immediately for other concurrently running effects.
+            gl.glColor4f(1, 1, 1, 1);
+
+            // Fade out the sound.
+            float dB=(1-s)*15;
+            android.util.Log.i("dB", String.valueOf(dB));
+            demo.getMediaPlayer().setVolume(dB, dB);
+        }
+    }
+
     public Credits(Demo demo, GL11 gl) {
         super(gl);
+
+        this.demo=demo;
 
         // Load the end screens.
         int[] ids={R.drawable.credits_names, R.drawable.credits_rab, R.drawable.credits_trsi, R.drawable.credits_final};
@@ -206,6 +233,6 @@ public class Credits extends EffectManager {
             add(new TextureShake(textures[i]), 300);
             add(new EffectManager.TextureShow(textures[i]), 2*d-300);
         }
-        add(new EffectManager.TextureFade(textures[3], false), 8*d);
+        add(new TextureFadeSound(textures[3], false), 8*d);
     }
 }

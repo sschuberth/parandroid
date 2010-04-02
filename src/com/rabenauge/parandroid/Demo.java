@@ -21,8 +21,8 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
 
     private Activity activity;
 
-    private SensorManager sm;
     private MediaPlayer mp;
+    private SensorManager sm;
 
     private Long t_start=null;
     private long t=0, t_credits=0;
@@ -85,6 +85,10 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
 
     public Activity getActivity() {
         return activity;
+    }
+
+    public MediaPlayer getMediaPlayer() {
+        return mp;
     }
 
     public SensorManager getSensorManager() {
@@ -166,6 +170,10 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
     public void onDrawFrame(GL10 gl) {
         if (t_start==null) {
             mp.start();
+
+            // Set to full volume initially (wraps at modulo 16).
+            mp.setVolume(15.0f, 15.0f);
+
             t_start=android.os.SystemClock.uptimeMillis();
         }
 
