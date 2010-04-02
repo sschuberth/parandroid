@@ -25,6 +25,7 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
     private MediaPlayer mp;
 
     private Long t_start=null;
+    private long t=0, t_credits=0;
     private boolean interactive=false;
 
     // The song has a duration of 5:28m (328s).
@@ -36,6 +37,7 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
     private IntroBlink intro_blink;
 
     public static final long DURATION_PART_OUTRO=40*1000;
+    public static final long DURATION_PART_OUTRO_FADE=6*1000;
     private Credits credits;
 
     public static final long DURATION_MAIN_EFFECTS=DURATION_TOTAL-DURATION_PART_INTRO-DURATION_PART_OUTRO;
@@ -167,7 +169,7 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
             t_start=android.os.SystemClock.uptimeMillis();
         }
 
-        long t=android.os.SystemClock.uptimeMillis()-t_start;
+        t=android.os.SystemClock.uptimeMillis()-t_start;
 
         // DEBUG: Uncomment to skip the intro part.
         t+=intro_fade.getDuration();
@@ -203,7 +205,14 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
             }
         }
 
-        if (!credits.play(t)) {
+        long tc=t+t_credits;
+        if (t_credits>0 && tc>DURATION_TOTAL-DURATION_PART_OUTRO) {
+            // Because we are still rendering the main effects if we jumped
+            // forward in time to the credits, we need to clear the screen for
+            // the final fade-out.
+            gl.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
+        }
+        if (!credits.play(tc)) {
             activity.finish();
         }
     }
@@ -246,6 +255,8 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
             }
             else {
                 Log.i(NAME, "TOUCH: Exit");
+
+                t_credits=DURATION_PART_INTRO+DURATION_MAIN_EFFECTS-DURATION_PART_OUTRO_FADE-t;
 
                 stars.flight.interactive=false;
                 scroller.scroll.interactive=false;

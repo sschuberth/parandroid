@@ -77,8 +77,6 @@ public class Credits extends EffectManager {
                 cubeVertexBfr[i] = FloatBuffer.wrap(cubeVertexCoords[i]);
             }
 
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-
             gl.glEnable(GL10.GL_CULL_FACE);
             gl.glEnable(GL10.GL_DEPTH_TEST);
         }
@@ -88,6 +86,8 @@ public class Credits extends EffectManager {
             cubeRotX=cubeRotXStart+s*90;
 
             gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+
+            gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
 
             xpos=-6f;
@@ -130,6 +130,7 @@ public class Credits extends EffectManager {
         }
 
         public void onStop(GL11 gl) {
+            gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
 
             gl.glDisable(GL10.GL_DEPTH_TEST);
@@ -174,9 +175,8 @@ public class Credits extends EffectManager {
         }
 
         // Schedule the effects in this part.
-        long overlap=6*1000;
-        add(new EffectManager.Wait(), Demo.DURATION_TOTAL-Demo.DURATION_PART_OUTRO-overlap);
-        add(new EffectManager.TextureFade(textures[0], true), overlap);
+        add(new EffectManager.Wait(), Demo.DURATION_TOTAL-Demo.DURATION_PART_OUTRO-Demo.DURATION_PART_OUTRO_FADE);
+        add(new EffectManager.TextureFade(textures[0], true), Demo.DURATION_PART_OUTRO_FADE);
 
         long d=Demo.DURATION_PART_OUTRO/(2+(4+2)*ids.length+8);
         add(new EffectManager.TextureShow(textures[0]), 2*d);
