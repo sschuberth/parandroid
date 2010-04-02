@@ -15,35 +15,41 @@ public class Bobs extends EffectManager {
     private static final int WIDTH=800, HEIGHT=480;
     private static final int NUM_BOBS=10;
     private static final int NUM_POINTS=400;
-    private static final int TEX_PER_ROW=4;
+    private static final int TEX_PER_ROW=5, TEX_PER_COLUMN=2;
     private static final float TEX_WIDTH=107.25f, TEX_HEIGHT=128.0f;
 
-    private Texture2D bobs;
+    private Texture2D bobs_static, bobs_dynamic;
+    private boolean bob_toggle=false;
+
     private int[] quad_coords, tex_coords;
     private short[] indices;
     private float[] points;
 
-    public enum BobType {
-        // This matches the texture order in the bitmap.
-        Sentinel, Skull, Cyclope, Rabenauge
+    public void toggleBobs() {
+        bob_toggle=!bob_toggle;
     }
 
-    public static void calcBobTexture2D(int tex_per_row, BobType name, int[] coords, int offset) {
-        float step=1.0f/tex_per_row;
-        int min=(int)(name.ordinal()*step*65536);
-        int max=min+(int)(step*65536);
+    public void toggleBobs(boolean toggle) {
+        bob_toggle=toggle;
+    }
 
-        coords[offset    ]=min;
-        coords[offset + 1]=(int)(0.0f*65536);
+    public static void calcBobTexture2D(int tex_per_row, int tex_per_column, int index, int[] coords, int offset) {
+        float x_step=1.0f/tex_per_row,y_step=1.0f/tex_per_column;
+        int x=index%tex_per_row, y=index/tex_per_row;
+        int x_min=(int)(x*x_step*65536), x_max=x_min+(int)(x_step*65536);
+        int y_min=(int)(y*y_step*65536), y_max=y_min+(int)(y_step*65536);
 
-        coords[offset + 2]=min;
-        coords[offset + 3]=(int)(1.0f*65536);
+        coords[offset    ]=x_min;
+        coords[offset + 1]=y_min;
 
-        coords[offset + 4]=max;
-        coords[offset + 5]=(int)(0.0f*65536);
+        coords[offset + 2]=x_min;
+        coords[offset + 3]=y_max;
 
-        coords[offset + 6]=max;
-        coords[offset + 7]=(int)(1.0f*65536);
+        coords[offset + 4]=x_max;
+        coords[offset + 5]=y_min;
+
+        coords[offset + 6]=x_max;
+        coords[offset + 7]=y_max;
     }
 
     public static void calcBobVertex2D(float center_x, float center_y, float width, float height, int[] coords, int offset) {
@@ -94,7 +100,12 @@ public class Bobs extends EffectManager {
             gl.glLoadIdentity();
             GLU.gluOrtho2D(gl, 0, WIDTH, HEIGHT, 0);
 
-            bobs.makeCurrent();
+            if (bob_toggle) {
+                bobs_dynamic.makeCurrent();
+            }
+            else {
+                bobs_static.makeCurrent();
+            }
 
             // Render the bobs.
             gl.glTexCoordPointer(2, GL11.GL_FIXED, 0, IntBuffer.wrap(tex_coords));
@@ -113,8 +124,13 @@ public class Bobs extends EffectManager {
         Bitmap bitmap;
 
         bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.bobs_static);
-        bobs=new Texture2D(gl);
-        bobs.setData(bitmap);
+        bobs_static=new Texture2D(gl);
+        bobs_static.setData(bitmap);
+        bitmap.recycle();
+
+        bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.bobs_dynamic);
+        bobs_dynamic=new Texture2D(gl);
+        bobs_dynamic.setData(bitmap);
         bitmap.recycle();
 
         // Generate the geometry and texture coordinates.
@@ -132,18 +148,7 @@ public class Bobs extends EffectManager {
             quad_coords[offset+4]=quad_coords[offset+5]=0;
             quad_coords[offset+6]=quad_coords[offset+7]=0;
 
-            if (i<2) {
-                calcBobTexture2D(TEX_PER_ROW, BobType.Skull, tex_coords, offset);
-            }
-            else if (i<5) {
-                calcBobTexture2D(TEX_PER_ROW, BobType.Cyclope, tex_coords, offset);
-            }
-            else if (i<7) {
-                calcBobTexture2D(TEX_PER_ROW, BobType.Skull, tex_coords, offset);
-            }
-            else {
-                calcBobTexture2D(TEX_PER_ROW, BobType.Sentinel, tex_coords, offset);
-            }
+            calcBobTexture2D(TEX_PER_ROW, TEX_PER_COLUMN, NUM_BOBS-1-i, tex_coords, offset);
 
             indices[b+0]=(short)(v+0);
             indices[b+1]=(short)(v+1);

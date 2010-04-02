@@ -202,6 +202,9 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
                 if (!fade_out_rorschach.play(tp)) {
                     interactive=true;
                 }
+                else {
+                    bobs.toggleBobs(true);
+                }
             }
         }
 
@@ -229,6 +232,8 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
         if (y<0.5f) {
             if (x<0.33f) {
                 Log.i(NAME, "TOUCH: Bobs");
+
+                bobs.toggleBobs();
 
                 stars.flight.interactive=false;
                 scroller.scroll.interactive=false;
