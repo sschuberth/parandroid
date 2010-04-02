@@ -236,6 +236,8 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
             else if (x<0.66f) {
                 Log.i(NAME, "TOUCH: Logo");
 
+                logos.changeNow();
+
                 stars.flight.interactive=false;
                 scroller.scroll.interactive=false;
             }

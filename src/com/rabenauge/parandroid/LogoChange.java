@@ -22,6 +22,13 @@ public class LogoChange extends EffectManager {
     private short[][] indices;
     private float[][] dists;
 
+    private Change change=null;
+    private boolean change_now=false;
+
+    public void changeNow() {
+        change_now=true;
+    }
+
     private class Change extends Effect {
         public void onStart(GL11 gl) {
             gl.glClientActiveTexture(GL11.GL_TEXTURE1);
@@ -63,6 +70,12 @@ public class LogoChange extends EffectManager {
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
+            long sd=serene_duration;
+            if (change_now){
+                sd=0;
+                change_now=false;
+            }
+
             if (pingpong) {
                 // Make sure t_fade snaps to a multiple of ripple_duration;
                 long t_snap1=t_fade/ripple_duration;
@@ -92,8 +105,8 @@ public class LogoChange extends EffectManager {
 
                 // If serening is done, switch to ripple mode.
                 t_serene+=e;
-                if (t_serene>=serene_duration) {
-                    t_serene=serene_duration;
+                if (t_serene>=sd) {
+                    t_serene=sd;
                     pingpong=!pingpong;
                 }
             }
@@ -198,6 +211,7 @@ public class LogoChange extends EffectManager {
         }
 
         // Schedule the effects in this part.
-        add(new Change(), Demo.DURATION_MAIN_EFFECTS);
+        change=new Change();
+        add(change, Demo.DURATION_MAIN_EFFECTS);
     }
 }
