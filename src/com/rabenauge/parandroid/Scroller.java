@@ -19,26 +19,25 @@ public class Scroller extends EffectManager {
     private static final String CHARS="abcdefghijklmnopqrstuvwxyz.:-,`´!»«+";
     private static final String TEXT=
         "               " +
-        "Another firstie for the pleasure of Breakpoint Nation: Para´N`droiD. The initial fully " +
-        "interactive mobile Android platform cell phone demo. Presented to you by Tristar and " +
-        "Red Sector Incorporated: Twice the Fun - Double the Trouble. And Rabenauge: Beauty lies in " +
-        "the Eye of the Raven. " +
+        "This is the Party Version. Squeezed and tweaked in part at the hotel and hall in Bingen: " +
+        "Another firstie for the pleasure of Breakpoint Nation:   Para´N`droiD.   The initial fully " +
+        "interactive mobile Android platform cell phone demo. Presented to you by Rabenauge: Beauty lies in " +
+        "the Eye of the Raven. Plus Tristar and Red Sector Incorporated: Twice the Fun - Double the Trouble. " +
         "     " +
-        "Twenty Five Years RSI. Twenty Years TRSI. Online until bust. We are the sleeping Gods. " +
-        "We salute all, who built the heritage. Values never die. Spotter says: Boogie down " +
-        "Brookline. This demo is for my Princessive Princess Press, the Beautiful. Three ´P` high and " +
-        "rising. Fly, Boston College Eagle, defy death. Regards to Irata, the Founder and Legend. " +
+        "Twenty Five Years of RSI. Twenty Years of TRSI. We are the sleeping Gods. " +
+        "We salute all, who built the heritage. Values never die. Spotter says: Boogie down Brookline." +
+        "This demo is for my Princess, the Beautiful and Irata, the Founder." +
         "     " +
-        "Handshakes to Titus: Thx man. And Happy Birtday to TRSI from Rabenauge! " +
+        "Handshakes to Titus: Thanks man. And Happy Birthday to TRSI from Rabenauge! " +
         "     " +
-        "Golden Greetings to: " +
+        "Golden Greetings fly to: " +
         "ACS - ALCATRAZ - ANDROMEDA SOFTWARE DEVELOPMENT - ATE BIT - BAUKNECHT - BITFELLAS - " +
         "BIRDHOUSE PROJECTS - BRAINSTORM - CONSPIRACY - COOCOON - DANISH GOLD - DRIFTERS - " +
         "EQUINOX - FAIRLIGHT - FTC - GENESIS - GNUMPF POSSE - HAUJOBB - HITMEN - HOODLUM - HOTSTUFFERS - " +
         "KALISTO - K TWO - KEFRENS - NEOSCIENTISTS - PARADISE - PARADOX - POLKA BROTHERS - RGBA - " +
         "REBELS - RAZOR NINETEEN ELEVEN - REMEDY - ROYAL BELGIAN BEER SQUADRON - SCARAB - SCOOPEX - " +
         "SECTION EIGHT - SPACEBALLS - SPECKDRUMM - SPEEDQUEEN - TEK - STILL - THE BLACK LOTUS - " +
-        "THE LIGHTFORCE - THE SILENTS - TITAN - THE PLANET OF LEATHER MOOMINS - UK ALLSTARS" +
+        "THE LIGHTFORCE - THE SILENTS - TITAN - THE PLANET OF LEATHER MOOMINS - UK ALLSTARS - and Irata." +
         " --- ";
 
     private Texture2D charset;
