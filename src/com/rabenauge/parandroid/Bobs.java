@@ -14,7 +14,7 @@ import javax.microedition.khronos.opengles.GL11;
 public class Bobs extends EffectManager {
     private static final int WIDTH=800, HEIGHT=480;
     private static final int NUM_BOBS=10;
-    private static final int NUM_POINTS=400;
+    private static final int NUM_POINTS=800;
     private static final int TEX_PER_ROW=5, TEX_PER_COLUMN=2;
     private static final float TEX_WIDTH=107.25f, TEX_HEIGHT=128.0f;
 
@@ -77,18 +77,26 @@ public class Bobs extends EffectManager {
         coords[offset + 6]=cxpw;
         coords[offset + 7]=cyph;
     }
-
+private long tt=0;
     private class Swarm extends Effect {
         public void onRender(GL11 gl, long t, long e, float s) {
             // Move the bobs.
-            int i, p=((int)t/40)&(~1);
+            int i, p=((int)tt/20);
+            tt+=40;
             for (i=0; i<NUM_BOBS; ++i) {
-                int offset=i*8, step=i*7;
+                int offset=i*8, step=i*9;
 
                 // Start moving the bobs one after the other, not all at the same time.
                 float px=quad_coords[offset];
-                int cx=((p+step)%NUM_POINTS)*2, cy=cx+1;
-                calcBobVertex2D(points[cx], points[cy], TEX_WIDTH*0.6f, TEX_HEIGHT*0.6f, quad_coords, offset);
+                //int cx=((p+step)%NUM_POINTS)*2, cy=cx+1;
+
+                final float amp_x=WIDTH/2.0f-WIDTH/10.0f, amp_y=HEIGHT/3.0f-HEIGHT/10.0f;
+                final float center_x=WIDTH/2.0f, center_y=HEIGHT/3.0f;
+
+                float angle=(float)(p+step)/NUM_POINTS*DemoMath.PI*2;
+                float x=FloatMath.cos(angle*3)*amp_x+center_x;
+                float y=FloatMath.sin(angle*5)*amp_y+center_y;
+                calcBobVertex2D(x, y, TEX_WIDTH*0.6f, TEX_HEIGHT*0.6f, quad_coords, offset);
                 if (px==0) {
                     break;
                 }
