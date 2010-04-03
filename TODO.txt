@@ -1,5 +1,7 @@
 For the final release:
 
+- Normalize MotionEvent coordinates
+
 - Replace the blinking dots in the intro part with textures
   (because few phones can render smoothed points)
 
