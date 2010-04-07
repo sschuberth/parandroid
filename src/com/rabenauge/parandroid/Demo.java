@@ -232,9 +232,18 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
             return false;
         }
 
-        // TODO: Do not hard-code these values, they come from the Milestone.
-        final float MAX_X=600, MAX_Y=320;
-        float x=Math.max(0, Math.min(event.getX()/MAX_X, 1)), y=Math.max(0, Math.min(event.getY()/MAX_Y, 1));
+        // Normalize the event coordinates (precision seems to always be 0).
+        float x=event.getX(), xp=event.getXPrecision();
+        if (xp!=0) {
+            x*=xp;
+        }
+        x/=v.getWidth();
+
+        float y=event.getY(), yp=event.getYPrecision();
+        if (yp!=0) {
+            y*=yp;
+        }
+        y/=v.getHeight();
 
         if (y<0.5f) {
             if (x<0.33f) {
