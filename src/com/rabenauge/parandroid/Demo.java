@@ -56,7 +56,8 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
 
         this.activity=activity;
 
-        //setDebugFlags(DEBUG_CHECK_GL_ERROR|DEBUG_LOG_GL_CALLS);
+        // Make sure we get a depth buffer. This is also required to get hardware acceleration on the Samsung Galaxy, see
+        // http://www.anddev.org/viewtopic.php?p=29081#29081
         setEGLConfigChooser(new EGLConfigChooser() {
             public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
                 int[] attributes={
@@ -70,6 +71,8 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
                 return configs[0];
            }
         });
+
+        //setDebugFlags(DEBUG_CHECK_GL_ERROR|DEBUG_LOG_GL_CALLS);
         setRenderer(this);
 
         sm=(SensorManager)activity.getSystemService(Context.SENSOR_SERVICE);
