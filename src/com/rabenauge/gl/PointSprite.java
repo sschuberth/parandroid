@@ -8,6 +8,9 @@ import javax.microedition.khronos.opengles.GL11;
 public class PointSprite extends Texture2D {
     public PointSprite(GL11 gl) {
         super(gl);
+
+        gl.glTexParameterx(target, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP_TO_EDGE);
+        gl.glTexParameterx(target, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP_TO_EDGE);
     }
 
     public void enable(boolean state) {
