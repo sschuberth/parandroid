@@ -10,3 +10,7 @@ For the final release:
 - Add the tunnel / camera texture "hidden" part
 
 - Print some greetings to the debug console
+
+- Use wrapped "direct" ByteBuffers for rendering
+
+- Use a sin/cos table
