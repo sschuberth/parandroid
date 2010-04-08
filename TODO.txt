@@ -1,8 +1,5 @@
 For the final release:
 
-- Replace the blinking dots in the intro part with textures
-  (because few phones can render smoothed points)
-
 - Fix the scroller's shadow (there are stripes from the line rendering)
 
 - Optimize the credits part / fix the alignment of the cubes
