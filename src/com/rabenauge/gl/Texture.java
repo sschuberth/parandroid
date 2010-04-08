@@ -20,15 +20,6 @@ public abstract class Texture extends Bindable {
         gl.glTexParameterx(target, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
     }
 
-    public void enable(boolean state) {
-        if (state) {
-            gl.glEnable(target);
-        }
-        else {
-            gl.glDisable(target);
-        }
-    }
-
     protected int create() {
         int[] textures=new int[1];
         gl.glGenTextures(1, textures, 0);

@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.util.FloatMath;
 import com.rabenauge.demo.*;
 import com.rabenauge.gl.*;
+
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import javax.microedition.khronos.opengles.GL11;
@@ -129,7 +130,7 @@ public class LogoChange extends EffectManager {
             logo_trsi.makeCurrent();
 
             gl.glActiveTexture(GL11.GL_TEXTURE1);
-            logo_rab.enable(true);
+            Helper.toggleState(gl, GL11.GL_TEXTURE_2D, true);
 
             float[] params={0, 0, 0, alpha};
             gl.glTexEnvfv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_COLOR, params, 0);
@@ -141,7 +142,7 @@ public class LogoChange extends EffectManager {
             }
 
             // Restore OpenGL states.
-            logo_rab.enable(false);
+            Helper.toggleState(gl, GL11.GL_TEXTURE_2D, false);
             gl.glActiveTexture(GL11.GL_TEXTURE0);
         }
     }

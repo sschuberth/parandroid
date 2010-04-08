@@ -79,7 +79,7 @@ public class IntroFade extends EffectManager {
         bitmap.recycle();
 
         // Set universal OpenGL states for all effects in this part.
-        title_droid.enable(true);
+        Helper.toggleState(gl, GL11.GL_TEXTURE_2D, true);
 
         gl.glEnable(GL11.GL_BLEND);
         gl.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
