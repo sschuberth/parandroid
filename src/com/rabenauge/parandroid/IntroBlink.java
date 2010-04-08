@@ -41,8 +41,8 @@ public class IntroBlink extends EffectManager {
             }
 
             // Set OpenGL states that differ from the concurrently running fading part.
+            Helper.toggleState(gl, GL11.GL_POINT_SPRITE_OES, true);
             gl.glEnableClientState(GL11.GL_COLOR_ARRAY);
-            dot.enable(true);
 
             // Set the projection to match the joint coordinates.
             gl.glMatrixMode(GL11.GL_PROJECTION);
@@ -58,8 +58,8 @@ public class IntroBlink extends EffectManager {
             // Restore OpenGL states for the fading part.
             gl.glPopMatrix();
 
-            dot.enable(false, true);
             gl.glDisableClientState(GL11.GL_COLOR_ARRAY);
+            Helper.toggleState(gl, GL11.GL_POINT_SPRITE_OES, false);
 
             // Yes, using color arrays seems to modify the color state!
             gl.glColor4f(1, 1, 1, 1);
