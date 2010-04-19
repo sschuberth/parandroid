@@ -8,6 +8,4 @@ For the final release:
 
 - Print some greetings to the debug console
 
-- Use wrapped "direct" ByteBuffers for rendering
-
 - Use a sin/cos table

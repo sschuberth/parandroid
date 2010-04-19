@@ -26,18 +26,19 @@ public class IntroBlink extends EffectManager {
     private static final float POINT_SIZE=7.0f;
 
     private PointSprite dot;
-    private int[] colors;
+    private ShortBuffer joints;
+    private IntBuffer colors;
 
     private class BlinkJoints extends Effect {
         public void onStart(GL11 gl) {
             dot.setSize(POINT_SIZE);
-            gl.glColorPointer(4, GL11.GL_FIXED, 0, IntBuffer.wrap(colors));
+            gl.glColorPointer(4, GL11.GL_FIXED, 0, colors);
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
             // Fade the colors.
-            for (int i=3; i<colors.length; i+=4) {
-                colors[i]=(int)((1.0f-FloatMath.cos(DemoMath.PI*s*i))/2.0f*65536);
+            for (int i=3; i<colors.capacity(); i+=4) {
+                colors.put(i, (int)((1.0f-FloatMath.cos(DemoMath.PI*s*i))/2.0f*65536));
             }
 
             // Set OpenGL states that differ from the concurrently running fading part.
@@ -52,8 +53,8 @@ public class IntroBlink extends EffectManager {
 
             dot.makeCurrent();
 
-            gl.glVertexPointer(2, GL11.GL_SHORT, 0, ShortBuffer.wrap(JOINTS));
-            gl.glDrawArrays(GL11.GL_POINTS, 0, JOINTS.length/2);
+            gl.glVertexPointer(2, GL11.GL_SHORT, 0, joints);
+            gl.glDrawArrays(GL11.GL_POINTS, 0, joints.capacity()/2);
 
             // Restore OpenGL states for the fading part.
             gl.glPopMatrix();
@@ -77,11 +78,14 @@ public class IntroBlink extends EffectManager {
         dot.setData(bitmap);
         bitmap.recycle();
 
-        colors=new int[JOINTS.length/2*4];
-        for (int i=0; i<colors.length; i+=4) {
-            colors[i  ]=(int)(1.0f*65536);
-            colors[i+1]=0;
-            colors[i+2]=0;
+        // Initialize the gl-pointer arrays.
+        joints=DirectBuffer.nativeShortBuffer(JOINTS);
+
+        colors=DirectBuffer.nativeIntBuffer(joints.capacity()/2*4);
+        for (int i=0; i<colors.capacity(); i+=4) {
+            colors.put(i  , (int)(1.0f*65536));
+            colors.put(i+1,                 0);
+            colors.put(i+2,                 0);
             // Set alpha when rendering.
         }
 

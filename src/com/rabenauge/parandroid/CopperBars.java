@@ -123,29 +123,29 @@ public class CopperBars extends EffectManager {
         super(gl);
 
         // Generate the cylinder geometry.
-        coords=IntBuffer.allocate(CYL_SIDES*3*2);
-        normals=IntBuffer.allocate(CYL_SIDES*3*2);
+        coords=DirectBuffer.nativeIntBuffer(CYL_SIDES*3*2);
+        normals=DirectBuffer.nativeIntBuffer(CYL_SIDES*3*2);
         calcCylinderGeom(CYL_RADIUS, CYL_LENGTH, CYL_SIDES, coords, normals);
 
-        indices=ShortBuffer.allocate(CYL_SIDES*2+2);
+        indices=DirectBuffer.nativeShortBuffer(CYL_SIDES*2+2);
         for (int i=0; i<CYL_SIDES; ++i) {
             indices.put((short)(i));
             indices.put((short)(i+CYL_SIDES));
         }
         indices.put((short)0);
         indices.put((short)CYL_SIDES);
-        indices.rewind();
+        indices.position(0);
 
         // Calculate the cylinder colors.
         colors=new ByteBuffer[3];
 
-        colors[0]=ByteBuffer.allocateDirect(CYL_SIDES*4*2);
+        colors[0]=DirectBuffer.nativeByteBuffer(CYL_SIDES*4*2);
         calcCylinderColors(CYL_SIDES, colors[0], 255, 255, 255);
 
-        colors[1]=ByteBuffer.allocateDirect(CYL_SIDES*4*2);
+        colors[1]=DirectBuffer.nativeByteBuffer(CYL_SIDES*4*2);
         calcCylinderColors(CYL_SIDES, colors[1], 255, 0, 0);
 
-        colors[2]=ByteBuffer.allocateDirect(CYL_SIDES*4*2);
+        colors[2]=DirectBuffer.nativeByteBuffer(CYL_SIDES*4*2);
         calcCylinderColors(CYL_SIDES, colors[2], 143, 115, 99);
 
         // Schedule the effects in this part.
