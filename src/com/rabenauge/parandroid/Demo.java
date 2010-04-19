@@ -99,6 +99,11 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+        // Get some Android device information.
+        Log.i(NAME, "DEVICE        : "    + android.os.Build.DEVICE);
+        Log.i(NAME, "MODEL         : "    + android.os.Build.MODEL);
+        Log.i(NAME, "PRODUCT       : "    + android.os.Build.PRODUCT);
+
         // Get some OpenGL information.
         Log.i(NAME, "GL_VENDOR     : "    + gl.glGetString(GL10.GL_VENDOR));
         Log.i(NAME, "GL_RENDERER   : "    + gl.glGetString(GL10.GL_RENDERER));
