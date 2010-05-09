@@ -14,7 +14,9 @@ import javax.microedition.khronos.opengles.GL11;
 public class Bobs extends EffectManager {
     private static final int WIDTH=800, HEIGHT=480;
     private static final int NUM_BOBS=10;
-    private static final int NUM_POINTS=800;
+    private static final float SPEED=0.9f;
+    private static final float AMP_X=WIDTH/2.0f-WIDTH/10.0f, AMP_Y=HEIGHT/3.0f-HEIGHT/10.0f;
+    private static final float CENTER_X=WIDTH/2.0f, CENTER_Y=HEIGHT/3.0f;
     private static final int TEX_PER_ROW=5, TEX_PER_COLUMN=2;
     private static final float TEX_WIDTH=107.25f, TEX_HEIGHT=128.0f;
 
@@ -23,7 +25,6 @@ public class Bobs extends EffectManager {
 
     private int[] quad_coords, tex_coords;
     private short[] indices;
-    private float[] points;
 
     public void toggleBobs() {
         bob_toggle=!bob_toggle;
@@ -77,30 +78,36 @@ public class Bobs extends EffectManager {
         coords[offset + 6]=cxpw;
         coords[offset + 7]=cyph;
     }
-private long tt=0;
+
     private class Swarm extends Effect {
+        private int counter=0;
+
         public void onRender(GL11 gl, long t, long e, float s) {
+            int i;
+
+            // Do not use the time here in order to have equidistant bob positions for
+            // each frame and thus make the animation smooth and not juddering.
+            float pos=counter*SPEED;
+
             // Move the bobs.
-            int i, p=((int)tt/20);
-            tt+=40;
             for (i=0; i<NUM_BOBS; ++i) {
-                int offset=i*8, step=i*9;
+                int offset=i*8, step=i*4;
 
                 // Start moving the bobs one after the other, not all at the same time.
                 float px=quad_coords[offset];
-                //int cx=((p+step)%NUM_POINTS)*2, cy=cx+1;
 
-                final float amp_x=WIDTH/2.0f-WIDTH/10.0f, amp_y=HEIGHT/3.0f-HEIGHT/10.0f;
-                final float center_x=WIDTH/2.0f, center_y=HEIGHT/3.0f;
+                float angle=(pos+step)/360*DemoMath.PI*2;
+                float x=FloatMath.cos(angle*3)*AMP_X+CENTER_X;
+                float y=FloatMath.sin(angle*5)*AMP_Y+CENTER_Y;
 
-                float angle=(float)(p+step)/NUM_POINTS*DemoMath.PI*2;
-                float x=FloatMath.cos(angle*3)*amp_x+center_x;
-                float y=FloatMath.sin(angle*5)*amp_y+center_y;
                 calcBobVertex2D(x, y, TEX_WIDTH*0.6f, TEX_HEIGHT*0.6f, quad_coords, offset);
+
                 if (px==0) {
                     break;
                 }
             }
+
+            ++counter;
 
             // Set OpenGL states.
             gl.glMatrixMode(GL11.GL_PROJECTION);
@@ -166,18 +173,6 @@ private long tt=0;
             indices[b+5]=(short)(v+1);
             b+=6;
             v+=4;
-        }
-
-        final float amp_x=WIDTH/2.0f-WIDTH/10.0f, amp_y=HEIGHT/3.0f-HEIGHT/10.0f;
-        final float center_x=WIDTH/2.0f, center_y=HEIGHT/3.0f;
-
-        points=new float[NUM_POINTS*2];
-
-        int p=0;
-        for (int i=0; i<NUM_POINTS; ++i) {
-            float angle=(float)i/NUM_POINTS*DemoMath.PI*2;
-            points[p++]=FloatMath.cos(angle*3)*amp_x+center_x;
-            points[p++]=FloatMath.sin(angle*5)*amp_y+center_y;
         }
 
         // Schedule the effects in this part.
