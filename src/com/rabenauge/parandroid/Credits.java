@@ -7,158 +7,149 @@ import android.util.FloatMath;
 import com.rabenauge.demo.*;
 import com.rabenauge.gl.*;
 
-import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
-import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 public class Credits extends EffectManager {
+    private static final int FACE_FRONT=0, FACE_RIGHT=1, FACE_BACK=2, FACE_LEFT=3, FACE_TOP=4, FACE_BOTTOM=5, FACE_COUNT=6;
+    private static final int CREDITS_NAMES=0, CREDITS_RAB=1, CREDITS_TRSI=2, CREDITS_FINAL=3;
+
+    private static final ShortBuffer vertices=DirectBuffer.nativeShortBuffer(6*4*3)
+        // Front face
+        .put((short)+1).put((short)+1).put((short)+1)
+        .put((short)-1).put((short)+1).put((short)+1)
+        .put((short)-1).put((short)-1).put((short)+1)
+        .put((short)+1).put((short)-1).put((short)+1)
+
+        // Right face
+        .put((short)+1).put((short)+1).put((short)-1)
+        .put((short)+1).put((short)+1).put((short)+1)
+        .put((short)+1).put((short)-1).put((short)+1)
+        .put((short)+1).put((short)-1).put((short)-1)
+
+        // Back face
+        .put((short)+1).put((short)-1).put((short)-1)
+        .put((short)-1).put((short)-1).put((short)-1)
+        .put((short)-1).put((short)+1).put((short)-1)
+        .put((short)+1).put((short)+1).put((short)-1)
+
+        // Left face
+        .put((short)-1).put((short)+1).put((short)+1)
+        .put((short)-1).put((short)+1).put((short)-1)
+        .put((short)-1).put((short)-1).put((short)-1)
+        .put((short)-1).put((short)-1).put((short)+1)
+
+        // Top face
+        .put((short)+1).put((short)+1).put((short)-1)
+        .put((short)-1).put((short)+1).put((short)-1)
+        .put((short)-1).put((short)+1).put((short)+1)
+        .put((short)+1).put((short)+1).put((short)+1)
+
+        // Bottom face
+        .put((short)+1).put((short)-1).put((short)+1)
+        .put((short)-1).put((short)-1).put((short)+1)
+        .put((short)-1).put((short)-1).put((short)-1)
+        .put((short)+1).put((short)-1).put((short)-1)
+    ;
+
+    static {
+        // Reset the position before using the buffer!
+        vertices.position(0);
+    }
+
     private Demo demo;
     private Texture2D[] textures;
 
     private class Cubes extends Effect {
-        private final static int MAX_X=5;
-        private final static int MAX_Y=3;
-
-        private  float[][] cubeVertexCoords = new float[][] {
-            new float[] { // top
-                 1, 1,-1,
-                -1, 1,-1,
-                -1, 1, 1,
-                 1, 1, 1
-            },
-            new float[] { // bottom
-                 1,-1, 1,
-                -1,-1, 1,
-                -1,-1,-1,
-                 1,-1,-1
-            },
-            new float[] { // front
-                 1, 1, 1,
-                -1, 1, 1,
-                -1,-1, 1,
-                 1,-1, 1
-            },
-            new float[] { // back
-                 1,-1,-1,
-                -1,-1,-1,
-                -1, 1,-1,
-                 1, 1,-1
-            },
-            new float[] { // left
-                -1, 1, 1,
-                -1, 1,-1,
-                -1,-1,-1,
-                -1,-1, 1
-            },
-            new float[] { // right
-                 1, 1,-1,
-                 1, 1, 1,
-                 1,-1, 1,
-                 1,-1,-1
-            },
-        };
-
-        private float[] cubeTextureCoords = new float[8];
-        private FloatBuffer[] cubeVertexBfr;
-
-        private float cubeRotX;
-        private float cubeRotY;
-        private float cubeRotZ;
+        private int num_cubes_x, num_cubes_y;
+        private IntBuffer tex_coords;
 
         private float cubeRotXStart=0;
+        private float xpos, ypos;
 
-        private float ypos;
-        private float xpos;
+        public Cubes(int num_cubes_x, int num_cubes_y) {
+            this.num_cubes_x=num_cubes_x;
+            this.num_cubes_y=num_cubes_y;
 
-        public void onStart(GL11 gl) {
-            cubeVertexBfr = new FloatBuffer[6];
-            for (int i = 0; i < 6; i++)
-            {
-                cubeVertexBfr[i] = FloatBuffer.wrap(cubeVertexCoords[i]);
+            tex_coords=DirectBuffer.nativeIntBuffer(num_cubes_x*num_cubes_y*4*2);
+
+            float step_x=65536.0f/num_cubes_x, step_y=65536.0f/num_cubes_y;
+            for (int y=0; y<num_cubes_y; ++y) {
+                int y0=(int)(y*step_y), y1=(int)((y+1)*step_y);
+
+                for (int x=0; x<num_cubes_x; ++x) {
+                    int x0=(int)(x*step_x), x1=(int)((x+1)*step_x);
+
+                    tex_coords.put(x1);  tex_coords.put(y0);
+                    tex_coords.put(x0);  tex_coords.put(y0);
+                    tex_coords.put(x0);  tex_coords.put(y1);
+                    tex_coords.put(x1);  tex_coords.put(y1);
+                }
             }
 
-            gl.glEnable(GL10.GL_CULL_FACE);
+            tex_coords.position(0);
         }
 
-        @Override
         public void onRender(GL11 gl, long t, long e, float s) {
-            cubeRotX=cubeRotXStart+s*90;
+            float cubeRotX=cubeRotXStart+s*90;
 
-            gl.glEnable(GL10.GL_DEPTH_TEST);
-            gl.glClear(GL10.GL_COLOR_BUFFER_BIT|GL10.GL_DEPTH_BUFFER_BIT);
+            gl.glEnable(GL11.GL_CULL_FACE);
+            gl.glEnable(GL11.GL_DEPTH_TEST);
+            gl.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
 
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadIdentity();
+            gl.glMatrixMode(GL11.GL_MODELVIEW);
 
-            xpos=-6f;
+            // Move the cube centers so the cubes will be centered in x-direction.
+            xpos=-num_cubes_x+1;
+            for(int x=0; x<num_cubes_x; ++x, xpos+=2.0f) {
+                // Move the cube centers so the cubes will be centered in y-direction.
+                ypos=num_cubes_y-1;
 
-            // draw the cubes
-            for(int x=0;x<MAX_X;x++)
-            {
-                xpos+=2f;
-                ypos=-4f;
-                for(int y=0;y<MAX_Y;y++)
-                {
+                for(int y=0; y<num_cubes_y; ++y, ypos-=2.0f) {
                     gl.glLoadIdentity();
-                    ypos+=2f;
 
+                    // Position the cubes.
+                    gl.glTranslatef(xpos, ypos, -8);
+
+                    // Spread out the cubes.
                     float f=1-FloatMath.cos(s*2*DemoMath.PI);
-                    gl.glTranslatef(xpos+(x-MAX_X/2)*f*2, ypos+(y-MAX_Y/2)*f*2, -8);
-
+                    gl.glTranslatef(xpos*f, ypos*f, -f*4);
                     gl.glRotatef(cubeRotX, 1, 0, 0);
-                    gl.glRotatef(cubeRotY, 0, 1, 0);
-                    gl.glRotatef(cubeRotZ, 0, 0, 1);
 
-                    for (int i = 0; i < 6; i++) // draw each face
-                    {
-                        switch (i)
-                        {
-                            case 0: textures[1].makeCurrent(); break; // top
-                            case 1: textures[3].makeCurrent(); break; // bottom
-                            case 2: textures[0].makeCurrent(); break; // front
-                            case 3: textures[2].makeCurrent(); break; // back
+                    tex_coords.position((y*num_cubes_x+x)*4*2);
+                    gl.glTexCoordPointer(2, GL11.GL_FIXED, 0, tex_coords.slice());
+
+                    for (int i=0; i<FACE_COUNT; ++i) {
+                        // Switch for the cubes faces in the order they are shown.
+                        switch(i) {
+                            case FACE_FRONT  : textures[CREDITS_NAMES].makeCurrent(); break;
+                            case FACE_TOP    : textures[CREDITS_RAB  ].makeCurrent(); break;
+                            case FACE_BACK   : textures[CREDITS_TRSI ].makeCurrent(); break;
+                            case FACE_BOTTOM : textures[CREDITS_FINAL].makeCurrent(); break;
+
+                            // Not shown:
+                            case FACE_LEFT   : textures[CREDITS_RAB  ].makeCurrent(); break;
+                            case FACE_RIGHT  : textures[CREDITS_TRSI ].makeCurrent(); break;
                         }
 
-                        setTextureCoords(x, y);
+                        vertices.position(i*4*3);
+                        gl.glVertexPointer(3, GL11.GL_SHORT, 0, vertices.slice());
 
-                        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, cubeVertexBfr[i]);
-                        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, FloatBuffer.wrap(cubeTextureCoords));
-                        gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+                        gl.glDrawArrays(GL11.GL_TRIANGLE_FAN, 0, 4);
                     }
                 }
             }
 
-            gl.glDisable(GL10.GL_DEPTH_TEST);
+            gl.glLoadIdentity();
+
+            gl.glDisable(GL11.GL_DEPTH_TEST);
+            gl.glDisable(GL11.GL_CULL_FACE);
         }
 
         public void onStop(GL11 gl) {
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadIdentity();
-
-            gl.glDisable(GL10.GL_CULL_FACE);
-
             cubeRotXStart+=90;
-        }
-
-        private void setTextureCoords(int x,int y)
-        {
-            float y2=2;
-            y2=y2-y;
-
-            // Hard-code the scaled POT texture size.
-            float W=1024;
-            float H=512;
-
-            float xOL=(W/MAX_X)*x;
-            float xOR=(W/MAX_X)*(x+1);
-            float yO=(H/MAX_Y)*y2;
-            float yU=(H/MAX_Y)*(y2+1);
-
-            cubeTextureCoords[0]=(xOR)/W;    cubeTextureCoords[1]=(yO)/H;
-            cubeTextureCoords[2]=(xOL)/W;    cubeTextureCoords[3]=(yO)/H;
-            cubeTextureCoords[4]=(xOL)/W;    cubeTextureCoords[5]=(yU)/H;
-            cubeTextureCoords[6]=(xOR)/W;    cubeTextureCoords[7]=(yU)/H;
         }
     }
 
@@ -170,7 +161,7 @@ public class Credits extends EffectManager {
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
+            gl.glMatrixMode(GL11.GL_MODELVIEW);
             gl.glPushMatrix();
             gl.glLoadIdentity();
             float f=FloatMath.sin(s*DemoMath.PI)/50;
@@ -199,7 +190,6 @@ public class Credits extends EffectManager {
 
             // Fade out the sound.
             float dB=(1-s)*15;
-            android.util.Log.i("dB", String.valueOf(dB));
             demo.getMediaPlayer().setVolume(dB, dB);
         }
     }
@@ -227,7 +217,7 @@ public class Credits extends EffectManager {
         long d=Demo.DURATION_PART_OUTRO/(2+(1+2)*ids.length+8);
         add(new EffectManager.TextureShow(textures[0]), 2*d);
 
-        Cubes cubes=new Cubes();
+        Cubes cubes=new Cubes(5, 3);
         for (int i=1; i<ids.length; ++i) {
             add(cubes, 1*d);
             add(new TextureShake(textures[i]), 300);

@@ -2,8 +2,6 @@ For the final release:
 
 - Fix the scroller's shadow (there are stripes from the line rendering)
 
-- Optimize the credits part / fix the alignment of the cubes
-
 - Add the tunnel / camera texture "hidden" part
 
 - Print some greetings to the debug console
