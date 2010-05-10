@@ -37,4 +37,14 @@ public class DirectBuffer {
         buffer.put(array).position(0);
         return buffer;
     }
+
+    public static FloatBuffer nativeFloatBuffer(int capacity) {
+        return nativeByteBuffer(capacity*Float.SIZE>>3).asFloatBuffer();
+    }
+
+    public static FloatBuffer nativeFloatBuffer(float[] array) {
+        FloatBuffer buffer=nativeFloatBuffer(array.length);
+        buffer.put(array).position(0);
+        return buffer;
+    }
 }
