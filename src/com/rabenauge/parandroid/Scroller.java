@@ -15,6 +15,7 @@ public class Scroller extends EffectManager {
     private static final int WIDTH=800, HEIGHT=480;
     private static final int SCROLLER_POS_Y=360;
     private static final int CHAR_SIZE=2+66+2;
+    private static final int SHADOW_OFFSET=12;
 
     private static final String CHARS="abcdefghijklmnopqrstuvwxyz.:-,`´!»«+";
     private static final String TEXT=
@@ -194,23 +195,21 @@ public class Scroller extends EffectManager {
             // Draw the text shadow.
             gl.glMatrixMode(GL11.GL_MODELVIEW);
             gl.glPushMatrix();
-            float shadow=12;
-            gl.glTranslatef(shadow, shadow, 0);
 
             // Choose to use texture combiners.
             gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_COMBINE);
 
+            gl.glTranslatef(0, SHADOW_OFFSET, 0);
             gl.glDrawArrays(GL11.GL_LINES, 0, line_coords.capacity()/2);
 
-            // Restore OpenGL states.
             gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
-            gl.glPopMatrix();
-
             // Draw the text.
+            gl.glTranslatef(-SHADOW_OFFSET, -SHADOW_OFFSET, 0);
             gl.glDrawArrays(GL11.GL_LINES, 0, line_coords.capacity()/2);
 
             // Restore OpenGL states.
+            gl.glPopMatrix();
             gl.glMatrixMode(GL11.GL_PROJECTION);
             gl.glPopMatrix();
         }
@@ -274,10 +273,10 @@ public class Scroller extends EffectManager {
         // Generate the geometry and texture coordinates.
         calcTexCoords(TEXT, bitmap.getWidth(), bitmap.getHeight(), 12, 3);
 
-        line_coords=DirectBuffer.nativeShortBuffer(WIDTH*2*2);
+        line_coords=DirectBuffer.nativeShortBuffer((WIDTH+SHADOW_OFFSET)*2*2);
 
         int y0=SCROLLER_POS_Y, y1=y0+CHAR_SIZE;
-        for (int x=0; x<WIDTH; ++x) {
+        for (int x=0; x<WIDTH+SHADOW_OFFSET; ++x) {
             // Start vertex x / y.
             line_coords.put((short)x);
             line_coords.put((short)y0);
