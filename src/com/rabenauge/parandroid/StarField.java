@@ -26,14 +26,14 @@ public class StarField extends EffectManager {
         private long t_last=-1;
 
         public void onStart(GL11 gl) {
-            gl.glEnable(GL11.GL_LINE_SMOOTH);
-
             // Using TYPE_ALL here does *not* work to listen to all sensors.
             Sensor sensor=sm.getDefaultSensor(Sensor.TYPE_ORIENTATION);
             sm.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
+            gl.glEnable(GL11.GL_LINE_SMOOTH);
+
             for (int i=0; i<star_coords.capacity(); i+=4) {
                 float factor=star_speeds.get(i)*e/500;
 
@@ -74,12 +74,12 @@ public class StarField extends EffectManager {
                     star_coords.put(i+1, (int)(DemoMath.randomize(HEIGHT, center_y)));
                 }
             }
+
+            gl.glDisable(GL11.GL_LINE_SMOOTH);
         }
 
         public void onStop(GL11 gl) {
             sm.unregisterListener(this);
-
-            gl.glDisable(GL11.GL_LINE_SMOOTH);
         }
 
         public void onAccuracyChanged(Sensor sensor, int accuracy) {

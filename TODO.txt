@@ -1,7 +1,5 @@
 Ideas for the final release:
 
-- Fix the scroller's shadow (there are stripes from the line rendering)
-
 - Add the tunnel / camera texture "hidden" part
 
 - Adjust the scroller text
