@@ -1,9 +1,9 @@
-For the final release:
+Ideas for the final release:
 
 - Fix the scroller's shadow (there are stripes from the line rendering)
 
 - Add the tunnel / camera texture "hidden" part
 
-- Print some greetings to the debug console
+- Adjust the scroller text
 
-- Use a sin/cos table
+- Maybe use a global sin/cos table
