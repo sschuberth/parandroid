@@ -13,7 +13,7 @@ public class Helper {
     private static final ByteBuffer VERTICES=ByteBuffer.allocateDirect(8).put((byte)0).put((byte)0).put((byte)0).put(HEIGHT).put(WIDTH).put(HEIGHT).put(WIDTH).put((byte)0);
 
     static {
-        // Reset the buffer position before using the buffer!
+        // Reset the position before using the buffer!
         VERTICES.position(0);
     }
 
