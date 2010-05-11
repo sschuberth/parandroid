@@ -23,8 +23,8 @@ public class Bobs extends EffectManager {
     private Texture2D bobs_static, bobs_dynamic;
     private boolean bob_toggle=false;
 
-    private IntBuffer quad_coords, tex_coords;
-    private ShortBuffer indices;
+    private int[] quad_coords, tex_coords;
+    private short[] indices;
 
     public void toggleBobs() {
         bob_toggle=!bob_toggle;
@@ -34,30 +34,26 @@ public class Bobs extends EffectManager {
         bob_toggle=toggle;
     }
 
-    public static void calcBobTexture2D(int tex_per_row, int tex_per_column, int index, IntBuffer coords, int offset) {
+    public static void calcBobTexture2D(int tex_per_row, int tex_per_column, int index, int[] coords, int offset) {
         float x_step=1.0f/tex_per_row,y_step=1.0f/tex_per_column;
         int x=index%tex_per_row, y=index/tex_per_row;
         int x_min=(int)(x*x_step*65536), x_max=x_min+(int)(x_step*65536);
         int y_min=(int)(y*y_step*65536), y_max=y_min+(int)(y_step*65536);
 
-        coords.position(offset);
+        coords[offset    ]=x_min;
+        coords[offset + 1]=y_min;
 
-        coords.put(x_min);
-        coords.put(y_min);
+        coords[offset + 2]=x_min;
+        coords[offset + 3]=y_max;
 
-        coords.put(x_min);
-        coords.put(y_max);
+        coords[offset + 4]=x_max;
+        coords[offset + 5]=y_min;
 
-        coords.put(x_max);
-        coords.put(y_min);
-
-        coords.put(x_max);
-        coords.put(y_max);
-
-        coords.position(0);
+        coords[offset + 6]=x_max;
+        coords[offset + 7]=y_max;
     }
 
-    public static void calcBobVertex2D(float center_x, float center_y, float width, float height, IntBuffer coords, int offset) {
+    public static void calcBobVertex2D(float center_x, float center_y, float width, float height, int[] coords, int offset) {
         width/=2;
         height/=2;
 
@@ -66,25 +62,21 @@ public class Bobs extends EffectManager {
         int cymh=(int)((center_y-height)*65536);
         int cyph=(int)((center_y+height)*65536);
 
-        coords.position(offset);
-
         // UL
-        coords.put(cxmw);
-        coords.put(cymh);
+        coords[offset    ]=cxmw;
+        coords[offset + 1]=cymh;
 
         // LL
-        coords.put(cxmw);
-        coords.put(cyph);
+        coords[offset + 2]=cxmw;
+        coords[offset + 3]=cyph;
 
         // UR
-        coords.put(cxpw);
-        coords.put(cymh);
+        coords[offset + 4]=cxpw;
+        coords[offset + 5]=cymh;
 
         // LR
-        coords.put(cxpw);
-        coords.put(cyph);
-
-        coords.position(0);
+        coords[offset + 6]=cxpw;
+        coords[offset + 7]=cyph;
     }
 
     private class Swarm extends Effect {
@@ -102,7 +94,7 @@ public class Bobs extends EffectManager {
                 int offset=i*8, step=i*4;
 
                 // Start moving the bobs one after the other, not all at the same time.
-                float px=quad_coords.get(offset);
+                float px=quad_coords[offset];
 
                 float angle=(pos+step)/360*DemoMath.PI*2;
                 float x=FloatMath.cos(angle*3)*AMP_X+CENTER_X;
@@ -131,9 +123,9 @@ public class Bobs extends EffectManager {
             }
 
             // Render the bobs.
-            gl.glTexCoordPointer(2, GL11.GL_FIXED, 0, tex_coords);
-            gl.glVertexPointer(2, GL11.GL_FIXED, 0, quad_coords);
-            gl.glDrawElements(GL11.GL_TRIANGLES, i*6, GL11.GL_UNSIGNED_SHORT, indices);
+            gl.glTexCoordPointer(2, GL11.GL_FIXED, 0, IntBuffer.wrap(tex_coords));
+            gl.glVertexPointer(2, GL11.GL_FIXED, 0, IntBuffer.wrap(quad_coords));
+            gl.glDrawElements(GL11.GL_TRIANGLES, i*6, GL11.GL_UNSIGNED_SHORT, ShortBuffer.wrap(indices));
 
             // Restore OpenGL states.
             gl.glPopMatrix();
@@ -157,28 +149,31 @@ public class Bobs extends EffectManager {
         bitmap.recycle();
 
         // Generate the geometry and texture coordinates.
-        quad_coords=DirectBuffer.nativeIntBuffer(NUM_BOBS*4*2);
-        tex_coords=DirectBuffer.nativeIntBuffer(NUM_BOBS*4*2);
-        indices=DirectBuffer.nativeShortBuffer(NUM_BOBS*6);
+        quad_coords=new int[NUM_BOBS*4*2];
+        tex_coords=new int[NUM_BOBS*4*2];
+        indices=new short[NUM_BOBS*6];
 
-        int v=0;
+        int b=0, v=0;
         for (int i=0; i<NUM_BOBS; ++i) {
             int offset=i*8;
 
             // Vertices are calculated in the render loop.
+            quad_coords[offset+0]=quad_coords[offset+1]=0;
+            quad_coords[offset+2]=quad_coords[offset+3]=0;
+            quad_coords[offset+4]=quad_coords[offset+5]=0;
+            quad_coords[offset+6]=quad_coords[offset+7]=0;
 
             calcBobTexture2D(TEX_PER_ROW, TEX_PER_COLUMN, NUM_BOBS-1-i, tex_coords, offset);
 
-            indices.put((short)(v+0));
-            indices.put((short)(v+1));
-            indices.put((short)(v+2));
-            indices.put((short)(v+3));
-            indices.put((short)(v+2));
-            indices.put((short)(v+1));
-
+            indices[b+0]=(short)(v+0);
+            indices[b+1]=(short)(v+1);
+            indices[b+2]=(short)(v+2);
+            indices[b+3]=(short)(v+3);
+            indices[b+4]=(short)(v+2);
+            indices[b+5]=(short)(v+1);
+            b+=6;
             v+=4;
         }
-        indices.position(0);
 
         // Schedule the effects in this part.
         add(new Swarm(), Demo.DURATION_MAIN_EFFECTS);

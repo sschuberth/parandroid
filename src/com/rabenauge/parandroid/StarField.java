@@ -13,8 +13,8 @@ public class StarField extends EffectManager {
     private static final int DEF_CENTER_X=WIDTH/2, DEF_CENTER_Y=HEIGHT/2;
     private int center_x=DEF_CENTER_X, center_y=DEF_CENTER_Y;
 
-    private IntBuffer star_coords;
-    private IntBuffer star_speeds;
+    private int[] star_coords;
+    private int[] star_speeds;
 
     private SensorManager sm;
     public Flight flight;
@@ -34,13 +34,12 @@ public class StarField extends EffectManager {
         public void onRender(GL11 gl, long t, long e, float s) {
             gl.glEnable(GL11.GL_LINE_SMOOTH);
 
-            for (int i=0; i<star_coords.capacity(); i+=4) {
-                float factor=star_speeds.get(i)*e/500;
+            for (int i=0; i<star_coords.length; i+=4) {
+                float factor=star_speeds[i]*e/500;
 
                 // Avoid flickering of small stars by making the lines at least two pixels long.
-                int x=star_coords.get(i), y=star_coords.get(i+1);
-                star_coords.put(i+2, x + (int)((x-center_x)*factor/65536.0f));
-                star_coords.put(i+3, y + (int)((y-center_y)*factor/65536.0f));
+                star_coords[i+2]=star_coords[i  ] + (int)((star_coords[i  ]-center_x)*factor/65536.0f);
+                star_coords[i+3]=star_coords[i+1] + (int)((star_coords[i+1]-center_y)*factor/65536.0f);
             }
 
             // Set OpenGL states.
@@ -53,9 +52,9 @@ public class StarField extends EffectManager {
             gl.glLoadIdentity();
             GLU.gluOrtho2D(gl, 0, WIDTH/65536.0f, HEIGHT/65536.0f, 0);
 
-            gl.glColorPointer(4, GL11.GL_FIXED, 0, star_speeds);
-            gl.glVertexPointer(2, GL11.GL_FIXED, 0, star_coords);
-            gl.glDrawArrays(GL11.GL_LINES, 0, star_coords.capacity()/2);
+            gl.glColorPointer(4, GL11.GL_FIXED, 0, IntBuffer.wrap(star_speeds));
+            gl.glVertexPointer(2, GL11.GL_FIXED, 0, IntBuffer.wrap(star_coords));
+            gl.glDrawArrays(GL11.GL_LINES, 0, star_coords.length/2);
 
             // Restore OpenGL states.
             gl.glPopMatrix();
@@ -64,14 +63,14 @@ public class StarField extends EffectManager {
             gl.glEnable(GL11.GL_TEXTURE_2D);
 
             // Move the stars.
-            for (int i=0; i<star_coords.capacity(); i+=4) {
-                star_coords.put(i  , star_coords.get(i+2));
-                star_coords.put(i+1, star_coords.get(i+3));
-
-                int x=star_coords.get(i), y=star_coords.get(i+1);
-                if (x<0 || x>=WIDTH || y<0 || y>=HEIGHT) {
-                    star_coords.put(i  , (int)(DemoMath.randomize(WIDTH , center_x)));
-                    star_coords.put(i+1, (int)(DemoMath.randomize(HEIGHT, center_y)));
+            for (int i=0; i<star_coords.length; i+=4) {
+                star_coords[i  ]=star_coords[i+2];
+                star_coords[i+1]=star_coords[i+3];
+                if (star_coords[i  ]<0 || star_coords[i  ]>=WIDTH
+                 || star_coords[i+1]<0 || star_coords[i+1]>=HEIGHT) 
+                {
+                    star_coords[i  ]=(int)(DemoMath.randomize(WIDTH , center_x));
+                    star_coords[i+1]=(int)(DemoMath.randomize(HEIGHT, center_y));
                 }
             }
 
@@ -126,24 +125,24 @@ public class StarField extends EffectManager {
         sm=demo.getSensorManager();
 
         // Stores x, y per star vertex.
-        star_coords=DirectBuffer.nativeIntBuffer(count*2*2);
+        star_coords=new int[count*2*2];
         // Stores r, g, b, a per star vertex.
-        star_speeds=DirectBuffer.nativeIntBuffer(count*4*2);
+        star_speeds=new int[count*4*2];
 
-        for (int c=0, s=0; c<star_coords.capacity(); c+=4, s+=8) {
-            star_coords.put(c  , (int)(DemoMath.randomize(WIDTH , center_x)));
-            star_coords.put(c+1, (int)(DemoMath.randomize(HEIGHT, center_y)));
+        for (int c=0, s=0; c<star_coords.length; c+=4, s+=8) {
+            star_coords[c  ]=(int)(DemoMath.randomize(WIDTH , center_x));
+            star_coords[c+1]=(int)(DemoMath.randomize(HEIGHT, center_y));
 
             // The speed is also used as the grayscale color.
-            star_speeds.put(s  , (int)(DemoMath.randomize(1, 0)*65536));
-            star_speeds.put(s+1, star_speeds.get(s));
-            star_speeds.put(s+2, star_speeds.get(s));
-            star_speeds.put(s+3, (int)(1.0f*65536));
+            star_speeds[s  ]=(int)(DemoMath.randomize(1, 0)*65536);
+            star_speeds[s+1]=star_speeds[s];
+            star_speeds[s+2]=star_speeds[s];
+            star_speeds[s+3]=(int)(1.0f*65536);
 
-            star_speeds.put(s+4, star_speeds.get(s  ));
-            star_speeds.put(s+5, star_speeds.get(s+1));
-            star_speeds.put(s+6, star_speeds.get(s+2));
-            star_speeds.put(s+7, star_speeds.get(s+3));
+            star_speeds[s+4]=star_speeds[s  ];
+            star_speeds[s+5]=star_speeds[s+1];
+            star_speeds[s+6]=star_speeds[s+2];
+            star_speeds[s+7]=star_speeds[s+3];
         }
 
         // Schedule the effects in this part.

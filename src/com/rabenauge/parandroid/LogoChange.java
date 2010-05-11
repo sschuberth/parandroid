@@ -19,8 +19,8 @@ public class LogoChange extends EffectManager {
 
     private Texture2D logo_trsi, logo_rab;
 
-    private IntBuffer grid_coords, tex_coords;
-    private ShortBuffer[] indices;
+    private int[] grid_coords, tex_coords;
+    private short[][] indices;
     private float[][] dists;
 
     private Change change=null;
@@ -34,7 +34,7 @@ public class LogoChange extends EffectManager {
         public void onStart(GL11 gl) {
             gl.glClientActiveTexture(GL11.GL_TEXTURE1);
             gl.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-            gl.glTexCoordPointer(2, GL11.GL_FIXED, 0, tex_coords);
+            gl.glTexCoordPointer(2, GL11.GL_FIXED, 0, IntBuffer.wrap(tex_coords));
             gl.glClientActiveTexture(GL11.GL_TEXTURE0);
 
             gl.glActiveTexture(GL11.GL_TEXTURE1);
@@ -117,7 +117,7 @@ public class LogoChange extends EffectManager {
             int g=2;
             for (int y=0; y<grid_y; ++y) {
                 for (int x=0; x<grid_x; ++x) {
-                    grid_coords.put(g,(int)((FloatMath.cos((dists[y][x]+amp*100)*freq)*amp/4-1)*65536));
+                    grid_coords[g]=(int)((FloatMath.cos((dists[y][x]+amp*100)*freq)*amp/4-1)*65536);
                     g+=3;
                 }
             }
@@ -135,10 +135,10 @@ public class LogoChange extends EffectManager {
             float[] params={0, 0, 0, alpha};
             gl.glTexEnvfv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_COLOR, params, 0);
 
-            gl.glTexCoordPointer(2, GL11.GL_FIXED, 0, tex_coords);
-            gl.glVertexPointer(3, GL11.GL_FIXED, 0, grid_coords);
+            gl.glTexCoordPointer(2, GL11.GL_FIXED, 0, IntBuffer.wrap(tex_coords));
+            gl.glVertexPointer(3, GL11.GL_FIXED, 0, IntBuffer.wrap(grid_coords));
             for (int i=0; i<grid_y-1; ++i) {
-                gl.glDrawElements(GL11.GL_TRIANGLE_STRIP, indices[i].capacity(), GL11.GL_UNSIGNED_SHORT, indices[i]);
+                gl.glDrawElements(GL11.GL_TRIANGLE_STRIP, indices[i].length, GL11.GL_UNSIGNED_SHORT, ShortBuffer.wrap(indices[i]));
             }
 
             // Restore OpenGL states.
@@ -175,18 +175,15 @@ public class LogoChange extends EffectManager {
         bitmap.recycle();
 
         // Generate the geometry and texture coordinates.
-        grid_coords=DirectBuffer.nativeIntBuffer(grid_x*grid_y*3);
-        tex_coords=DirectBuffer.nativeIntBuffer(grid_x*grid_y*2);
-        indices=new ShortBuffer[grid_y];
-        for (int y=0; y<grid_y; ++y) {
-            indices[y]=DirectBuffer.nativeShortBuffer(grid_x*2);
-        }
+        grid_coords=new int[grid_x*grid_y*3];
+        tex_coords=new int[grid_x*grid_y*2];
+        indices=new short[grid_y][grid_x*2];
         dists=new float[grid_y][grid_x];
 
         float x0=-0.4f, x1=0.4f;
         float y0=0.35f, y1=-0.15f;
 
-        int g=0;
+        int g=0, t=0;
         for (int y=0; y<grid_y; ++y) {
             float sy=(float)y/grid_y;
 
@@ -199,23 +196,20 @@ public class LogoChange extends EffectManager {
                 int x2=grid_x/2-x;
                 x2*=x2;
 
-                grid_coords.put(g++,(int)((x0+(x1-x0)*sx)*65536));
-                grid_coords.put(g++,(int)((y0+(y1-y0)*sy)*65536));
+                grid_coords[g++]=(int)((x0+(x1-x0)*sx)*65536);
+                grid_coords[g++]=(int)((y0+(y1-y0)*sy)*65536);
                 g++;  // Set z when rendering.
 
-                tex_coords.put((int)(sx*65536));
-                tex_coords.put((int)(sy*65536));
+                tex_coords[t++]=(int)(sx*65536);
+                tex_coords[t++]=(int)(sy*65536);
 
                 int offset=y*grid_x+x;
-                indices[y].put((short)offset);
-                indices[y].put((short)(offset+grid_x));
+                indices[y][x*2]=(short)offset;
+                indices[y][x*2+1]=(short)(offset+grid_x);
 
                 dists[y][x]=FloatMath.sqrt(x2+y2);
             }
-
-            indices[y].position(0);
         }
-        tex_coords.position(0);
 
         // Schedule the effects in this part.
         change=new Change();
