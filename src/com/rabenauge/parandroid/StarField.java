@@ -134,14 +134,16 @@ public class StarField extends EffectManager {
             star_coords[c+1]=(int)(DemoMath.randomize(HEIGHT, center_y));
 
             // The speed is also used as the grayscale color.
-            star_speeds[s  ]=(int)(DemoMath.randomize(1, 0)*65536);
-            star_speeds[s+1]=star_speeds[s];
-            star_speeds[s+2]=star_speeds[s];
+            int color=(int)(DemoMath.randomize(1, 0)*65536);
+
+            star_speeds[s  ]=color/4;
+            star_speeds[s+1]=color/4;
+            star_speeds[s+2]=color/4;
             star_speeds[s+3]=(int)(1.0f*65536);
 
-            star_speeds[s+4]=star_speeds[s  ];
-            star_speeds[s+5]=star_speeds[s+1];
-            star_speeds[s+6]=star_speeds[s+2];
+            star_speeds[s+4]=color;
+            star_speeds[s+5]=color;
+            star_speeds[s+6]=color;
             star_speeds[s+7]=star_speeds[s+3];
         }
 
