@@ -13,15 +13,21 @@ import javax.microedition.khronos.opengles.GL11;
 public class IntroBlink extends EffectManager {
     private static final int WIDTH=800, HEIGHT=480;
     private static final short[] JOINTS={
-        269, 93,  231,131,  213,131,
+        // First "column"
+        270, 93,
+        213,131,  232,131,
         251,299,  269,299,
         185,357,
-        403, 53,  403, 72,  421, 72,
-        438,128,  438,147,
-        335,339,  335,357,  335,376,  354,376,  373,376,
-        479,288,  461,323,  461,341,
-        531, 46,  549, 65,  549, 83,  549,100,
-        556,397,  573,397,  573,378
+
+        // Second "column"
+        403, 53,  403, 72,  420, 72,
+        439,128,  439,147,
+        335,338,  335,356,  335,376,  354,376,  373,376,
+
+        // Third "column"
+        529, 46,  548, 65,  548, 83,  548,100,
+        480,288,  461,322,  461,341,
+        555,397,  574,378,  574,397
     };
     private static final float POINT_SIZE=7.0f;
 
