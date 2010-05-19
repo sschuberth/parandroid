@@ -20,10 +20,13 @@ public class Scroller extends EffectManager {
     private static final String CHARS="abcdefghijklmnopqrstuvwxyz.:-,`´!»«+";
     private static final String TEXT=
         "               " +
-        "This is the Party Version. Squeezed and tweaked in part at the hotel and hall in Bingen: " +
-        "Another firstie for the pleasure of Breakpoint Nation:   Para´N`droiD.   The initial fully " +
+        "This is the final version. Squeezed and tweaked in part at the hotel and hall in Bingen, " +
+        "finalized and 3D-ready in Berlin for the droidcon: " +
+        "For the pleasure of Breakpoint Nation.   Para´N`droiD.   The first real " +
         "interactive mobile Android platform cell phone demo. Presented to you by Rabenauge: Beauty lies in " +
         "the Eye of the Raven. Plus Tristar and Red Sector Incorporated: Twice the Fun - Double the Trouble. " +
+        "     " +
+        "In the interactive part, use the touch screen and motion sensor to toggle all effects of the demo. " +
         "     " +
         "Twenty Five Years of RSI. Twenty Years of TRSI. We are the sleeping Gods. " +
         "We salute all, who built the heritage. Values never die. Spotter says: Boogie down Brookline." +
@@ -38,7 +41,7 @@ public class Scroller extends EffectManager {
         "KALISTO - K TWO - KEFRENS - NEOSCIENTISTS - PARADISE - PARADOX - POLKA BROTHERS - RGBA - " +
         "REBELS - RAZOR NINETEEN ELEVEN - REMEDY - ROYAL BELGIAN BEER SQUADRON - SCARAB - SCOOPEX - " +
         "SECTION EIGHT - SPACEBALLS - SPECKDRUMM - SPEEDQUEEN - TEK - STILL - THE BLACK LOTUS - " +
-        "THE LIGHTFORCE - THE SILENTS - TITAN - THE PLANET OF LEATHER MOOMINS - UK ALLSTARS - and Irata." +
+        "THE LIGHTFORCE - THE SILENTS - TITAN - UK ALLSTARS ... and Irata." +
         " --- ";
 
     private Texture2D charset;

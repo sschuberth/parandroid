@@ -1,5 +1,3 @@
 Ideas for the final release:
 
 - Add the tunnel / camera texture "hidden" part
-
-- Adjust the scroller text
