@@ -146,22 +146,29 @@ public class EffectManager {
         effects.add(new EffectEntry(effect, getDuration(), duration));
     }
 
+    public boolean isPlaying(long t) {
+        return curr_index>=0;
+    }
+
     public boolean play(long t) {
-        if (curr_index<0) {
-            // There is no current effect yet, so start the first one.
-            effects.getFirst().startRunning(gl);
-            curr_index=0;
+        // Starting with the current one, iterate through the list of effects.
+        ListIterator<EffectEntry> i;
+        if (curr_index>=0) {
+            i=effects.listIterator(curr_index);
+        }
+        else {
+            i=effects.listIterator();
         }
 
-        // Starting with the current one, iterate through the list of effects.
-        ListIterator<EffectEntry> i=effects.listIterator(curr_index);
         while (i.hasNext()) {
             EffectEntry entry=i.next();
             if (entry.isCurrent(t)) {
                 int index=effects.indexOf(entry);
                 if (index!=curr_index) {
-                    // It is time to change effects, so stop the current one ...
-                    effects.get(curr_index).stopRunning(gl);
+                    if (curr_index>=0) {
+                        // It is time to change effects, so stop the current one ...
+                        effects.get(curr_index).stopRunning(gl);
+                    }
                     // ... and start the new one.
                     entry.startRunning(gl);
 
@@ -169,15 +176,21 @@ public class EffectManager {
                 }
 
                 // After rendering the current effect state we are done.
-                long t_local=t-entry.start;
-                entry.effect.onRender(gl, t_local, t-t_last, (float)t_local/entry.duration);
+                long t_local=t-entry.start, t_elapsed=t-t_last;
+                entry.effect.onRender(gl, t_local, t_elapsed, (float)t_local/entry.duration);
+
                 t_last=t;
+
                 return true;
             }
         }
 
-        // No match was found, so end the last effect.
-        effects.getLast().stopRunning(gl);
+        // No match was found, so end the current effect and reset the effect index.
+        if (curr_index>=0) {
+            effects.get(curr_index).stopRunning(gl);
+            curr_index=-1;
+        }
+
         return false;
     }
 }
