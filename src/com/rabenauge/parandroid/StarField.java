@@ -14,8 +14,11 @@ public class StarField extends EffectManager {
     private static final int DEF_CENTER_X=WIDTH/2, DEF_CENTER_Y=HEIGHT/2;
     private int center_x=DEF_CENTER_X, center_y=DEF_CENTER_Y;
 
+    private Demo demo;
+
     private short[] star_coords;
     private int[] star_speeds;
+    private int hidden_stars;
 
     private SensorManager sm;
     public Flight flight;
@@ -33,14 +36,35 @@ public class StarField extends EffectManager {
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
+            if (demo.shootem) {
+                // Make the remaining stars move faster off-screen.
+                e*=2;
+
+                if (hidden_stars==star_coords.length/4) {
+                    // Do nothing if we are in the "Shoot'em!" mode and
+                    // the effect is already completely hidden.
+                    return;
+                }
+            }
+
             gl.glEnable(GL11.GL_LINE_SMOOTH);
 
+            // Move the stars.
             for (int i=0; i<star_coords.length; i+=4) {
                 float factor=star_speeds[i]/65536.0f*e/500.0f;
 
-                // Avoid flickering of small stars by making the lines at least two pixels long.
-                star_coords[i+2]=(short)(star_coords[i  ] + (star_coords[i  ]-center_x)*factor);
-                star_coords[i+3]=(short)(star_coords[i+1] + (star_coords[i+1]-center_y)*factor);
+                if ((star_coords[i  ]==-1 && star_coords[i+1]==-1)
+                 || (demo.shootem && star_speeds[i]<0.1f*65536))
+                {
+                    star_coords[i  ]=(short)-1;
+                    star_coords[i+1]=(short)-1;
+                    star_coords[i+2]=(short)-1;
+                    star_coords[i+3]=(short)-1;
+                }
+                else {
+                    star_coords[i+2]=(short)(star_coords[i  ] + (star_coords[i  ]-center_x)*factor);
+                    star_coords[i+3]=(short)(star_coords[i+1] + (star_coords[i+1]-center_y)*factor);
+                }
             }
 
             // Set OpenGL states.
@@ -63,15 +87,35 @@ public class StarField extends EffectManager {
             gl.glDisableClientState(GL11.GL_COLOR_ARRAY);
             gl.glEnable(GL11.GL_TEXTURE_2D);
 
-            // Move the stars.
+            // Discard hidden stars and regenerate visible stars.
+            float rand_w=WIDTH, rand_h=HEIGHT;
+            if (hidden_stars==star_coords.length/4){
+                // If all stars are hidden, regenerate visible ones
+                // only close to the center.
+                rand_w/=10;
+                rand_h/=10;
+            }
+
+            hidden_stars=0;
+
             for (int i=0; i<star_coords.length; i+=4) {
                 star_coords[i  ]=star_coords[i+2];
                 star_coords[i+1]=star_coords[i+3];
                 if (star_coords[i  ]<0 || star_coords[i  ]>=WIDTH
                  || star_coords[i+1]<0 || star_coords[i+1]>=HEIGHT) 
                 {
-                    star_coords[i  ]=(short)(DemoMath.randomize(WIDTH , center_x));
-                    star_coords[i+1]=(short)(DemoMath.randomize(HEIGHT, center_y));
+                    ++hidden_stars;
+
+                    if (!demo.shootem) {
+                        // Subtract some safety value from rand_{w|h} to not be out of bounds again
+                        // immediately due to rounding errors.
+                        star_coords[i  ]=(short)(center_x + DemoMath.randomize(rand_w-5, rand_w/2)-rand_w/2);
+                        star_coords[i+1]=(short)(center_y + DemoMath.randomize(rand_h-5, rand_h/2)-rand_h/2);
+                    }
+                    else {
+                        star_coords[i  ]=(short)-1;
+                        star_coords[i+1]=(short)-1;
+                    }
                 }
             }
 
@@ -122,6 +166,8 @@ public class StarField extends EffectManager {
 
     public StarField(Demo demo, GL11 gl, int count) {
         super(gl);
+
+        this.demo=demo;
 
         sm=demo.getSensorManager();
 

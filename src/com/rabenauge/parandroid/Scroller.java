@@ -44,6 +44,9 @@ public class Scroller extends EffectManager {
         "THE LIGHTFORCE - THE SILENTS - TITAN - UK ALLSTARS ... and Irata." +
         " --- ";
 
+    private Demo demo;
+    private float hide=0.0f;
+
     private Texture2D charset;
     private IntBuffer tex_coords;
     private ShortBuffer line_coords;
@@ -155,6 +158,29 @@ public class Scroller extends EffectManager {
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
+            float hide_speed=6.0f;
+            if (demo.shootem) {
+                if (hide<150.0f) {
+                    hide+=hide_speed;
+                    if (hide>150.0f) {
+                        hide=150.0f;
+                    }
+                }
+                else {
+                    // Do nothing if we are in the "Shoot'em!" mode and
+                    // the effect is already completely hidden.
+                    return;
+                }
+            }
+            else {
+                if (hide>0.0f) {
+                    hide-=hide_speed;
+                    if (hide<0.0f) {
+                        hide=0.0f;
+                    }
+                }
+            }
+
             pos+=(int)(CHAR_SIZE*speed*(float)e/1000)*2*2;
             while (pos<0) {
                 pos+=tex_coords.capacity();
@@ -196,7 +222,7 @@ public class Scroller extends EffectManager {
             // Choose to use texture combiners.
             gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_COMBINE);
 
-            gl.glTranslatef(0, SHADOW_OFFSET, 0);
+            gl.glTranslatef(0, SHADOW_OFFSET+hide, 0);
             gl.glDrawArrays(GL11.GL_LINES, 0, line_coords.capacity()/2);
 
             gl.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
@@ -256,6 +282,8 @@ public class Scroller extends EffectManager {
 
     public Scroller(Demo demo, GL11 gl) {
         super(gl);
+
+        this.demo=demo;
 
         sm=demo.getSensorManager();
 

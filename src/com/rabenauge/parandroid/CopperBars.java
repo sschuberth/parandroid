@@ -10,6 +10,12 @@ public class CopperBars extends EffectManager {
     private static final float CYL_LENGTH=5.0f;
     private static final int CYL_SIDES=20;
 
+    private Demo demo;
+    private static final float stx=0.0f, sty=-0.85f, stz=-3.0f;
+    private static final float etx=0.0f, ety=0.0f, etz=0.0f;
+    private static final float sry=90.0f, ery=0.0f;
+    private float ss=0.0f;
+
     private IntBuffer coords, normals;
     private ShortBuffer indices;
     private ByteBuffer[] colors;
@@ -76,6 +82,28 @@ public class CopperBars extends EffectManager {
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
+            if (demo.shootem) {
+                if (ss<1.0f) {
+                    ss+=0.1f;
+                    if (ss>1.0f) {
+                        ss=1.0f;
+                    }
+                }
+                else {
+                    // Do nothing if we are in the "Shoot'em!" mode and
+                    // the effect is already completely hidden.
+                    return;
+                }
+            }
+            else {
+                if (ss>0.0f) {
+                    ss-=0.1f;
+                    if (ss<0.0f) {
+                        ss=0.0f;
+                    }
+                }
+            }
+
             // Set OpenGL states.
             gl.glDisable(GL11.GL_BLEND);
             gl.glDisable(GL11.GL_TEXTURE_2D);
@@ -88,8 +116,15 @@ public class CopperBars extends EffectManager {
 
             gl.glMatrixMode(GL11.GL_MODELVIEW);
             gl.glPushMatrix();
-            gl.glTranslatef(0.0f, -0.85f, -3.0f);
-            gl.glRotatef(90, 0, 1, 0);
+
+            // Start position and orientation for the bars.
+            float tx=stx+(etx-stx)*ss;
+            float ty=sty+(ety-sty)*ss;
+            float tz=stz+(etz-stz)*ss;
+            gl.glTranslatef(tx, ty, tz);
+
+            float ry=sry+(ery-sry)*ss;
+            gl.glRotatef(ry, 0, 1, 0);
 
             gl.glVertexPointer(3, GL11.GL_FIXED, 0, coords);
 
@@ -121,6 +156,8 @@ public class CopperBars extends EffectManager {
 
     public CopperBars(Demo demo, GL11 gl) {
         super(gl);
+
+        this.demo=demo;
 
         // Generate the cylinder geometry.
         coords=IntBuffer.allocate(CYL_SIDES*3*2);

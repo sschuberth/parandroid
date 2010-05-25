@@ -11,6 +11,9 @@ import java.nio.ShortBuffer;
 import javax.microedition.khronos.opengles.GL11;
 
 public class LogoChange extends EffectManager {
+    private Demo demo;
+    private float hide=0.0f;
+
     private int grid_x, grid_y;
     private long serene_duration, ripple_duration;
 
@@ -71,6 +74,29 @@ public class LogoChange extends EffectManager {
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
+            float hide_speed=0.06f;
+            if (demo.shootem) {
+                if (hide<1.0f) {
+                    hide+=hide_speed;
+                    if (hide>1.0f) {
+                        hide=1.0f;
+                    }
+                }
+                else {
+                    // Do nothing if we are in the "Shoot'em!" mode and
+                    // the effect is already completely hidden.
+                    return;
+                }
+            }
+            else {
+                if (hide>0.0f) {
+                    hide-=hide_speed;
+                    if (hide<0.0f) {
+                        hide=0.0f;
+                    }
+                }
+            }
+
             long sd=serene_duration;
             if (change_now){
                 sd=0;
@@ -137,9 +163,12 @@ public class LogoChange extends EffectManager {
 
             gl.glTexCoordPointer(2, GL11.GL_FIXED, 0, IntBuffer.wrap(tex_coords));
             gl.glVertexPointer(3, GL11.GL_FIXED, 0, IntBuffer.wrap(grid_coords));
+
+            gl.glTranslatef(0, hide, 0);
             for (int i=0; i<grid_y-1; ++i) {
                 gl.glDrawElements(GL11.GL_TRIANGLE_STRIP, indices[i].length, GL11.GL_UNSIGNED_SHORT, ShortBuffer.wrap(indices[i]));
             }
+            gl.glTranslatef(0, -hide, 0);
 
             // Restore OpenGL states.
             Helper.toggleState(gl, GL11.GL_TEXTURE_2D, false);
@@ -149,6 +178,8 @@ public class LogoChange extends EffectManager {
 
     public LogoChange(Demo demo, GL11 gl, int grid_x, int grid_y, long serene_duration, long ripple_duration) {
         super(gl);
+
+        this.demo=demo;
 
         this.grid_x=grid_x;
         this.grid_y=grid_y;

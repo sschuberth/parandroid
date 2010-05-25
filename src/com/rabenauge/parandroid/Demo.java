@@ -8,6 +8,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
@@ -24,7 +25,9 @@ public class Demo extends GLSurfaceView implements Renderer {
 
     private Long t_start=null;
     private long t_global=0, t_main=0, t_credits=0;
+
     private boolean interactive=false;
+    public boolean shootem=false;
 
     // The song has a duration of 5:28m (328s).
     public static final long DURATION_TOTAL=328*1000;
@@ -69,6 +72,9 @@ public class Demo extends GLSurfaceView implements Renderer {
                 return configs[0];
            }
         });
+
+        // This is required to receive onKeyDown() events.
+        setFocusableInTouchMode(true);
 
         //setDebugFlags(DEBUG_CHECK_GL_ERROR|DEBUG_LOG_GL_CALLS);
         setRenderer(this);
@@ -226,6 +232,23 @@ public class Demo extends GLSurfaceView implements Renderer {
         if (!credits.play(tc)) {
             activity.finish();
         }
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.i(NAME, "KEY: "+String.valueOf(keyCode));
+
+        if (!interactive || event.getAction()!=KeyEvent.ACTION_DOWN) {
+            return false;
+        }
+
+        // The HTC Hero does not have a dedicated camera button,
+        // so also allow to use the trackball button.
+        if (keyCode==KeyEvent.KEYCODE_CAMERA || keyCode==KeyEvent.KEYCODE_DPAD_CENTER) {
+            shootem=!shootem;
+            return true;
+        }
+
+        return false;
     }
 
     public boolean onTouchEvent(MotionEvent event) {

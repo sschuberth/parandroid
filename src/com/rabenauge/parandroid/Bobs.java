@@ -20,6 +20,9 @@ public class Bobs extends EffectManager {
     private static final int TEX_PER_ROW=5, TEX_PER_COLUMN=2;
     private static final float TEX_WIDTH=107.25f, TEX_HEIGHT=128.0f;
 
+    private Demo demo;
+    private int draw_bobs=NUM_BOBS;
+
     private Texture2D bobs_static, bobs_dynamic;
     private boolean bob_toggle=false;
 
@@ -83,6 +86,22 @@ public class Bobs extends EffectManager {
         private int counter=0;
 
         public void onRender(GL11 gl, long t, long e, float s) {
+            if (demo.shootem) {
+                if (draw_bobs>0) {
+                    --draw_bobs;
+                }
+                else {
+                    // Do nothing if we are in the "Shoot'em!" mode and
+                    // the effect is already completely hidden.
+                    return;
+                }
+            }
+            else {
+                if (draw_bobs<NUM_BOBS) {
+                    ++draw_bobs;
+                }
+            }
+
             int i;
 
             // Do not use the time here in order to have equidistant bob positions for
@@ -90,7 +109,7 @@ public class Bobs extends EffectManager {
             float pos=counter*SPEED;
 
             // Move the bobs.
-            for (i=0; i<NUM_BOBS; ++i) {
+            for (i=0; i<draw_bobs; ++i) {
                 int offset=i*8, step=i*4;
 
                 // Start moving the bobs one after the other, not all at the same time.
@@ -134,6 +153,8 @@ public class Bobs extends EffectManager {
 
     public Bobs(Demo demo, GL11 gl) {
         super(gl);
+
+        this.demo=demo;
 
         // Load the bob textures.
         Bitmap bitmap;
