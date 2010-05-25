@@ -25,7 +25,7 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
     private SensorManager sm;
 
     private Long t_start=null;
-    private long t=0, t_credits=0;
+    private long t_global=0, t_main=0, t_credits=0;
     private boolean interactive=false;
 
     // The song has a duration of 5:28m (328s).
@@ -185,40 +185,40 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
             t_start=android.os.SystemClock.uptimeMillis();
         }
 
-        t=android.os.SystemClock.uptimeMillis()-t_start;
+        t_global=android.os.SystemClock.uptimeMillis()-t_start;
 
         // DEBUG: Uncomment to skip the intro part.
-        //t+=intro_fade.getDuration();
+        //t_global+=intro_fade.getDuration();
 
-        long tc=t+t_credits;
+        long tc=t_global+t_credits;
 
         // These parts run concurrently and render to the same frame!
-        if (intro_fade.play(t)) {
-            intro_blink.play(t);
+        if (intro_fade.play(t_global)) {
+            intro_blink.play(t_global);
         }
         else {
             // Reset the relative time for this part.
-            long tp=t-intro_fade.getDuration();
+            t_main=t_global-intro_fade.getDuration();
 
             gl.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
             if (t_credits==0 || tc<=DURATION_TOTAL-DURATION_PART_OUTRO) {
                 // These parts run concurrently and render to the same frame!
-                stars.play(tp);
-                logos.play(tp);
-                bobs.play(tp);
-                bars.play(tp);
-                scroller.play(tp);
+                stars.play(t_main);
+                logos.play(t_main);
+                bobs.play(t_main);
+                bars.play(t_main);
+                scroller.play(t_main);
 
                 // These must come last as they need to render on top of all other effects.
-                white_fade_in.play(tp);
+                white_fade_in.play(t_main);
             }
 
-            if (!fade_in_rorschach.play(tp)) {
+            if (!fade_in_rorschach.play(t_main)) {
                 // Reset the relative time for this part.
-                tp-=fade_in_rorschach.getDuration();
+                t_main-=fade_in_rorschach.getDuration();
 
                 // These must come last as they need to render on top of all other effects.
-                if (!fade_out_rorschach.play(tp)) {
+                if (!fade_out_rorschach.play(t_main)) {
                     interactive=true;
                 }
                 else {
@@ -284,7 +284,7 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
             else {
                 Log.i(NAME, "TOUCH: Exit");
 
-                t_credits=DURATION_PART_INTRO+DURATION_MAIN_EFFECTS-DURATION_PART_OUTRO_FADE-t;
+                t_credits=DURATION_PART_INTRO+DURATION_MAIN_EFFECTS-DURATION_PART_OUTRO_FADE-t_global;
 
                 stars.flight.interactive=false;
                 scroller.scroll.interactive=false;
