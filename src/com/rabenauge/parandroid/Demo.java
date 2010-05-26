@@ -9,14 +9,12 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
 import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.egl.*;
 
-public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
+public class Demo extends GLSurfaceView implements Renderer {
     public static final String NAME="ParaNdroiD";
 
     private Activity activity;
@@ -76,8 +74,6 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
         setRenderer(this);
 
         sm=(SensorManager)activity.getSystemService(Context.SENSOR_SERVICE);
-        setOnTouchListener(this);
-
         mp=MediaPlayer.create(activity, R.raw.track);
     }
 
@@ -232,7 +228,7 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
         }
     }
 
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent event) {
         if (!interactive || event.getAction()!=MotionEvent.ACTION_DOWN) {
             return false;
         }
@@ -242,13 +238,13 @@ public class Demo extends GLSurfaceView implements Renderer, OnTouchListener {
         if (xp!=0) {
             x*=xp;
         }
-        x/=v.getWidth();
+        x/=getWidth();
 
         float y=event.getY(), yp=event.getYPrecision();
         if (yp!=0) {
             y*=yp;
         }
-        y/=v.getHeight();
+        y/=getHeight();
 
         if (y<0.5f) {
             if (x<0.33f) {
