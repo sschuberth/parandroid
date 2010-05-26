@@ -15,10 +15,10 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.egl.*;
 
-public class Demo extends GLSurfaceView implements Renderer {
+public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallback {
     public static final String NAME="ParaNdroiD";
 
-    private Activity activity;
+    private Launcher activity;
 
     private MediaPlayer mp;
     private SensorManager sm;
@@ -48,11 +48,12 @@ public class Demo extends GLSurfaceView implements Renderer {
     private Bobs bobs;
     private CopperBars bars;
     private Scroller scroller;
+    private CamCube cube;
 
     public static final long DURATION_PART_STATIC=20*1000;
     private RorschachFade fade_in_rorschach, fade_out_rorschach;
 
-    public Demo(Activity activity) {
+    public Demo(Launcher activity) {
         super(activity);
 
         this.activity=activity;
@@ -165,6 +166,7 @@ public class Demo extends GLSurfaceView implements Renderer {
         fade_out_rorschach=new RorschachFade(this, (GL11)gl, 6*1000, false);
 
         credits=new Credits(this, (GL11)gl);
+        cube=new CamCube(this, (GL11)gl);
     }
 
     public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -185,6 +187,7 @@ public class Demo extends GLSurfaceView implements Renderer {
             mp.setVolume(15.0f, 15.0f);
 
             t_start=android.os.SystemClock.uptimeMillis();
+            activity.showPreview();
         }
 
         t_global=android.os.SystemClock.uptimeMillis()-t_start;
@@ -311,5 +314,18 @@ public class Demo extends GLSurfaceView implements Renderer {
         }
 
         return true;
+    }
+
+    public void onPreviewFrame(byte[] yuvs, Camera camera) {
+        int bwCounter=0;
+        int yuvsCounter=0;
+
+        for (int y=0; y<160; ++y) {
+            if (cube!=null) {
+                System.arraycopy(yuvs, yuvsCounter, cube.camFrame, bwCounter, 240);
+            }
+            yuvsCounter=yuvsCounter+240;
+            bwCounter=bwCounter+256;
+        }
     }
 }
