@@ -23,7 +23,7 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
     private MediaPlayer mp;
     private SensorManager sm;
 
-    private Long t_start=null;
+    private Long t_start=null, t_start_cube=null;
     private long t_global=0, t_main=0, t_credits=0;
 
     private boolean interactive=false;
@@ -48,7 +48,9 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
     private Bobs bobs;
     private CopperBars bars;
     private Scroller scroller;
+
     private CamCube cube;
+    private boolean cube_zoom=true;
 
     public static final long DURATION_PART_STATIC=20*1000;
     private RorschachFade fade_in_rorschach, fade_out_rorschach;
@@ -189,11 +191,32 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
             t_start=android.os.SystemClock.uptimeMillis();
             activity.showPreview();
         }
-
         t_global=android.os.SystemClock.uptimeMillis()-t_start;
 
         // DEBUG: Uncomment to skip the intro part.
         //t_global+=intro_fade.getDuration();
+
+        gl.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
+
+        // Do not query the stars visibility as it is too inaccurate (worked on the Hero, but not on the Milestone).
+        if (bobs.isHidden() && bars.isHidden() && logos.isHidden() && scroller.isHidden() /*&& stars.isHidden()*/) {
+            if (t_start_cube==null) {
+                t_start_cube=t_global;
+            }
+            long t_cube=t_global-t_start_cube;
+
+            if (cube_zoom && t_cube>CamCube.DURATION_PART_TRANSITION) {
+                t_cube=CamCube.DURATION_PART_TRANSITION;
+            }
+
+            if (cube.play(t_cube)) {
+                return;
+            }
+            else {
+                shootem=false;
+                t_start_cube=null;
+            }
+        }
 
         long tc=t_global+t_credits;
 
@@ -205,7 +228,6 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
             // Reset the relative time for this part.
             t_main=t_global-intro_fade.getDuration();
 
-            gl.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
             if (t_credits==0 || tc<=DURATION_TOTAL-DURATION_PART_OUTRO) {
                 // These parts run concurrently and render to the same frame!
                 stars.play(t_main);
@@ -247,7 +269,14 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
         // The HTC Hero does not have a dedicated camera button,
         // so also allow to use the trackball button.
         if (keyCode==KeyEvent.KEYCODE_CAMERA || keyCode==KeyEvent.KEYCODE_DPAD_CENTER) {
-            shootem=!shootem;
+            if (!shootem) {
+                cube_zoom=true;
+                shootem=true;
+            }
+            else {
+                cube_zoom=false;
+                t_start_cube=t_global-CamCube.DURATION_PART_TRANSITION;
+            }
             return true;
         }
 

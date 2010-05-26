@@ -12,6 +12,9 @@ import javax.microedition.khronos.opengles.GL11;
 
 public class LogoChange extends EffectManager {
     private Demo demo;
+
+    private static final float HIDE_MAX=1.0f;
+    private static final float HIDE_SPEED=0.06f;
     private float hide=0.0f;
 
     private int grid_x, grid_y;
@@ -28,6 +31,10 @@ public class LogoChange extends EffectManager {
 
     private Change change=null;
     private boolean change_now=false;
+
+    public boolean isHidden() {
+        return hide==HIDE_MAX;
+    }
 
     public void changeNow() {
         change_now=true;
@@ -74,12 +81,11 @@ public class LogoChange extends EffectManager {
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
-            float hide_speed=0.06f;
             if (demo.shootem) {
-                if (hide<1.0f) {
-                    hide+=hide_speed;
-                    if (hide>1.0f) {
-                        hide=1.0f;
+                if (hide<HIDE_MAX) {
+                    hide+=HIDE_SPEED;
+                    if (hide>HIDE_MAX) {
+                        hide=HIDE_MAX;
                     }
                 }
                 else {
@@ -90,7 +96,7 @@ public class LogoChange extends EffectManager {
             }
             else {
                 if (hide>0.0f) {
-                    hide-=hide_speed;
+                    hide-=HIDE_SPEED;
                     if (hide<0.0f) {
                         hide=0.0f;
                     }

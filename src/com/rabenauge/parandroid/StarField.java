@@ -23,6 +23,10 @@ public class StarField extends EffectManager {
     private SensorManager sm;
     public Flight flight;
 
+    public boolean isHidden() {
+        return hidden_stars==star_coords.length/4;
+    }
+
     public class Flight extends Effect implements SensorEventListener {
         public boolean interactive=false;
 
@@ -40,7 +44,7 @@ public class StarField extends EffectManager {
                 // Make the remaining stars move faster off-screen.
                 e*=2;
 
-                if (hidden_stars==star_coords.length/4) {
+                if (isHidden()) {
                     // Do nothing if we are in the "Shoot'em!" mode and
                     // the effect is already completely hidden.
                     return;
@@ -89,7 +93,7 @@ public class StarField extends EffectManager {
 
             // Discard hidden stars and regenerate visible stars.
             float rand_w=WIDTH, rand_h=HEIGHT;
-            if (hidden_stars==star_coords.length/4){
+            if (isHidden()){
                 // If all stars are hidden, regenerate visible ones
                 // only close to the center.
                 rand_w/=10;

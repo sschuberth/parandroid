@@ -29,6 +29,10 @@ public class Bobs extends EffectManager {
     private int[] quad_coords, tex_coords;
     private short[] indices;
 
+    public boolean isHidden() {
+        return draw_bobs==0;
+    }
+
     public void toggleBobs() {
         bob_toggle=!bob_toggle;
     }

@@ -45,6 +45,9 @@ public class Scroller extends EffectManager {
         " --- ";
 
     private Demo demo;
+
+    private static final float HIDE_MAX=150.0f;
+    private static final float HIDE_SPEED=6.0f;
     private float hide=0.0f;
 
     private Texture2D charset;
@@ -53,6 +56,10 @@ public class Scroller extends EffectManager {
 
     private SensorManager sm;
     public Scroll scroll;
+
+    public boolean isHidden() {
+        return hide==HIDE_MAX;
+    }
 
     private void calcTexCoords(String text, int tex_width, int tex_height, int chars_per_row, int chars_per_column) {
         text=text.toLowerCase();
@@ -158,12 +165,11 @@ public class Scroller extends EffectManager {
         }
 
         public void onRender(GL11 gl, long t, long e, float s) {
-            float hide_speed=6.0f;
             if (demo.shootem) {
-                if (hide<150.0f) {
-                    hide+=hide_speed;
-                    if (hide>150.0f) {
-                        hide=150.0f;
+                if (hide<HIDE_MAX) {
+                    hide+=HIDE_SPEED;
+                    if (hide>HIDE_MAX) {
+                        hide=HIDE_MAX;
                     }
                 }
                 else {
@@ -174,7 +180,7 @@ public class Scroller extends EffectManager {
             }
             else {
                 if (hide>0.0f) {
-                    hide-=hide_speed;
+                    hide-=HIDE_SPEED;
                     if (hide<0.0f) {
                         hide=0.0f;
                     }

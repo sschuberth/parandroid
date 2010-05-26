@@ -20,6 +20,10 @@ public class CopperBars extends EffectManager {
     private ShortBuffer indices;
     private ByteBuffer[] colors;
 
+    public boolean isHidden() {
+        return ss==1.0f;
+    }
+
     private static void calcCylinderGeom(float radius, float length, int sides, IntBuffer coords, IntBuffer normals) {
         length*=65536/2;
 
