@@ -14,14 +14,16 @@ public class CopperBars extends EffectManager {
     private static final float stx=0.0f, sty=-0.85f, stz=-3.0f;
     private static final float etx=0.0f, ety=0.0f, etz=0.0f;
     private static final float sry=90.0f, ery=0.0f;
-    private float ss=0.0f;
+    private static final float HIDE_MAX=5.0f;
+    private static final float HIDE_SPEED=0.1f;
+    private float hide=0.0f;
 
     private IntBuffer coords, normals;
     private ShortBuffer indices;
     private ByteBuffer[] colors;
 
     public boolean isHidden() {
-        return ss==1.0f;
+        return hide==HIDE_MAX;
     }
 
     private static void calcCylinderGeom(float radius, float length, int sides, IntBuffer coords, IntBuffer normals) {
@@ -87,10 +89,10 @@ public class CopperBars extends EffectManager {
 
         public void onRender(GL11 gl, long t, long e, float s) {
             if (demo.shootem) {
-                if (ss<1.0f) {
-                    ss+=0.1f;
-                    if (ss>1.0f) {
-                        ss=1.0f;
+                if (hide<HIDE_MAX) {
+                    hide+=HIDE_SPEED;
+                    if (hide>HIDE_MAX) {
+                        hide=HIDE_MAX;
                     }
                 }
                 else {
@@ -100,10 +102,10 @@ public class CopperBars extends EffectManager {
                 }
             }
             else {
-                if (ss>0.0f) {
-                    ss-=0.1f;
-                    if (ss<0.0f) {
-                        ss=0.0f;
+                if (hide>0.0f) {
+                    hide-=HIDE_SPEED;
+                    if (hide<0.0f) {
+                        hide=0.0f;
                     }
                 }
             }
@@ -122,6 +124,7 @@ public class CopperBars extends EffectManager {
             gl.glPushMatrix();
 
             // Start position and orientation for the bars.
+            float ss=hide/HIDE_MAX;
             float tx=stx+(etx-stx)*ss;
             float ty=sty+(ety-sty)*ss;
             float tz=stz+(etz-stz)*ss;
