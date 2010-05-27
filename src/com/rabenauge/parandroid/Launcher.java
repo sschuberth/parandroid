@@ -67,4 +67,12 @@ public class Launcher extends Activity {
         // not make it reusable.
         Process.killProcess(Process.myPid());
     }
+
+    public void stopPreview() {
+        preview.stopPreview();
+    }
+
+    public void startPreview() {
+        preview.startPreview();
+    }
 }

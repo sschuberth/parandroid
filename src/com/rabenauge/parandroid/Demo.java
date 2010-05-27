@@ -28,6 +28,7 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
 
     private boolean interactive=false;
     public boolean shootem=false;
+    private int shootem_counter=0;
 
     // The song has a duration of 5:28m (328s).
     public static final long DURATION_TOTAL=328*1000;
@@ -189,7 +190,6 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
             mp.setVolume(15.0f, 15.0f);
 
             t_start=android.os.SystemClock.uptimeMillis();
-            activity.showPreview();
         }
         t_global=android.os.SystemClock.uptimeMillis()-t_start;
 
@@ -215,6 +215,7 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
             else {
                 shootem=false;
                 t_start_cube=null;
+                activity.stopPreview();
             }
         }
 
@@ -272,8 +273,15 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
             if (!shootem) {
                 cube_zoom=true;
                 shootem=true;
+                if (shootem_counter==0) {
+                    activity.showPreview();
+                }
+                else {
+                    activity.startPreview();
+                }
+                ++shootem_counter;
             }
-            else {
+            else if (shootem) {
                 cube_zoom=false;
                 t_start_cube=t_global-CamCube.DURATION_PART_TRANSITION;
             }
