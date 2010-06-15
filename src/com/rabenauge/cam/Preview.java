@@ -46,7 +46,9 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback, Prev
     }
 
     public void stopPreview() {
-        cam.stopPreview();
+        if (cam!=null) {
+            cam.stopPreview();
+        }
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
@@ -79,6 +81,8 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback, Prev
     }
 
     public void startPreview() {
-        cam.startPreview();
+        if (cam!=null) {
+            cam.startPreview();
+        }
     }
 }
