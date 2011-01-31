@@ -80,6 +80,7 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
         // This is required to receive onKeyDown() events.
         setFocusableInTouchMode(true);
 
+        // DEBUG: Comment-in to see OpenGL calls in the log.
         //setDebugFlags(DEBUG_CHECK_GL_ERROR|DEBUG_LOG_GL_CALLS);
         setRenderer(this);
 
@@ -184,6 +185,7 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
 
     public void onDrawFrame(GL10 gl) {
         if (t_start==null) {
+            // DEBUG: Comment-out to not play the music.
             mp.start();
 
             // Set to full volume initially (wraps at modulo 16).
@@ -193,7 +195,7 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
         }
         t_global=android.os.SystemClock.uptimeMillis()-t_start;
 
-        // DEBUG: Uncomment to skip the intro part.
+        // DEBUG: Comment-in to skip the intro part.
         //t_global+=intro_fade.getDuration();
 
         gl.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
