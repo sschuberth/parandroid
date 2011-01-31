@@ -15,6 +15,74 @@ import javax.microedition.khronos.opengles.GL11;
 public class CamCube extends EffectManager {
     public static final long DURATION_PART_TRANSITION=2000;
 
+    private static final float[] CAM_OBJ_COORDS={
+        // front
+        -2.0f, -1.5f,  2.0f,
+         2.0f, -1.5f,  2.0f,
+        -2.0f,  1.5f,  2.0f,
+         2.0f,  1.5f,  2.0f,
+        // back
+        -2.0f, -1.5f, -2.0f,
+        -2.0f,  1.5f, -2.0f,
+         2.0f, -1.5f, -2.0f,
+         2.0f,  1.5f, -2.0f,
+        // left
+        -2.0f, -1.5f,  2.0f,
+        -2.0f,  1.5f,  2.0f,
+        -2.0f, -1.5f, -2.0f,
+        -2.0f,  1.5f, -2.0f,
+        // right
+         2.0f, -1.5f, -2.0f,
+         2.0f,  1.5f, -2.0f,
+         2.0f, -1.5f,  2.0f,
+         2.0f,  1.5f,  2.0f,
+        // top
+        -2.0f,  1.5f,  2.0f,
+         2.0f,  1.5f,  2.0f,
+        -2.0f,  1.5f, -2.0f,
+         2.0f,  1.5f, -2.0f,
+        // bottom
+        -2.0f, -1.5f,  2.0f,
+        -2.0f, -1.5f, -2.0f,
+         2.0f, -1.5f,  2.0f,
+         2.0f, -1.5f, -2.0f,
+    };
+
+    private static final float[] CAM_TEX_COORDS={
+        // front
+        0.0f    , 0.0f,
+        0.9375f , 0.0f,
+        0.0f    , 0.625f,
+        0.9375f , 0.625f,
+        // back
+        0.9375f , 0.0f,
+        0.9375f , 0.625f,
+        0.0f    , 0.0f,
+        0.0f    , 0.625f,
+        // left
+        0.9375f , 0.0f,
+        0.9375f , 0.625f,
+        0.0f    , 0.0f,
+        0.0f    , 0.625f,
+        // right
+        0.9375f , 0.0f,
+        0.9375f , 0.625f,
+        0.0f    , 0.0f,
+        0.0f    , 0.625f,
+        // top
+        0.0f    , 0.0f,
+        0.9375f , 0.0f,
+        0.0f    , 0.625f,
+        0.9375f , 0.625f,
+        // bottom
+        0.9375f , 0.0f,
+        0.9375f , 0.625f,
+        0.0f    , 0.0f,
+        0.0f    , 0.625f
+    };
+
+    private FloatBuffer camObjCoords,camTexCoords;
+
     private int frameCounter=0;
     private Texture2D camTexture;
 
@@ -75,8 +143,8 @@ public class CamCube extends EffectManager {
 
             ++frameCounter;
 
-            gl.glVertexPointer(3, GL11.GL_FLOAT, 0, FloatBuffer.wrap(camObjCoord));
-            gl.glTexCoordPointer(2, GL11.GL_FLOAT, 0, FloatBuffer.wrap(camTexCoords));
+            gl.glVertexPointer(3, GL11.GL_FLOAT, 0, camObjCoords);
+            gl.glTexCoordPointer(2, GL11.GL_FLOAT, 0, camTexCoords);
 
             bindCameraTexture(gl);
 
@@ -100,76 +168,14 @@ public class CamCube extends EffectManager {
                 gl.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_LUMINANCE, 256, 256, 0, GL11.GL_LUMINANCE, GL11.GL_UNSIGNED_BYTE, ByteBuffer.wrap(camFrame));
             }
         }
-
-        private final float[] camObjCoord={
-            // front
-             -2.0f, -1.5f,  2.0f,
-              2.0f, -1.5f,  2.0f,
-             -2.0f,  1.5f,  2.0f,
-              2.0f,  1.5f,  2.0f,
-             // back
-             -2.0f, -1.5f, -2.0f,
-             -2.0f,  1.5f, -2.0f,
-              2.0f, -1.5f, -2.0f,
-              2.0f,  1.5f, -2.0f,
-             // left
-             -2.0f, -1.5f,  2.0f,
-             -2.0f,  1.5f,  2.0f,
-             -2.0f, -1.5f, -2.0f,
-             -2.0f,  1.5f, -2.0f,
-             // right
-              2.0f, -1.5f, -2.0f,
-              2.0f,  1.5f, -2.0f,
-              2.0f, -1.5f,  2.0f,
-              2.0f,  1.5f,  2.0f,
-             // top
-             -2.0f,  1.5f,  2.0f,
-              2.0f,  1.5f,  2.0f,
-             -2.0f,  1.5f, -2.0f,
-              2.0f,  1.5f, -2.0f,
-             // bottom
-             -2.0f, -1.5f,  2.0f,
-             -2.0f, -1.5f, -2.0f,
-              2.0f, -1.5f,  2.0f,
-              2.0f, -1.5f, -2.0f,
-        };
-
-        private final float[] camTexCoords={
-             0.0f, 0.0f,
-             0.9375f, 0.0f,
-             0.0f, 0.625f,
-             0.9375f, 0.625f,
-
-            // back
-             0.9375f, 0.0f,
-             0.9375f, 0.625f,
-             0.0f, 0.0f,
-             0.0f, 0.625f,
-            // left
-             0.9375f, 0.0f,
-             0.9375f, 0.625f,
-             0.0f, 0.0f,
-             0.0f, 0.625f,
-            // right
-             0.9375f, 0.0f,
-             0.9375f, 0.625f,
-             0.0f, 0.0f,
-             0.0f, 0.625f,
-            // top
-             0.0f, 0.0f,
-             0.9375f, 0.0f,
-             0.0f, 0.625f,
-             0.9375f, 0.625f,
-            // bottom
-             0.9375f, 0.0f,
-             0.9375f, 0.625f,
-             0.0f, 0.0f,
-             0.0f, 0.625f
-        };
     }
 
     public CamCube(Demo demo, GL11 gl) {
         super(gl);
+
+        // Initialize the gl-pointer arrays.
+        camObjCoords=DirectBuffer.nativeFloatBuffer(CAM_OBJ_COORDS);
+        camTexCoords=DirectBuffer.nativeFloatBuffer(CAM_TEX_COORDS);
 
         // Load the frame textures.
         Bitmap bitmap;

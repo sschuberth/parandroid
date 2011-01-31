@@ -71,7 +71,7 @@ public class Scroller extends EffectManager {
         // a start and end vertex with u / v coordinates each.
         int num_coords=text.length()*char_width*2*2;
 
-        tex_coords=IntBuffer.allocate(num_coords);
+        tex_coords=DirectBuffer.nativeIntBuffer(num_coords);
 
         for (int i=0; i<text.length(); ++i) {
             int pos=CHARS.indexOf(text.charAt(i));
@@ -109,7 +109,7 @@ public class Scroller extends EffectManager {
             }
         }
 
-        tex_coords.rewind();
+        tex_coords.position(0);
     }
 
     public class Scroll extends Effect implements SensorEventListener {
@@ -126,15 +126,21 @@ public class Scroller extends EffectManager {
         private int pos=0;
 
         public Scroll() {
-            sliding_tex_coords=IntBuffer.allocate(tex_coords.capacity()+WIDTH*2*2);
+            // Copy tex_coords to the beginning of sliding_tex_coords.
+            sliding_tex_coords=DirectBuffer.nativeIntBuffer(tex_coords.capacity()+WIDTH*2*2);
             sliding_tex_coords.put(tex_coords);
-            tex_coords.rewind();
-            for (int i=0; i<WIDTH*2*2; ++i) {
-                sliding_tex_coords.put(tex_coords.get(i));
-            }
-            // No need to rewind sliding_tex_coords.
 
-            wobbling_line_coords=ShortBuffer.allocate(line_coords.capacity());
+            // Wrap tex_coords and fill the remaining entries in sliding_tex_coords.
+            tex_coords.position(0);
+            tex_coords.limit(WIDTH*2*2);
+            sliding_tex_coords.put(tex_coords);
+
+            // Restore tex_coords and sliding_tex_coords.
+            tex_coords.position(0);
+            tex_coords.limit(tex_coords.capacity());
+            sliding_tex_coords.position(0);
+
+            wobbling_line_coords=DirectBuffer.nativeShortBuffer(line_coords.capacity());
 
             int t=Math.round(TEXT.length()/speed);
             android.util.Log.i(Demo.NAME,
@@ -304,7 +310,7 @@ public class Scroller extends EffectManager {
         // Generate the geometry and texture coordinates.
         calcTexCoords(TEXT, bitmap.getWidth(), bitmap.getHeight(), 12, 3);
 
-        line_coords=ShortBuffer.allocate((WIDTH+SHADOW_OFFSET)*2*2);
+        line_coords=DirectBuffer.nativeShortBuffer((WIDTH+SHADOW_OFFSET)*2*2);
 
         int y0=SCROLLER_POS_Y, y1=y0+CHAR_SIZE;
         for (int x=0; x<WIDTH+SHADOW_OFFSET; ++x) {
@@ -316,7 +322,7 @@ public class Scroller extends EffectManager {
             line_coords.put((short)x);
             line_coords.put((short)y1);
         }
-        line_coords.rewind();
+        line_coords.position(0);
 
         // Schedule the effects in this part.
         scroll=new Scroll();

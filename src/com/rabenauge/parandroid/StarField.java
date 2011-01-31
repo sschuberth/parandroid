@@ -16,15 +16,16 @@ public class StarField extends EffectManager {
 
     private Demo demo;
 
-    private short[] star_coords;
-    private int[] star_speeds;
+    private ShortBuffer star_coords;
+    private IntBuffer star_speeds;
+
     private int hidden_stars;
 
     private SensorManager sm;
     public Flight flight;
 
     public boolean isHidden() {
-        return hidden_stars==star_coords.length/4;
+        return hidden_stars==star_coords.capacity()/4;
     }
 
     public class Flight extends Effect implements SensorEventListener {
@@ -54,20 +55,20 @@ public class StarField extends EffectManager {
             gl.glEnable(GL11.GL_LINE_SMOOTH);
 
             // Move the stars.
-            for (int i=0; i<star_coords.length; i+=4) {
-                float factor=star_speeds[i]/65536.0f*e/500.0f;
+            for (int i=0; i<star_coords.capacity(); i+=4) {
+                float factor=star_speeds.get(i)/65536.0f*e/500.0f;
 
-                if ((star_coords[i  ]==-1 && star_coords[i+1]==-1)
-                 || (demo.shootem && star_speeds[i]<0.1f*65536))
+                if ((star_coords.get(i)==-1 && star_coords.get(i+1)==-1)
+                 || (demo.shootem && star_speeds.get(i)<0.1f*65536))
                 {
-                    star_coords[i  ]=(short)-1;
-                    star_coords[i+1]=(short)-1;
-                    star_coords[i+2]=(short)-1;
-                    star_coords[i+3]=(short)-1;
+                    star_coords.put(i  ,(short)-1);
+                    star_coords.put(i+1,(short)-1);
+                    star_coords.put(i+2,(short)-1);
+                    star_coords.put(i+3,(short)-1);
                 }
                 else {
-                    star_coords[i+2]=(short)(star_coords[i  ] + (star_coords[i  ]-center_x)*factor);
-                    star_coords[i+3]=(short)(star_coords[i+1] + (star_coords[i+1]-center_y)*factor);
+                    star_coords.put(i+2,(short)(star_coords.get(i  ) + (star_coords.get(i  )-center_x)*factor));
+                    star_coords.put(i+3,(short)(star_coords.get(i+1) + (star_coords.get(i+1)-center_y)*factor));
                 }
             }
 
@@ -81,9 +82,9 @@ public class StarField extends EffectManager {
             gl.glLoadIdentity();
             GLU.gluOrtho2D(gl, 0, WIDTH, HEIGHT, 0);
 
-            gl.glColorPointer(4, GL11.GL_FIXED, 0, IntBuffer.wrap(star_speeds));
-            gl.glVertexPointer(2, GL11.GL_SHORT, 0, ShortBuffer.wrap(star_coords));
-            gl.glDrawArrays(GL11.GL_LINES, 0, star_coords.length/2);
+            gl.glColorPointer(4, GL11.GL_FIXED, 0, star_speeds);
+            gl.glVertexPointer(2, GL11.GL_SHORT, 0, star_coords);
+            gl.glDrawArrays(GL11.GL_LINES, 0, star_coords.capacity()/2);
 
             // Restore OpenGL states.
             gl.glPopMatrix();
@@ -102,23 +103,23 @@ public class StarField extends EffectManager {
 
             hidden_stars=0;
 
-            for (int i=0; i<star_coords.length; i+=4) {
-                star_coords[i  ]=star_coords[i+2];
-                star_coords[i+1]=star_coords[i+3];
-                if (star_coords[i  ]<0 || star_coords[i  ]>=WIDTH
-                 || star_coords[i+1]<0 || star_coords[i+1]>=HEIGHT) 
+            for (int i=0; i<star_coords.capacity(); i+=4) {
+                star_coords.put(i  ,star_coords.get(i+2));
+                star_coords.put(i+1,star_coords.get(i+3));
+                if (star_coords.get(i)<0 || star_coords.get(i)>=WIDTH
+                 || star_coords.get(i+1)<0 || star_coords.get(i+1)>=HEIGHT)
                 {
                     ++hidden_stars;
 
                     if (!demo.shootem) {
                         // Subtract some safety value from rand_{w|h} to not be out of bounds again
                         // immediately due to rounding errors.
-                        star_coords[i  ]=(short)(center_x + DemoMath.randomize(rand_w-5, rand_w/2)-rand_w/2);
-                        star_coords[i+1]=(short)(center_y + DemoMath.randomize(rand_h-5, rand_h/2)-rand_h/2);
+                        star_coords.put(i  ,(short)(center_x + DemoMath.randomize(rand_w-5, rand_w/2)-rand_w/2));
+                        star_coords.put(i+1,(short)(center_y + DemoMath.randomize(rand_h-5, rand_h/2)-rand_h/2));
                     }
                     else {
-                        star_coords[i  ]=(short)-1;
-                        star_coords[i+1]=(short)-1;
+                        star_coords.put(i  ,(short)-1);
+                        star_coords.put(i+1,(short)-1);
                     }
                 }
             }
@@ -176,26 +177,26 @@ public class StarField extends EffectManager {
         sm=demo.getSensorManager();
 
         // Stores x, y per star vertex.
-        star_coords=new short[count*2*2];
+        star_coords=DirectBuffer.nativeShortBuffer(count*2*2);
         // Stores r, g, b, a per star vertex.
-        star_speeds=new int[count*4*2];
+        star_speeds=DirectBuffer.nativeIntBuffer(count*4*2);
 
-        for (int c=0, s=0; c<star_coords.length; c+=4, s+=8) {
-            star_coords[c  ]=(short)(DemoMath.randomize(WIDTH , center_x));
-            star_coords[c+1]=(short)(DemoMath.randomize(HEIGHT, center_y));
+        for (int c=0, s=0; c<star_coords.capacity(); c+=4, s+=8) {
+            star_coords.put(c  ,(short)(DemoMath.randomize(WIDTH , center_x)));
+            star_coords.put(c+1,(short)(DemoMath.randomize(HEIGHT, center_y)));
 
             // The speed is also used as the grayscale color.
             int color=(int)(DemoMath.randomize(1, 0)*65536);
 
-            star_speeds[s  ]=color/4;
-            star_speeds[s+1]=color/4;
-            star_speeds[s+2]=color/4;
-            star_speeds[s+3]=(int)(1.0f*65536);
+            star_speeds.put(s  ,color/4);
+            star_speeds.put(s+1,color/4);
+            star_speeds.put(s+2,color/4);
+            star_speeds.put(s+3,(int)(1.0f*65536));
 
-            star_speeds[s+4]=color;
-            star_speeds[s+5]=color;
-            star_speeds[s+6]=color;
-            star_speeds[s+7]=star_speeds[s+3];
+            star_speeds.put(s+4,color);
+            star_speeds.put(s+5,color);
+            star_speeds.put(s+6,color);
+            star_speeds.put(s+7,star_speeds.get(s+3));
         }
 
         // Schedule the effects in this part.
