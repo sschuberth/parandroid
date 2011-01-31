@@ -269,9 +269,10 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
             return false;
         }
 
-        // The HTC Hero does not have a dedicated camera button,
-        // so also allow to use the trackball button.
-        if (keyCode==KeyEvent.KEYCODE_CAMERA || keyCode==KeyEvent.KEYCODE_DPAD_CENTER) {
+        if (keyCode==KeyEvent.KEYCODE_CAMERA
+         || keyCode==KeyEvent.KEYCODE_DPAD_CENTER // Also allow to use the trackball button (e.g. for the HTC Hero).
+         || keyCode==KeyEvent.KEYCODE_SEARCH      // Also allow to use the search button (e.g. for the Samsung Galaxy Tab).
+        ) {
             if (!shootem) {
                 cube_zoom=true;
                 shootem=true;
