@@ -28,7 +28,7 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback, Prev
     public void surfaceCreated(SurfaceHolder holder) {
         synchronized(this) {
             cam = Camera.open();
-            System.out.println("Preview.surfaceCreated()");
+
             Camera.Parameters para = cam.getParameters();
             para.setPreviewSize(240,160);  //240,160  don't change the values !
             cam.setParameters(para);
@@ -42,7 +42,6 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback, Prev
             cam.startPreview();
             cam.setPreviewCallback(this);
         }
-        System.out.println("Preview.enclosing_method()");
     }
 
     public void stopPreview() {
