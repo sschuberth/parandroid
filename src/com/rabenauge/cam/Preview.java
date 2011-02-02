@@ -12,10 +12,9 @@ import android.view.SurfaceView;
 import com.rabenauge.parandroid.Launcher;
 
 public class Preview extends SurfaceView implements SurfaceHolder.Callback, PreviewCallback {
-    Camera cam;
-    boolean isPreviewRunning = false;
-    Camera.PreviewCallback callback;
-    SurfaceHolder mHolder;
+    private Camera cam;
+    private Camera.PreviewCallback callback;
+    private SurfaceHolder mHolder;
 
     public Preview(Launcher launcher, Camera.PreviewCallback callback) {
         super(launcher);
@@ -136,7 +135,6 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback, Prev
             try {
                 if (cam!=null) {
                     cam.stopPreview();
-                    isPreviewRunning=false;
                     cam.release();
                 }
             } catch (Exception e) {
@@ -154,9 +152,9 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback, Prev
         }
     }
 
-    public void onPreviewFrame(byte[] arg0, Camera arg1) {
+    public void onPreviewFrame(byte[] data, Camera camera) {
         if (callback!=null) {
-            callback.onPreviewFrame(arg0, arg1);
+            callback.onPreviewFrame(data, camera);
         }
     }
 
