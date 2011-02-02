@@ -2,6 +2,7 @@ package com.rabenauge.cam;
 
 import java.io.IOException;
 
+import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
 import android.util.Log;
@@ -30,7 +31,87 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback, Prev
             cam = Camera.open();
 
             Camera.Parameters para = cam.getParameters();
-            para.setPreviewSize(240,160);  //240,160  don't change the values !
+
+            int format=para.getPreviewFormat();
+            String str="Preview format is ";
+            switch (format) {
+                case PixelFormat.A_8: {
+                    str+="A_8";
+                    break;
+                }
+                case PixelFormat.JPEG: {
+                    str+="JPEG";
+                    break;
+                }
+                case PixelFormat.LA_88: {
+                    str+="LA_88";
+                    break;
+                }
+                case PixelFormat.L_8: {
+                    str+="L_8";
+                    break;
+                }
+                case PixelFormat.OPAQUE: {
+                    str+="OPAQUE";
+                    break;
+                }
+                case PixelFormat.RGBA_4444: {
+                    str+="RGBA_4444";
+                    break;
+                }
+                case PixelFormat.RGBA_5551: {
+                    str+="RGBA_5551";
+                    break;
+                }
+                case PixelFormat.RGBA_8888: {
+                    str+="RGBA_8888";
+                    break;
+                }
+                case PixelFormat.RGBX_8888: {
+                    str+="RGBX_8888";
+                    break;
+                }
+                case PixelFormat.RGB_332: {
+                    str+="RGB_332";
+                    break;
+                }
+                case PixelFormat.RGB_565: {
+                    str+="RGB_565";
+                    break;
+                }
+                case PixelFormat.RGB_888: {
+                    str+="RGB_888";
+                    break;
+                }
+                case PixelFormat.TRANSLUCENT: {
+                    str+="TRANSLUCENT";
+                    break;
+                }
+                case PixelFormat.TRANSPARENT: {
+                    str+="TRANSPARENT";
+                    break;
+                }
+                case PixelFormat.UNKNOWN: {
+                    str+="UNKNOWN";
+                    break;
+                }
+                case PixelFormat.YCbCr_420_SP: {
+                    str+="YCbCr_420_SP (NV21)";
+                    break;
+                }
+                case PixelFormat.YCbCr_422_SP: {
+                    str+="YCbCr_422_SP (NV16)";
+                    break;
+                }
+            }
+            str+=" using ";
+            PixelFormat info=new PixelFormat();
+            PixelFormat.getPixelFormatInfo(format,info);
+            str+=String.valueOf(info.bitsPerPixel) + " bits per pixel";
+            str+=" / " + String.valueOf(info.bytesPerPixel) + " byte(s) per pixel";
+            Log.i("CAMERA",str);
+
+            para.setPreviewSize(240, 160);  //240,160  don't change the values !
             cam.setParameters(para);
 
             try {
