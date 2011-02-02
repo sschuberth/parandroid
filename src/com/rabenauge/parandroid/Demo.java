@@ -15,6 +15,8 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.egl.*;
 
+import com.rabenauge.cam.Preview;
+
 public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallback {
     public static final String NAME="ParaNdroiD";
 
@@ -52,6 +54,9 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
 
     private CamCube cube;
     private boolean cube_zoom=true;
+
+    private int cam_pre_width=-1;
+    private int cam_pre_height=-1;
 
     public static final long DURATION_PART_STATIC=20*1000;
     private RorschachFade fade_in_rorschach, fade_out_rorschach;
@@ -356,16 +361,25 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
         return true;
     }
 
-    public void onPreviewFrame(byte[] yuvs, Camera camera) {
-        int bwCounter=0;
-        int yuvsCounter=0;
-
-        for (int y=0; y<160; ++y) {
-            if (cube!=null) {
-                System.arraycopy(yuvs, yuvsCounter, cube.camFrame, bwCounter, 240);
+    public void onPreviewFrame(byte[] data, Camera camera) {
+        if (cube!=null) {
+            if (cam_pre_width<0 || cam_pre_height<0) {
+                // Get the camera preview size in effect.
+                Camera.Parameters params=camera.getParameters();
+                Camera.Size size=params.getPreviewSize();
+                cam_pre_width=size.width;
+                cam_pre_height=size.height;
             }
-            yuvsCounter=yuvsCounter+240;
-            bwCounter=bwCounter+256;
+
+            int bwCounter=0;
+            int yuvsCounter=0;
+
+            for (int y=0; y<Preview.PRE_HEIGHT; ++y) {
+                System.arraycopy(data, yuvsCounter, cube.camFrame, bwCounter, Preview.PRE_WIDTH);
+
+                yuvsCounter=yuvsCounter+cam_pre_width;
+                bwCounter=bwCounter+CamCube.TEX_WIDTH;
+            }
         }
     }
 }

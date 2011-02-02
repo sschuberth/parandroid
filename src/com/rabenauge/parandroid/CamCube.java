@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLU;
 
+import com.rabenauge.cam.Preview;
 import com.rabenauge.demo.*;
 import com.rabenauge.gl.*;
 
@@ -14,6 +15,12 @@ import javax.microedition.khronos.opengles.GL11;
 
 public class CamCube extends EffectManager {
     public static final long DURATION_PART_TRANSITION=2000;
+
+    public static final int TEX_WIDTH=256;
+    public static final int TEX_HEIGHT=256;
+
+    public static final float TEX_COORD_X=((float)Preview.PRE_WIDTH)/TEX_WIDTH;
+    public static final float TEX_COORD_Y=((float)Preview.PRE_HEIGHT)/TEX_HEIGHT;
 
     private static final float[] CAM_OBJ_COORDS={
         // front
@@ -50,35 +57,35 @@ public class CamCube extends EffectManager {
 
     private static final float[] CAM_TEX_COORDS={
         // front
-        0.0f    , 0.0f,
-        0.9375f , 0.0f,
-        0.0f    , 0.625f,
-        0.9375f , 0.625f,
+        0.0f        , 0.0f,
+        TEX_COORD_X , 0.0f,
+        0.0f        , TEX_COORD_Y,
+        TEX_COORD_X , TEX_COORD_Y,
         // back
-        0.9375f , 0.0f,
-        0.9375f , 0.625f,
-        0.0f    , 0.0f,
-        0.0f    , 0.625f,
+        TEX_COORD_X , 0.0f,
+        TEX_COORD_X , TEX_COORD_Y,
+        0.0f        , 0.0f,
+        0.0f        , TEX_COORD_Y,
         // left
-        0.9375f , 0.0f,
-        0.9375f , 0.625f,
-        0.0f    , 0.0f,
-        0.0f    , 0.625f,
+        TEX_COORD_X , 0.0f,
+        TEX_COORD_X , TEX_COORD_Y,
+        0.0f        , 0.0f,
+        0.0f        , TEX_COORD_Y,
         // right
-        0.9375f , 0.0f,
-        0.9375f , 0.625f,
-        0.0f    , 0.0f,
-        0.0f    , 0.625f,
+        TEX_COORD_X , 0.0f,
+        TEX_COORD_X , TEX_COORD_Y,
+        0.0f        , 0.0f,
+        0.0f        , TEX_COORD_Y,
         // top
-        0.0f    , 0.0f,
-        0.9375f , 0.0f,
-        0.0f    , 0.625f,
-        0.9375f , 0.625f,
+        0.0f        , 0.0f,
+        TEX_COORD_X , 0.0f,
+        0.0f        , TEX_COORD_Y,
+        TEX_COORD_X , TEX_COORD_Y,
         // bottom
-        0.9375f , 0.0f,
-        0.9375f , 0.625f,
-        0.0f    , 0.0f,
-        0.0f    , 0.625f
+        TEX_COORD_X , 0.0f,
+        TEX_COORD_X , TEX_COORD_Y,
+        0.0f        , 0.0f,
+        0.0f        , TEX_COORD_Y
     };
 
     private FloatBuffer camObjCoords,camTexCoords;
@@ -86,7 +93,7 @@ public class CamCube extends EffectManager {
     private int frameCounter=0;
     private Texture2D camTexture;
 
-    public byte[] camFrame=new byte[256*256];
+    public byte[] camFrame=new byte[TEX_WIDTH*TEX_HEIGHT];
 
     private Texture2D frame_left, frame_right;
 

@@ -12,6 +12,9 @@ import android.view.SurfaceView;
 import com.rabenauge.parandroid.Launcher;
 
 public class Preview extends SurfaceView implements SurfaceHolder.Callback, PreviewCallback {
+    public static final int PRE_WIDTH=240;
+    public static final int PRE_HEIGHT=160;
+
     private Camera cam;
     private Camera.PreviewCallback callback;
     private SurfaceHolder mHolder;
@@ -95,6 +98,7 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback, Prev
                     break;
                 }
                 case PixelFormat.YCbCr_420_SP: {
+                    // This is the default and must be supported on all hardware.
                     str+="YCbCr_420_SP (NV21)";
                     break;
                 }
@@ -110,7 +114,13 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback, Prev
             str+=" / " + String.valueOf(info.bytesPerPixel) + " byte(s) per pixel";
             Log.i("CAMERA",str);
 
-            para.setPreviewSize(240, 160);  //240,160  don't change the values !
+            try {
+                // We cannot query the supported preview sizes in this API version
+                // so just set something and check for the size in effect later.
+                para.setPreviewSize(PRE_WIDTH, PRE_HEIGHT);
+            } catch (IllegalArgumentException e) {
+                Log.e("CAMERA", e.getMessage());
+            }
             cam.setParameters(para);
 
             try {
