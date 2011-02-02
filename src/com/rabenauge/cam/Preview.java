@@ -36,7 +36,7 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback, Prev
             try {
                 cam.setPreviewDisplay(holder);
             } catch (IOException e) {
-                Log.e("Camera", "cam.setPreviewDisplay(holder); "+e);
+                Log.e("CAMERA", e.getMessage());
             }
 
             cam.startPreview();
@@ -59,7 +59,7 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback, Prev
                     cam.release();
                 }
             } catch (Exception e) {
-                Log.e("Camera: ", e.getMessage());
+                Log.e("CAMERA", e.getMessage());
             }
         }
     }
