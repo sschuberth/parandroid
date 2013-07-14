@@ -3,6 +3,19 @@
       package="com.rabenauge.parandroid"
       android:versionCode="2"
       android:versionName="1.0.1">
+
+    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <supports-screens android:smallScreens="true"
+                      android:largeScreens="true"
+                      android:anyDensity="true" />
+
     <application android:icon="@drawable/icon" android:label="@string/app_name">
         <activity android:name=".Launcher"
                   android:label="@string/app_name"
@@ -14,12 +27,4 @@
             </intent-filter>
         </activity>
     </application>
-    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-    <supports-screens android:smallScreens="true"
-                      android:largeScreens="true"
-                      android:anyDensity="true" />
 </manifest>
