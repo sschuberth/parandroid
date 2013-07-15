@@ -21,10 +21,14 @@ import android.graphics.BitmapFactory;
 import android.hardware.*;
 import android.opengl.GLU;
 import android.util.FloatMath;
+
 import com.rabenauge.demo.*;
 import com.rabenauge.gl.*;
+
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
+import java.util.Locale;
+
 import javax.microedition.khronos.opengles.GL11;
 
 public class Scroller extends EffectManager {
@@ -78,7 +82,7 @@ public class Scroller extends EffectManager {
     }
 
     private void calcTexCoords(String text, int tex_width, int tex_height, int chars_per_row, int chars_per_column) {
-        text=text.toLowerCase();
+        text=text.toLowerCase(Locale.US);
 
         int char_width=tex_width/chars_per_row;
         int char_height=tex_height/chars_per_column;
