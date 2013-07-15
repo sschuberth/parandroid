@@ -132,9 +132,6 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
         Log.i(NAME, "MODEL         : "    + android.os.Build.MODEL);
         Log.i(NAME, "PRODUCT       : "    + android.os.Build.PRODUCT);
 
-        // Get some OpenGL information.
-        Log.i(NAME, "ACCELERATION  : "    + isHardwareAccelerated());
-
         Log.i(NAME, "GL_VENDOR     : "    + gl.glGetString(GL10.GL_VENDOR));
         Log.i(NAME, "GL_RENDERER   : "    + gl.glGetString(GL10.GL_RENDERER));
         Log.i(NAME, "GL_VERSION    : "    + gl.glGetString(GL10.GL_VERSION));
