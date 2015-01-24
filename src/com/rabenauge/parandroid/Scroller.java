@@ -37,12 +37,12 @@ public class Scroller extends EffectManager {
     private static final int CHAR_SIZE=2+66+2;
     private static final int SHADOW_OFFSET=12;
 
-    private static final String CHARS="abcdefghijklmnopqrstuvwxyz.:-,`´!»«+";
+    private static final String CHARS="abcdefghijklmnopqrstuvwxyz.:-,`Â´!Â»Â«+";
     private static final String TEXT=
         "               " +
         "This is the final version. Squeezed and tweaked in part at the hotel and hall in Bingen, " +
         "finalized and 3D-ready in Berlin for the droidcon: " +
-        "For the pleasure of Breakpoint Nation.   Para´N`droiD.   The first real " +
+        "For the pleasure of Breakpoint Nation.   ParaÂ´N`droiD.   The first real " +
         "interactive mobile Android platform cell phone demo. Presented to you by Rabenauge: Beauty lies in " +
         "the Eye of the Raven. Plus Tristar and Red Sector Incorporated: Twice the Fun - Double the Trouble. " +
         "     " +
