@@ -77,9 +77,12 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
     public static final long DURATION_PART_STATIC=20*1000;
     private RorschachFade fade_in_rorschach, fade_out_rorschach;
 
-    public Demo(Launcher activity) {
-        super(activity);
+    public Demo(Context context) {
+        super(context);
+    }
 
+    public Demo(Launcher activity) {
+        this((Context)activity);
         this.activity=activity;
 
         // Make sure we get a depth buffer. This is also required to get hardware acceleration on the Samsung Galaxy, see

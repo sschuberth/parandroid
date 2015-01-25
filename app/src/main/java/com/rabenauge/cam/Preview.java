@@ -18,6 +18,7 @@ package com.rabenauge.cam;
 
 import java.io.IOException;
 
+import android.content.Context;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
@@ -35,8 +36,12 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback, Prev
     private Camera.PreviewCallback callback;
     private SurfaceHolder mHolder;
 
+    public Preview(Context context) {
+        super(context);
+    }
+
     public Preview(Launcher launcher, Camera.PreviewCallback callback) {
-        super(launcher);
+        this(launcher);
         this.callback=callback;
 
         mHolder = getHolder();
