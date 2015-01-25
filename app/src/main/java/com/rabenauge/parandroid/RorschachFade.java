@@ -42,12 +42,12 @@ public class RorschachFade extends EffectManager {
         // Schedule the effects in this part.
         if (in) {
             add(new EffectManager.Wait(), Demo.DURATION_PART_STATIC-t);
-            add(new EffectManager.TextureFade(rorschach[0], in), t);
+            add(new EffectManager.TextureFade(rorschach[0], true), t);
         }
         else {
             add(new EffectManager.TextureTransition(rorschach[0], rorschach[1]), t/3);
             add(new EffectManager.TextureTransition(rorschach[1], rorschach[2]), t/3);
-            add(new EffectManager.TextureFade(rorschach[2], in), t/3);
+            add(new EffectManager.TextureFade(rorschach[2], false), t/3);
         }
     }
 }

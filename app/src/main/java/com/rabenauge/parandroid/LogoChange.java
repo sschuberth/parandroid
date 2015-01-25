@@ -140,14 +140,14 @@ public class LogoChange extends EffectManager {
                 t_ripple+=e;
                 if (t_ripple>ripple_duration) {
                     t_ripple=ripple_duration;
-                    pingpong=!pingpong;
+                    pingpong=false;
                 }
             }
             else {
                 // Only reset fading every second time rippling is reset.
                 if (updown) {
                     t_fade=0;
-                    updown=!updown;
+                    updown=false;
                 }
 
                 t_ripple=0;
@@ -156,7 +156,7 @@ public class LogoChange extends EffectManager {
                 t_serene+=e;
                 if (t_serene>=sd) {
                     t_serene=sd;
-                    pingpong=!pingpong;
+                    pingpong=true;
                 }
             }
 

@@ -307,7 +307,7 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
                 }
                 ++shootem_counter;
             }
-            else if (shootem) {
+            else {
                 cube_zoom=false;
                 t_start_cube=t_global-CamCube.DURATION_PART_TRANSITION;
             }
