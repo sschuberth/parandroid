@@ -26,6 +26,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import javax.microedition.khronos.opengles.GL11;
 
+@SuppressWarnings("SameParameterValue")
 public class LogoChange extends EffectManager {
     private Demo demo;
 

@@ -21,6 +21,7 @@ import java.nio.*;
 /*
  * A class to create directly allocated buffers of native byte order.
  */
+@SuppressWarnings("SameParameterValue")
 public class DirectBuffer {
     public static ByteBuffer nativeByteBuffer(int capacity) {
         ByteBuffer buffer=ByteBuffer.allocateDirect(capacity);

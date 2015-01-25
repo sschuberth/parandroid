@@ -23,6 +23,7 @@ import javax.microedition.khronos.opengles.GL11;
 /*
  * Wrapper class for 2D texture objects.
  */
+@SuppressWarnings("SameParameterValue")
 public class Texture2D extends Texture {
     public Texture2D(GL11 gl) {
         super(gl, GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_BINDING_2D);

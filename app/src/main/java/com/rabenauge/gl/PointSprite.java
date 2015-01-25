@@ -21,6 +21,7 @@ import javax.microedition.khronos.opengles.GL11;
 /*
  * Wrapper class for point sprites (requires GL_OES_point_sprite).
  */
+@SuppressWarnings("SameParameterValue")
 public class PointSprite extends Texture2D {
     public PointSprite(GL11 gl) {
         super(gl);

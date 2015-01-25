@@ -24,6 +24,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import javax.microedition.khronos.opengles.GL11;
 
+@SuppressWarnings("SameParameterValue")
 public class StarField extends EffectManager {
     private static final int WIDTH=800, HEIGHT=480;
 

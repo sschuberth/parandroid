@@ -31,6 +31,7 @@ import java.util.Locale;
 
 import javax.microedition.khronos.opengles.GL11;
 
+@SuppressWarnings("SameParameterValue")
 public class Scroller extends EffectManager {
     private static final int WIDTH=800, HEIGHT=480;
     private static final int SCROLLER_POS_Y=360;

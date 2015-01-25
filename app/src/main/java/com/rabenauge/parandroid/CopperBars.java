@@ -21,6 +21,7 @@ import com.rabenauge.demo.*;
 import java.nio.*;
 import javax.microedition.khronos.opengles.GL11;
 
+@SuppressWarnings("SameParameterValue")
 public class CopperBars extends EffectManager {
     private static final float CYL_RADIUS=0.08f;
     private static final float CYL_LENGTH=5.0f;

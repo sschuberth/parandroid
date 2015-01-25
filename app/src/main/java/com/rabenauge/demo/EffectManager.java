@@ -47,6 +47,7 @@ public class EffectManager {
     /*
      * An effect to fade the current screen contents from / to a given color.
      */
+    @SuppressWarnings("SameParameterValue")
     public class ColorFade extends Effect {
         private float r, g, b;
         private boolean in;

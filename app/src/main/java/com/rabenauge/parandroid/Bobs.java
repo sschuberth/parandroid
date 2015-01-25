@@ -27,6 +27,7 @@ import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL11;
 
+@SuppressWarnings("SameParameterValue")
 public class Bobs extends EffectManager {
     private static final int WIDTH=800, HEIGHT=480;
     private static final int NUM_BOBS=10;

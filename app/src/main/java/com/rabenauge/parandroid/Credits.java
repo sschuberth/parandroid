@@ -78,6 +78,7 @@ public class Credits extends EffectManager {
     private Demo demo;
     private Texture2D[] textures;
 
+    @SuppressWarnings("SameParameterValue")
     private class Cubes extends Effect {
         private int num_cubes_x, num_cubes_y;
         private IntBuffer tex_coords;
@@ -187,6 +188,7 @@ public class Credits extends EffectManager {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     public class TextureFadeSound extends Effect {
         private Texture2D texture;
         private boolean in;

@@ -21,6 +21,7 @@ import javax.microedition.khronos.opengles.GL11;
 /*
  * Base class for OpenGL texture objects.
  */
+@SuppressWarnings("SameParameterValue")
 public abstract class Texture extends Bindable {
     protected int target, pname;
 
