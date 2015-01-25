@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.Process;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 
 import com.rabenauge.cam.Preview;
 
@@ -40,11 +41,12 @@ public class Launcher extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         PowerManager pm=(PowerManager)getSystemService(Context.POWER_SERVICE);
         wl=pm.newWakeLock(
-            PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
-            PowerManager.ACQUIRE_CAUSES_WAKEUP   |
-            PowerManager.ON_AFTER_RELEASE        ,
+            PowerManager.ACQUIRE_CAUSES_WAKEUP |
+            PowerManager.ON_AFTER_RELEASE      ,
             "ScreenBrightKeyboardOff"
         );
 
