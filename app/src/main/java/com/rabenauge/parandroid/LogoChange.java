@@ -39,13 +39,12 @@ public class LogoChange extends EffectManager {
     private long t_serene, t_ripple, t_fade;
     private boolean pingpong, updown;
 
-    private Texture2D logo_trsi, logo_rab;
+    private Texture2D logo_trsi;
 
     private IntBuffer grid_coords, tex_coords;
     private ShortBuffer[] indices;
     private float[][] dists;
 
-    private Change change=null;
     private boolean change_now=false;
 
     public boolean isHidden() {
@@ -217,7 +216,7 @@ public class LogoChange extends EffectManager {
 
         gl.glActiveTexture(GL11.GL_TEXTURE1);
         bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.logo_rab);
-        logo_rab=new Texture2D(gl);
+        Texture2D logo_rab=new Texture2D(gl);
         logo_rab.setData(bitmap);
         bitmap.recycle();
 
@@ -271,7 +270,6 @@ public class LogoChange extends EffectManager {
         tex_coords.position(0);
 
         // Schedule the effects in this part.
-        change=new Change();
-        add(change, Demo.DURATION_MAIN_EFFECTS);
+        add(new Change(), Demo.DURATION_MAIN_EFFECTS);
     }
 }

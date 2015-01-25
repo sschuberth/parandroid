@@ -42,7 +42,7 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
     private SensorManager sm;
 
     private Long t_start=null, t_start_cube=null;
-    private long t_global=0, t_main=0, t_credits=0;
+    private long t_global=0, t_credits=0;
 
     private boolean interactive=false;
     public boolean shootem=false;
@@ -252,7 +252,7 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
         }
         else {
             // Reset the relative time for this part.
-            t_main=t_global-intro_fade.getDuration();
+            long t_main=t_global-intro_fade.getDuration();
 
             if (t_credits==0 || tc<=DURATION_TOTAL-DURATION_PART_OUTRO) {
                 // These parts run concurrently and render to the same frame!

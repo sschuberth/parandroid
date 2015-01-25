@@ -26,7 +26,7 @@ public class IntroFade extends EffectManager {
     public static final long DURATION_EFFECT_DELAY=1000;
     public static final long DURATION_EFFECT_FADEOUT=500;
 
-    private Texture2D title_droid, title_parandroid, title_trsinrab;
+    private Texture2D title_droid, title_parandroid;
 
     // Fade-in the Droid title screen from black.
     private class FadeBlackToDroid extends Effect {
@@ -89,7 +89,7 @@ public class IntroFade extends EffectManager {
         title_parandroid.setData(bitmap);
         bitmap.recycle();
 
-        title_trsinrab=new Texture2D(gl);
+        Texture2D title_trsinrab=new Texture2D(gl);
         bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), R.drawable.title_trsinrab);
         title_trsinrab.setData(bitmap);
         bitmap.recycle();

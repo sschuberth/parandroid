@@ -25,14 +25,12 @@ import com.rabenauge.gl.*;
 import javax.microedition.khronos.opengles.GL11;
 
 public class RorschachFade extends EffectManager {
-    private Texture2D rorschach[];
-
     public RorschachFade(Demo demo, GL11 gl, long t, boolean in) {
         super(gl);
 
         // Load the Rorschach textures.
         int[] ids={R.drawable.rorschach_1, R.drawable.rorschach_2, R.drawable.rorschach_3};
-        rorschach=new Texture2D[ids.length];
+        Texture2D rorschach[]=new Texture2D[ids.length];
 
         for (int i=0; i<ids.length; ++i) {
             Bitmap bitmap=BitmapFactory.decodeResource(demo.getActivity().getResources(), ids[i]);
