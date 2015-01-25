@@ -211,7 +211,7 @@ public class Bobs extends EffectManager {
 
             calcBobTexture2D(TEX_PER_ROW, TEX_PER_COLUMN, NUM_BOBS-1-i, tex_coords, offset);
 
-            indices.put((short)(v+0));
+            indices.put((short)(v  ));
             indices.put((short)(v+1));
             indices.put((short)(v+2));
             indices.put((short)(v+3));
