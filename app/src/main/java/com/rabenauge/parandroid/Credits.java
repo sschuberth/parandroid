@@ -237,7 +237,7 @@ public class Credits extends EffectManager {
 
         Cubes cubes=new Cubes(5, 3);
         for (int i=1; i<ids.length; ++i) {
-            add(cubes, 1*d);
+            add(cubes, d);
             add(new TextureShake(textures[i]), 300);
             add(new EffectManager.TextureShow(textures[i]), 2*d-300);
         }
