@@ -172,6 +172,7 @@ public class Demo extends GLSurfaceView implements Renderer, Camera.PreviewCallb
 
             Log.e(NAME, "No GL11 available");
             activity.finish();
+            return;
         }
 
         // Get some sensor information.
