@@ -23,4 +23,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        Camera {
+            // This is the "regular" flavor.
+        }
+
+        NoCamera {
+            // This disables the camera for privacy reasons.
+        }
+    }
 }
