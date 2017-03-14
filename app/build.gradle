@@ -11,6 +11,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            defaultConfig {
+                // Enable pre-dexing for debug builds.
+                minSdkVersion 21
+            }
+        }
+
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
