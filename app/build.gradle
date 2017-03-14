@@ -6,8 +6,6 @@ android {
 
     defaultConfig {
         applicationId 'com.rabenauge.parandroid'
-        minSdkVersion 15
-        targetSdkVersion 25
         versionName '1.1'
         versionCode 3
     }
@@ -17,10 +15,16 @@ android {
             defaultConfig {
                 // Enable pre-dexing for debug builds.
                 minSdkVersion 21
+                targetSdkVersion 25
             }
         }
 
         release {
+            defaultConfig {
+                minSdkVersion 15
+                targetSdkVersion 25
+            }
+
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
