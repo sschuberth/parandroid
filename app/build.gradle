@@ -8,6 +8,8 @@ android {
         applicationId 'com.rabenauge.parandroid'
         minSdkVersion 15
         targetSdkVersion 25
+        versionName '1.1'
+        versionCode 3
     }
 
     buildTypes {
