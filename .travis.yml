@@ -12,3 +12,12 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
+
+install:
+  - echo $ANDROID_HOME
+  - mkdir -p $ANDROID_HOME/licenses
+  - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
+  - cat $ANDROID_HOME/licenses/android-sdk-license
+
+script:
+  - ./gradlew --no-daemon build
