@@ -19,7 +19,6 @@ package com.rabenauge.parandroid;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLU;
-import android.util.FloatMath;
 import com.rabenauge.demo.*;
 import com.rabenauge.gl.*;
 import java.nio.IntBuffer;
@@ -145,8 +144,8 @@ public class Bobs extends EffectManager {
                 float px=quad_coords.get(offset);
 
                 float angle=(pos+step)/360*DemoMath.PI*2;
-                float x=FloatMath.cos(angle*3)*AMP_X+CENTER_X;
-                float y=FloatMath.sin(angle*5)*AMP_Y+CENTER_Y;
+                float x=(float)Math.cos(angle*3)*AMP_X+CENTER_X;
+                float y=(float)Math.sin(angle*5)*AMP_Y+CENTER_Y;
 
                 calcBobVertex2D(x, y, TEX_WIDTH*0.6f, TEX_HEIGHT*0.6f, quad_coords, offset);
 

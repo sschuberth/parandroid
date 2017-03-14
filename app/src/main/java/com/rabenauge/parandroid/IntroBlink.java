@@ -19,7 +19,6 @@ package com.rabenauge.parandroid;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLU;
-import android.util.FloatMath;
 import com.rabenauge.demo.*;
 import com.rabenauge.gl.*;
 import java.nio.IntBuffer;
@@ -60,7 +59,7 @@ public class IntroBlink extends EffectManager {
         public void onRender(GL11 gl, long t, long e, float s) {
             // Fade the colors.
             for (int i=3; i<colors.capacity(); i+=4) {
-                colors.put(i, (int)((1.0f-FloatMath.cos(DemoMath.PI*s*i))/2.0f*65536));
+                colors.put(i, (int)((1.0f-Math.cos(DemoMath.PI*s*i))/2.0f*65536));
             }
 
             // Set OpenGL states that differ from the concurrently running fading part.

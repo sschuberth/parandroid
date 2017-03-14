@@ -16,7 +16,6 @@
 
 package com.rabenauge.parandroid;
 
-import android.util.FloatMath;
 import com.rabenauge.demo.*;
 import java.nio.*;
 import javax.microedition.khronos.opengles.GL11;
@@ -50,8 +49,8 @@ public class CopperBars extends EffectManager {
         for (int i=0; i<sides; ++i) {
             // The coordinates are generated so that we are looking through the hollow cylinder.
             float angle=(float)i/sides*DemoMath.PI*2;
-            float x=FloatMath.cos(angle)*65536;
-            float y=FloatMath.sin(angle)*65536;
+            float x=(float)Math.cos(angle)*65536;
+            float y=(float)Math.sin(angle)*65536;
 
             int xc=(int)(x*radius);
             int yc=(int)(y*radius);
@@ -154,7 +153,7 @@ public class CopperBars extends EffectManager {
 
             for (int i=0;i<3; ++i) {
                 gl.glPushMatrix();
-                gl.glTranslatef(i*2*CYL_RADIUS, FloatMath.sin(t/400.0f+i)*0.25f, 0);
+                gl.glTranslatef(i*2*CYL_RADIUS, (float)Math.sin(t/400.0f+i)*0.25f, 0);
 
                 gl.glColorPointer(4, GL11.GL_UNSIGNED_BYTE, 0, colors[i]);
                 gl.glDrawElements(GL11.GL_TRIANGLE_STRIP, indices.capacity(), GL11.GL_UNSIGNED_SHORT, indices);

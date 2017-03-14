@@ -18,7 +18,6 @@ package com.rabenauge.parandroid;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.FloatMath;
 import com.rabenauge.demo.*;
 import com.rabenauge.gl.*;
 
@@ -160,12 +159,12 @@ public class LogoChange extends EffectManager {
                 }
             }
 
-            float amp=(FloatMath.cos(DemoMath.PI*(float)t_ripple/ripple_duration*2-DemoMath.PI)+1)/2, freq=amp*2;
+            float amp=(float)(Math.cos(DemoMath.PI*(float)t_ripple/ripple_duration*2-DemoMath.PI)+1)/2, freq=amp*2;
 
             int g=2;
             for (int y=0; y<grid_y; ++y) {
                 for (int x=0; x<grid_x; ++x) {
-                    grid_coords.put(g,(int)((FloatMath.cos((dists[y][x]+amp*100)*freq)*amp/4-1)*65536));
+                    grid_coords.put(g,(int)((Math.cos((dists[y][x]+amp*100)*freq)*amp/4-1)*65536));
                     g+=3;
                 }
             }
@@ -263,7 +262,7 @@ public class LogoChange extends EffectManager {
                 indices[y].put((short)offset);
                 indices[y].put((short)(offset+grid_x));
 
-                dists[y][x]=FloatMath.sqrt(x2+y2);
+                dists[y][x]=(float)Math.sqrt(x2+y2);
             }
 
             indices[y].position(0);

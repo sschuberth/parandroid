@@ -20,7 +20,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.*;
 import android.opengl.GLU;
-import android.util.FloatMath;
 
 import com.rabenauge.demo.*;
 import com.rabenauge.gl.*;
@@ -229,11 +228,11 @@ public class Scroller extends EffectManager {
                 angle+=(float)t/200;
 
                 wobbling_line_coords.put(i  , line_coords.get(i  ));
-                short y0=(short)(line_coords.get(i+1)+FloatMath.sin(angle)*amp);
+                short y0=(short)(line_coords.get(i+1)+Math.sin(angle)*amp);
                 wobbling_line_coords.put(i+1, y0);
 
                 wobbling_line_coords.put(i+2, line_coords.get(i+2));
-                short y1=(short)(line_coords.get(i+3)+FloatMath.sin(angle+0.9f)*amp);
+                short y1=(short)(line_coords.get(i+3)+Math.sin(angle+0.9f)*amp);
                 wobbling_line_coords.put(i+3, y1);
             }
 

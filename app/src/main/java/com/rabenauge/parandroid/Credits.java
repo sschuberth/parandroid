@@ -18,7 +18,6 @@ package com.rabenauge.parandroid;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.FloatMath;
 
 import com.rabenauge.demo.*;
 import com.rabenauge.gl.*;
@@ -131,7 +130,7 @@ public class Credits extends EffectManager {
                     gl.glTranslatef(xpos, ypos, -8);
 
                     // Spread out the cubes.
-                    float f=1-FloatMath.cos(s*2*DemoMath.PI);
+                    float f=1-(float)Math.cos(s*2*DemoMath.PI);
                     gl.glTranslatef(xpos*f, ypos*f, -f*4);
                     gl.glRotatef(cubeRotX, 1, 0, 0);
 
@@ -181,7 +180,7 @@ public class Credits extends EffectManager {
             gl.glMatrixMode(GL11.GL_MODELVIEW);
             gl.glPushMatrix();
             gl.glLoadIdentity();
-            float f=FloatMath.sin(s*DemoMath.PI)/50;
+            float f=(float)Math.sin(s*DemoMath.PI)/50;
             gl.glTranslatef((float)(Math.random()-0.5)*f, (float)(Math.random()-0.5)*f, 0);
             Helper.drawScreenSpaceTexture(title);
             gl.glPopMatrix();
