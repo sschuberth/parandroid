@@ -17,9 +17,7 @@
 package com.rabenauge.parandroid;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.os.Process;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
@@ -27,7 +25,6 @@ import android.view.WindowManager;
 import com.rabenauge.cam.Preview;
 
 public class Launcher extends Activity {
-    private PowerManager.WakeLock wl;
     private Demo demo;
 
     private Preview preview;
@@ -43,13 +40,6 @@ public class Launcher extends Activity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        PowerManager pm=(PowerManager)getSystemService(Context.POWER_SERVICE);
-        wl=pm.newWakeLock(
-            PowerManager.ACQUIRE_CAUSES_WAKEUP |
-            PowerManager.ON_AFTER_RELEASE      ,
-            "ScreenBrightKeyboardOff"
-        );
-
         demo=new Demo(this);
         preview=new Preview(this, demo);
 
@@ -62,14 +52,12 @@ public class Launcher extends Activity {
 
         preview.removeCallback();
         demo.onPause();
-        wl.release();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        wl.acquire();
         demo.onResume();
     }
 
