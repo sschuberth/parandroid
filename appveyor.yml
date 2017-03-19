@@ -1,0 +1,25 @@
+environment:
+  ANDROID_HOME: $(LOCALAPPDATA)\Android\sdk
+  HOME: $(HOMEDRIVE)$(HOMEPATH)
+  SDK_REVISION: 25.2.3
+
+cache:
+  - $(HOME)\.gradle\caches
+  - $(HOME)\.gradle\wrapper
+  - $(HOME)\.android\build-cache
+
+install:
+  - ps: Start-FileDownload "https://dl.google.com/android/repository/tools_r${env:SDK_REVISION}-windows.zip"
+  - 7z x tools_r%SDK_REVISION%-windows.zip -o%ANDROID_HOME%
+  - echo %ANDROID_HOME%
+  - if not exist %ANDROID_HOME%\licenses (
+      md %ANDROID_HOME%\licenses &&
+      echo.> %ANDROID_HOME%\licenses\android-sdk-license &&
+      echo 8933bad161af4178b1185d1a37fbf41ea5269c55>> %ANDROID_HOME%\licenses\android-sdk-license)
+  - type %ANDROID_HOME%\licenses\android-sdk-license
+
+build_script:
+  - gradlew build
+
+artifacts:
+  - path: app\build\outputs\apk\*.apk
