@@ -1,13 +1,22 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    signingConfigs {
+        config {
+            storeFile file('/Applications/Android Studio.app/Contents/bin/mykey')
+            storePassword 'keykey'
+            keyPassword 'keykey'
+            keyAlias 'key1'
+        }
+    }
+    compileSdkVersion 26
+    buildToolsVersion '29.0.2'
 
     defaultConfig {
         applicationId 'com.rabenauge.parandroid'
         versionName '1.1'
         versionCode 3
+        signingConfig signingConfigs.config
     }
 
     buildTypes {
@@ -15,20 +24,23 @@ android {
             defaultConfig {
                 // Enable pre-dexing for debug builds.
                 minSdkVersion 21
-                targetSdkVersion 25
+                targetSdkVersion 26
             }
         }
 
         release {
             defaultConfig {
                 minSdkVersion 15
-                targetSdkVersion 25
+                targetSdkVersion 26
             }
 
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
+
+    flavorDimensions "fd"
 
     productFlavors {
         Camera {
