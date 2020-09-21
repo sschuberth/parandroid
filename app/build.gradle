@@ -9,6 +9,7 @@ android {
             keyAlias 'key1'
         }
     }
+
     compileSdkVersion 26
     buildToolsVersion '29.0.2'
 
